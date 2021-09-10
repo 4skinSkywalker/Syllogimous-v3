@@ -98,7 +98,7 @@ button:hover {
   background-color: #000c;
   background-image: url(snake-background.png);
   background-size: cover;
-  filter: brightness(.05);
+  filter: brightness(.15);
 }
 
 .metal-gear {
