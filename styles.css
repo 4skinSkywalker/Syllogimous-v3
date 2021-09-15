@@ -1,137 +1,161 @@
-@import url('https://fonts.googleapis.com/css2?family=Wallpoet&display=swap');
-
 @font-face {
-  font-family: 'Espionage';
-  font-style: normal;
-  font-weight: normal;
-  src: url('Espionage.woff') format('woff');
+    font-family: "MGS2";
+    font-style: normal;
+    font-weight: normal;
+    src: url("MGS2.ttf") format("ttf");
 }
-    
 
 @font-face {
-  font-family: 'Metal Gear';
-  font-style: normal;
-  font-weight: normal;
-  src: url('Metal Gear.woff') format('woff');
+    font-family: "Espionage";
+    font-style: normal;
+    font-weight: normal;
+    src: url("Espionage.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Metal Gear";
+    font-style: normal;
+    font-weight: normal;
+    src: url("Metal Gear.woff") format("woff");
 }
 
 ::-webkit-scrollbar {
-  width: 4px;
+    width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0000;
+    background: #0000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #EDDB7E;
+    background-color: #eddb7e;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color:  #0000; 
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: #0000;
 }
 
 *:focus {
-  outline: 0;
+    outline: 0;
 }
 
 body {
-  height: 100vh;
-  margin: 0;
-  padding: 2em;
-  color: #fffff1;
-  background-color: #111;
+    height: 100vh;
+    margin: 0;
+    padding: 2em;
+    font-family: "MGS2", sans-serif;
+    color: #fffff1;
+    background-color: #111;
 }
 
-h1, h2, h3, h4, h5, h6, p, pre, ul {
-  margin: 0;
-  padding: 0;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+pre,
+ul {
+    margin: 0;
+    padding: 0;
 }
 
 ul {
-  list-style: none;
-  max-height: 7.5em;
-  padding: 0 1em;
-  overflow: auto;
+    list-style: none;
+    max-height: 7.5em;
+    padding: 0 1em;
+    overflow: auto;
 }
 
 ul li:not(:last-child) {
-  margin-bottom: .5em;
+    margin-bottom: 0.5em;
 }
 
 button {
-  padding: .25em .75em;
-  font-family: inherit;
-  font-size: inherit;
-  color: #DFE9EC;
-  border: 0;
-  background-color: #3C6C64;
-  cursor: pointer;
+    padding: 0.25em 0.75em;
+    font-family: inherit;
+    font-size: inherit;
+    color: #dfe9ec;
+    border: 0;
+    background-color: #3c6c64;
+    cursor: pointer;
 }
 
 button:hover {
-  box-shadow: 0 2px 4px #4AA39A;
+    box-shadow: 0 2px 4px #4aa39a;
 }
 
 .codec {
-  position: relative;
-  display: grid;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  font-family: "Espionage", sans-serif;
-  letter-spacing: .1em;
-  border: 4px solid #3C6C64;
-  box-shadow: 0 0 20px #4AA39A;
-  overflow: hidden;
+    position: relative;
+    display: grid;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    letter-spacing: 0.1em;
+    border: 4px solid #3c6c64;
+    box-shadow: 0 0 20px #4aa39a;
+    overflow: hidden;
 }
 
 .background-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  background-color: #000c;
-  background-image: url(snake-background.png);
-  background-size: cover;
-  filter: brightness(.15);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background-color: #000c;
+    background-image: url(snake-background.png);
+    background-size: cover;
+    filter: brightness(0.15);
 }
 
 .metal-gear {
-  letter-spacing: .25em;
+    font-family: "Espionage", sans-serif;
+    letter-spacing: 0.25em;
 }
 
 .metal-gear .v3 {
-  position: relative;
-  display: inline-block;
-  isolation: isolate;
+    position: relative;
+    display: inline-block;
+    isolation: isolate;
 }
 
 .metal-gear .v3 img {
-  position: absolute;
-  top: 75%;
-  left: 75%;
-  z-index: -1;
-  transform: translate(-50%, -50%);
-  height: 5em;
-  opacity: .75;
+    position: absolute;
+    top: 75%;
+    left: 75%;
+    z-index: -1;
+    transform: translate(-50%, -50%);
+    height: 5em;
+    opacity: 0.75;
 }
 
 .metal-gear h1 {
-  font-family: "Metal Gear", serif;
-  letter-spacing: .3em;
+    font-family: "Metal Gear", serif;
+    letter-spacing: 0.3em;
 }
 
-.premises-wrapper, .conclusion-wrapper {
-  position: relative;
-  display: grid;
-  gap: 1em;
-  padding: 1em;
-  max-width: calc(100vw - 4em);
+.premises-wrapper,
+.conclusion-wrapper {
+    position: relative;
+    display: grid;
+    gap: 1em;
+    padding: 1em;
+    max-width: calc(100vw - 4em);
+}
+
+.premises-wrapper h2,
+.conclusion-wrapper h2 {
+    font-family: "Espionage", sans-serif;
+    letter-spacing: 0.25em;
+    margin-top: -24px;
+    margin-left: 4px;
 }
 
 .border-left,
@@ -140,118 +164,119 @@ button:hover {
 .bracket-lip-top-right,
 .bracket-lip-bottom-left,
 .bracket-lip-bottom-right {
-  position: absolute;
-  background-color: #EDDB7E;
-  box-shadow: 0 0 4px #9e8847;
+    position: absolute;
+    background-color: #eddb7e;
+    box-shadow: 0 0 4px #9e8847;
 }
 
-.border-left, .border-right {
-  left: -8px;
-  height: 100%;
-  width: 4px;
+.border-left,
+.border-right {
+    left: -8px;
+    height: 100%;
+    width: 4px;
 }
 
 .border-right {
-  left: calc(100% + 8px);
+    left: calc(100% + 8px);
 }
 
 .bracket-lip-top-left {
-  top: 0;
-  left: -4px;
-  width: 8px;
-  height: 4px;
+    top: 0;
+    left: -4px;
+    width: 8px;
+    height: 4px;
 }
 
 .bracket-lip-bottom-left {
-  bottom: 0;
-  left: -8px;
-  width: 12px;
-  height: 4px;
+    bottom: 0;
+    left: -8px;
+    width: 12px;
+    height: 4px;
 }
 
 .bracket-lip-top-right {
-  top: 0;
-  left: 100%;
-  width: 8px;
-  height: 4px;
+    top: 0;
+    left: 100%;
+    width: 8px;
+    height: 4px;
 }
 
 .bracket-lip-bottom-right {
-  bottom: 0;
-  left: 100%;
-  width: 12px;
-  height: 4px;
+    bottom: 0;
+    left: 100%;
+    width: 12px;
+    height: 4px;
 }
 
 .subject {
-  color: #A5070E;
+    text-transform: uppercase;
+    color: #a5070e;
 }
 
 .buttons-wrapper {
-  justify-self: center;
-  display: flex;
-  gap: 2em;
+    justify-self: center;
+    display: flex;
+    gap: 2em;
 }
 
 .level-wrapper {
-  position: relative;
-  padding: 0 1em;
-  font-family: 'Wallpoet', cursive;
+    position: relative;
+    padding: 0 1em;
 }
 
 .level-wrapper h3 {
-  margin-top: 4px;
+    margin-top: 4px;
 }
 
 .sign {
-  position: absolute;
-  bottom: .5em;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: "Metal Gear", serif;
-  color: #111;
-  text-decoration: none;
+    position: absolute;
+    bottom: 0.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Metal Gear", serif;
+    color: #111;
+    text-decoration: none;
 }
 
 @media (max-width: 400px) {
-  body {
-    padding: 0;
-  }
+    body {
+        padding: 0;
+    }
 
-  .codec {
-    border: 0;
-    box-shadow: none;
-  }
+    .codec {
+        border: 0;
+        box-shadow: none;
+    }
 
-  .metal-gear {
-    font-size: 10px;
-  }
+    .metal-gear {
+        font-size: 10px;
+    }
 
-  .metal-gear h1 {
-    font-size: 20px;
-  }
+    .metal-gear h1 {
+        font-size: 20px;
+    }
 
-  .premises-wrapper, .conclusion-wrapper {
-    gap: .5em;
-    padding: .5em;
-    max-width: calc(100vw - 3em);
-  }
+    .premises-wrapper,
+    .conclusion-wrapper {
+        gap: 0.5em;
+        padding: 0.5em;
+        max-width: calc(100vw - 3em);
+    }
 
-  .buttons-wrapper {
-    gap: 1.5em;
-  }
+    .buttons-wrapper {
+        gap: 1.5em;
+    }
 
-  .level-wrapper {
-    padding: 0;
-  }
+    .level-wrapper {
+        padding: 0;
+    }
 
-  .level-wrapper .border-left,
-  .level-wrapper .border-right,
-  .level-wrapper .bracket-lip-top-left,
-  .level-wrapper .bracket-lip-top-right,
-  .level-wrapper .bracket-lip-bottom-left,
-  .level-wrapper .bracket-lip-bottom-right {
-    display: none;
-  }
+    .level-wrapper .border-left,
+    .level-wrapper .border-right,
+    .level-wrapper .bracket-lip-top-left,
+    .level-wrapper .bracket-lip-top-right,
+    .level-wrapper .bracket-lip-bottom-left,
+    .level-wrapper .bracket-lip-bottom-right {
+        display: none;
+    }
 }
-
