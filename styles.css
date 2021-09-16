@@ -38,10 +38,6 @@
     -webkit-tap-highlight-color: #0000;
 }
 
-*:focus {
-    outline: 0;
-}
-
 body {
     height: 100vh;
     margin: 0;
