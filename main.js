@@ -762,15 +762,20 @@ function createMoreLess(length) {
         }
     }
 
-    premises = shuffle(premises);
+    console.log(bucket, sign);
 
     let conclusion;
+    let a = Math.floor(Math.random() * bucket.length);
+    let b = Math.floor(Math.random() * bucket.length);
+    while (a === b) {
+        b = Math.floor(Math.random() * bucket.length);
+    }
     if (Math.random() > 0.5) {
-        conclusion = `<span class="subject">${bucket[0]}</span> is less than <span class="subject">${next}</span>`;
-        isValid = sign === 1;
+        conclusion = `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`;
+        isValid = sign === 1 && a < b || sign === -1 && a > b;
     } else {
-        conclusion = `<span class="subject">${bucket[0]}</span> is more than <span class="subject">${next}</span>`;
-        isValid = sign === -1;
+        conclusion = `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`;
+        isValid = sign === 1 && a > b || sign === -1 && a < b;
     }
 
     return {
