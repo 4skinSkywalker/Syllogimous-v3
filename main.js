@@ -914,11 +914,62 @@ function createSyllogism(length) {
     }
 }
 
-let premisesEl = document.querySelector(".premises");
-let conclusionEl = document.querySelector(".conclusion");
-let correctlyAnsweredEl = document.querySelector(".correctly-answered");
-let nextLevelEl = document.querySelector(".next-level");
-let lsKey = "SYLLOGIMOUSv3"
+const premisesEl = document.querySelector(".premises");
+const conclusionEl = document.querySelector(".conclusion");
+const correctlyAnsweredEl = document.querySelector(".correctly-answered");
+const nextLevelEl = document.querySelector(".next-level");
+const lsKey = "SYLLOGIMOUSv3"
+
+const timerInput = document.querySelector("#timer-input");
+const timerToggle = document.querySelector("#timer-toggle");
+const timerBar = document.querySelector(".timer__bar");
+let timerToggled = false;
+let timerTime = 10;
+let timerCount = 10;
+let timerInstance;
+let timerRunning = false;
+
+timerInput.addEventListener("input", evt => {
+    const el = evt.target;
+    timerTime = el.value;
+    timerCount = el.value;
+    el.style.width = (el.value.length + 3) + 'ch';
+});
+
+timerToggle.addEventListener("click", evt => {
+    timerToggled = evt.target.checked;
+    if (timerToggled) startCountDown();
+    else stopCountDown();
+});
+
+function startCountDown() {
+    timerRunning = true;
+    animateTimerBar();
+}
+
+function stopCountDown() {
+    timerRunning = false;
+    timerCount = timerTime;
+    timerBar.style.width = '100%';
+    clearTimeout(timerInstance);
+}
+
+function animateTimerBar() {
+    timerBar.style.width = (timerCount / timerTime * 100) + '%';
+    if (timerCount > 0) {
+        timerCount--;
+        timerInstance = setTimeout(animateTimerBar, 1000);
+    }
+    else {
+        timeElapsed();
+    }
+}
+
+function timeElapsed() {
+    correctlyAnswered--;
+    dataLS(correctlyAnswered);
+    init();
+}
 
 function dataLS(update) {
     if (update) {
@@ -936,6 +987,10 @@ function dataLS(update) {
 let correctlyAnswered = dataLS();
 let question;
 function init() {
+
+    stopCountDown();
+    if (timerToggled) startCountDown();
+
     correctlyAnsweredEl.innerText = correctlyAnswered;
     nextLevelEl.innerText = Math.floor((correctlyAnswered + 100) / 100) * 100;
 
