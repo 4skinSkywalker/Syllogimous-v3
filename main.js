@@ -1076,18 +1076,27 @@ function init() {
     nextLevelEl.innerText = Math.floor((correctlyAnswered + 100) / 100) * 100;
 
     let rnd = Math.random();
-    if (rnd < 0.33) {
-        question = createSyllogism(3 + Math.floor(correctlyAnswered / 100));
-    } else if (rnd < 0.66) {
-        question = createMoreLess(3 + Math.floor(correctlyAnswered / 100));
-    } else {
-        question = createSameOpposite(3 + Math.floor(correctlyAnswered / 100));
+
+    // Can use same/different kind of questions 1/4 of the time if user is experienced
+    if (correctlyAnswered > 100) {
+        if (rnd < 0.25)
+            question = createSameDifferent(3 + Math.floor(correctlyAnswered / 100));
+        else if (rnd < 0.5)
+            question = createSyllogism(3 + Math.floor(correctlyAnswered / 100));
+        else if (rnd < 0.75)
+            question = createMoreLess(3 + Math.floor(correctlyAnswered / 100));
+        else
+            question = createSameOpposite(3 + Math.floor(correctlyAnswered / 100));
+    } 
+    else {
+        if (rnd < 0.33)
+            question = createSyllogism(3 + Math.floor(correctlyAnswered / 100));
+        else if (rnd < 0.66)
+            question = createMoreLess(3 + Math.floor(correctlyAnswered / 100));
+        else
+            question = createSameOpposite(3 + Math.floor(correctlyAnswered / 100));
     }
 
-    // Can use same/different kind of questions 1/4 of the time
-    if (correctlyAnswered > 100)
-        if (Math.random() < 0.25)
-            question = createSameDifferent(3 + Math.floor(correctlyAnswered / 100));
 
     premisesEl.innerHTML = "";
     question.premises.forEach(premise => {
