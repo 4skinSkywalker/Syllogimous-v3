@@ -657,17 +657,6 @@ var nouns = [
     "Youth"
 ];
 
-function shuffle(array) {
-    let len = array.length;
-    let copyOfArray = [...array];
-    let shuffled = [];
-    for (let i = 0; i < len; i++) {
-        let rnd = Math.floor(Math.random() * copyOfArray.length);
-        shuffled.push(copyOfArray.splice(rnd, 1).pop());
-    }
-    return shuffled;
-}
-
 function createSameOpposite(length) {
     if (length < 3) {
         length = 3;
@@ -692,7 +681,7 @@ function createSameOpposite(length) {
         curr = nouns[rnd];
         seen.push(rnd);
 
-        if (Math.random() > 0.5) {
+        if (coinFlip()) {
             premises.push(`<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`);
             buckets[prevBucket].push(curr);
         } else {
@@ -704,11 +693,11 @@ function createSameOpposite(length) {
         prev = curr;
     }
 
-    premises = shuffle(premises);
+    shuffle(premises);
 
     let conclusion;
     let isValid;
-    if (Math.random() > 0.5) {
+    if (coinFlip()) {
         conclusion = `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`;
         isValid = buckets[0].includes(curr);
     } else {
@@ -717,6 +706,7 @@ function createSameOpposite(length) {
     }
 
     return {
+        buckets,
         isValid,
         premises,
         conclusion
@@ -747,7 +737,7 @@ function createMoreLess(length) {
     for (let i = 0; i < length - 1; i++) {
         let curr = bucket[i];
         next = bucket[i + 1];
-        if (Math.random() > 0.5) {
+        if (coinFlip()) {
             if (sign === 1) {
                 premises.push(`<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`);
             } else {
@@ -770,7 +760,7 @@ function createMoreLess(length) {
     while (a === b) {
         b = Math.floor(Math.random() * bucket.length);
     }
-    if (Math.random() > 0.5) {
+    if (coinFlip()) {
         conclusion = `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`;
         isValid = sign === 1 && a < b || sign === -1 && a > b;
     } else {
@@ -778,11 +768,101 @@ function createMoreLess(length) {
         isValid = sign === 1 && a > b || sign === -1 && a < b;
     }
 
+    shuffle(premises);
+
     return {
+        bucket,
         isValid,
         premises,
         conclusion
     }
+}
+
+function shuffle(array) {
+    let currentIndex = array.length, randomIndex;
+    while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+    return array;
+}
+
+function createSameDifferent(length) {
+    // This kind of questions need at least a length of 4 which is why they will only be played after the number of premises has increased
+    if (length < 4) {
+        length = 4;
+    }
+
+    const kindOfQuestions = [createSameOpposite(length), createMoreLess(length)];
+    const flip = 0; // coinFlip();
+    const choice = kindOfQuestions[(flip ? 1 : 0)];
+    let conclusion = "";
+    let isValid, isValidSame;
+    let a, b, c, d;
+    let indexOfA, indexOfB, indexOfC, indexOfD;
+    if (!flip) {
+        // Pick 4 different items
+        [a, b, c, d] = pickUniqueItems([...choice.buckets[0], ...choice.buckets[1]], 4);
+        // Pick a relation (same/different), determine the truth
+        conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+        // Find in which side a, b, c and d are
+        [
+            indexOfA,
+            indexOfB,
+            indexOfC,
+            indexOfD
+        ] = [
+            Number(choice.buckets[0].indexOf(a) !== -1),
+            Number(choice.buckets[0].indexOf(b) !== -1),
+            Number(choice.buckets[0].indexOf(c) !== -1),
+            Number(choice.buckets[0].indexOf(d) !== -1)
+        ];
+        isValidSame = indexOfA === indexOfB && indexOfC === indexOfD
+                   || indexOfA !== indexOfB && indexOfC !== indexOfD;
+    }
+    else {
+        // Pick 4 different items
+        [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
+        // Pick a relation (same/different), determine the truth
+        conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+        // Find index of a and index of b
+        [indexOfA, indexOfB] = [choice.bucket.indexOf(a), choice.bucket.indexOf(b)];
+        // Find index of c and index of d
+        [indexOfC, indexOfD] = [choice.bucket.indexOf(c), choice.bucket.indexOf(d)];
+        conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
+        isValidSame = indexOfA > indexOfB && indexOfC > indexOfD
+                   || indexOfA < indexOfB && indexOfC < indexOfD;
+    }
+    if (coinFlip()) {
+        isValid = isValidSame;
+        conclusion += '<br>is same as<br>';
+    }
+    else {
+        isValid = !isValidSame;
+        conclusion += '<br>is different from<br>';
+    }
+    conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
+
+    choice.isValid = isValid;
+    choice.conclusion = conclusion;
+
+    return choice;
+}
+
+function coinFlip() {
+    return Math.random() > 0.5;
+}
+
+function pickUniqueItems(array, n) {
+    const copy = JSON.parse(JSON.stringify(array));
+    const picked = [];
+    while (n > 0) {
+        const rnd = Math.floor(Math.random()*copy.length);
+        picked.push(copy.splice(rnd, 1)[0]);
+        n--;
+    }
+    return picked;
 }
 
 let validRules = [
@@ -890,7 +970,7 @@ function createSyllogism(length) {
     let premises = [];
 
     let conclusion;
-    let isValid = Math.random() > 0.5;
+    let isValid = coinFlip();
     if (isValid) {
         [premises[0], premises[1], conclusion] = getSyllogism(bucket[0], bucket[1], bucket[2], validRules[Math.floor(Math.random() * validRules.length)]);
     } else {
@@ -899,15 +979,16 @@ function createSyllogism(length) {
 
     for (let i = 3; i < length; i++) {
         let rnd = Math.floor(Math.random() * (i - 1));
-        let coinFlip = Math.random() > 0.5;
-        let p = coinFlip ? bucket[i] : bucket[rnd];
-        let m = coinFlip ? bucket[rnd] : bucket[i];
+        let flip = coinFlip();
+        let p = flip ? bucket[i] : bucket[rnd];
+        let m = flip ? bucket[rnd] : bucket[i];
         premises.push(getSyllogism("#####", p, m, getRandomInvalidRule())[0]);
     }
 
     premises = shuffle(premises);
 
     return {
+        bucket,
         isValid,
         premises,
         conclusion
@@ -1002,6 +1083,11 @@ function init() {
     } else {
         question = createSameOpposite(3 + Math.floor(correctlyAnswered / 100));
     }
+
+    // Can use same/different kind of questions 1/4 of the time
+    if (correctlyAnswered > 100)
+        if (Math.random() < 0.25)
+            question = createSameDifferent(3 + Math.floor(correctlyAnswered / 100));
 
     premisesEl.innerHTML = "";
     question.premises.forEach(premise => {

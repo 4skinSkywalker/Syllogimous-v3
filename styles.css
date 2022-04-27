@@ -190,6 +190,10 @@ button:hover {
     margin-left: 4px;
 }
 
+.premises, .conclusions {
+    text-align: center;
+}
+
 .border-left,
 .border-right,
 .bracket-lip-top-left,
