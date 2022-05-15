@@ -85,6 +85,20 @@ button:hover {
     box-shadow: 0 2px 4px #4aa39a;
 }
 
+/* start of Utils */
+.mb-1 {
+    margin-bottom: 1rem;
+}
+
+.mb-2 {
+    margin-bottom: 2rem;
+}
+
+.ffmono {
+    font-family: monospace;
+}
+/* end of Utils */
+
 .codec {
     position: relative;
     display: grid;
@@ -182,12 +196,14 @@ button:hover {
     max-width: calc(100vw - 4em);
 }
 
-.premises-wrapper h2,
-.conclusion-wrapper h2 {
+.premises-wrapper h4,
+.conclusion-wrapper h4 {
     font-family: "Espionage", sans-serif;
-    letter-spacing: 0.25em;
-    margin-top: -24px;
-    margin-left: 4px;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    margin-top: -0.5rem;
+    margin-left: 1rem;
+    position: absolute;
 }
 
 .premises, .conclusions {
@@ -270,8 +286,207 @@ button:hover {
     left: 50%;
     transform: translateX(-50%);
     font-family: "Metal Gear", serif;
-    color: #111;
+    color: #444;
     text-decoration: none;
+}
+
+label.open[for="offcanvas-settings"],
+label.open[for="offcanvas-history"] {
+    background-color: #0009;
+    color: #abf4ff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 1rem;
+    position: absolute;
+    z-index: 50;
+}
+
+label.open[for="offcanvas-settings"] {
+    left: 0;
+    top: 0;
+    transform-origin: bottom left;
+    transform: rotateZ(90deg) translateX(-3rem);
+}
+
+label.open[for="offcanvas-history"] {
+    right: 0;
+    top: 0;
+    transform-origin: top right;
+    transform: rotateZ(-90deg) translateY(-3rem);
+}
+
+label.open[for="offcanvas-settings"]:hover {
+    text-shadow: 0px 0px 5px #affa;
+}
+
+label.open[for="offcanvas-history"]:hover {
+    text-shadow: 0px 0px 5px #affa;
+}
+
+#offcanvas-settings:checked + .offcanvas {
+    box-shadow: 0 0 0 9999px #000c;
+    transform: translateX(0);
+}
+
+#offcanvas-history:checked + .offcanvas {
+    box-shadow: 0 0 0 9999px #000c;
+    transform: translateX(0);
+}
+
+.offcanvas {
+    align-content: start;
+    background-image: radial-gradient(circle at top center, #000, #100);
+    color: #fffff0;
+    height: 100%;
+    overflow: auto;
+    position: absolute;
+    top: 0;
+    transition: all 0.3s ease-out;
+    width: fit-content;
+    z-index: 1000;
+}
+
+.offcanvas--left {
+    left: 0;
+    padding: 1rem 3rem 1rem 1rem;
+    transform: translateX(-100%);
+}
+
+.offcanvas--right {
+    padding: 1rem 1rem 1rem 3rem;
+    right: 0;
+    transform: translateX(100%);
+}
+
+.offcanvas-close {
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.5rem;
+    position: absolute;
+    top: 0;
+}
+
+.offcanvas--left .offcanvas-close {
+    right: 0;
+}
+
+.offcanvas--right .offcanvas-close {
+    left: 0;
+}
+
+.explainer {
+    color: #666;
+    font-size: 0.825rem;
+    font-style: italic;
+    list-style: none;
+    margin: 0.25rem 0;
+    padding-left: 1rem;
+}
+
+.ctrl {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.switch {
+    align-items: center;
+    border: 2px solid #666;
+    background-color: #333;
+    cursor: pointer;
+    display: flex;
+    height: 1.5rem;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    transition: all 1s ease-out;
+    width: 1.5rem;
+}
+
+.switch::after {
+    background-color: #444;
+    content: "";
+    height: 0.75rem;
+    position: absolute;
+    transition: all 0.1s ease-out;
+    width: 0.75rem;
+}
+
+input[type="checkbox"]:checked + .switch {
+    border-color: #cff9;
+    box-shadow: 0 0 6px 1px  #cff6;
+    transition-timing-function: ease-in;
+}
+
+input[type="checkbox"]:checked + .switch::after {
+    background-color: #cff;
+    transition-timing-function: ease-in;
+}
+
+.hql {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.hqli {
+    background-color: #191817;
+    box-shadow: 0 1px 10px 5px #0004;
+    padding: 0 0 1rem 2rem;
+    position: relative;
+}
+
+.hqli .inner {
+    border-bottom: 2px dashed #444;
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.5rem 2rem 0.5rem 0.5rem;
+}
+
+.hqli .inner > .hqli-premise:nth-child(even) {
+    background-color: #fff1;
+}
+
+.hqli--right .inner {
+    background-color: #3e31;
+    border-bottom-style: solid;
+    border-bottom-color: #3e3a!important;
+}
+
+.hqli--wrong .inner {
+    background-color: #e331;
+    border-bottom-style: solid;
+    border-bottom-color: #e33a!important;
+}
+
+.hqli-conclusion::before,
+.hqli-answer-user::before,
+.hqli-answer::before {
+    color: #fffa;
+    font-weight: bold;
+    margin-right: 0.25rem;
+}
+
+.hqli-conclusion::before {
+    content: "Conclusion";
+    display: block;
+}
+
+.hqli-answer-user::before {
+    content: "Your answer:"
+}
+
+.hqli-answer::before {
+    content: "Right answer:"
+}
+
+.hqli-footer {
+    color: #fff6;
+    font-size: 12px;
+    margin-right: -1rem;
+    text-align: right;
 }
 
 @media (max-width: 768px) {

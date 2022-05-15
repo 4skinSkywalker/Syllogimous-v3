@@ -1,4 +1,22 @@
-var nouns = [
+// Constants and variables
+const localKey = "syllogimous-v3";
+
+const premisesEl = document.querySelector(".premises");
+const conclusionEl = document.querySelector(".conclusion");
+const correctlyAnsweredEl = document.querySelector(".correctly-answered");
+const nextLevelEl = document.querySelector(".next-level");
+const lsKey = "SYLLOGIMOUSv3"
+
+const timerInput = document.querySelector("#timer-input");
+const timerToggle = document.querySelector("#timer-toggle");
+const timerBar = document.querySelector(".timer__bar");
+let timerToggled = false;
+let timerTime = 10;
+let timerCount = 10;
+let timerInstance;
+let timerRunning = false;
+
+const nouns = [
     "Ability",
     "Access",
     "Accident",
@@ -657,6 +675,117 @@ var nouns = [
     "Youth"
 ];
 
+const validRules = [
+    "0001",
+    "1011",
+    "0221",
+    "1231",
+    "0021",
+    "1031",
+    "0112",
+    "1012",
+    "1232",
+    "0332",
+    "0132",
+    "1032",
+    "0223",
+    "2023",
+    "3033",
+    "1233",
+    "0023",
+    "1033",
+    "0114",
+    "2024",
+    "1234",
+    "0134",
+    "1034",
+    "0024"
+];
+
+const forms = [
+    'All <span class="subject">$</span> is <span class="subject">$</span>',
+    'No <span class="subject">$</span> is <span class="subject">$</span>',
+    'Some <span class="subject">$</span> is <span class="subject">$</span>',
+    'Some <span class="subject">$</span> is not <span class="subject">$</span>'
+];
+
+let savedata = {
+    "timer": 10,
+    "completed": 0,
+    "enableDistinction": true,
+    "enableComparison": true,
+    "enableSyllogism": true,
+    "enableAnalogy": true,
+    "enableCarouselMode": false,
+    "questions": []
+};
+
+const keySettingMap = {
+    "p-1": "enableDistinction",
+    "p-2": "enableComparison",
+    "p-3": "enableSyllogism",
+    "p-4": "enableAnalogy",
+    "p-5": "enableCarouselMode"
+};
+const keySettingMapInverse = Object.entries(keySettingMap)
+    .reduce((a, b) => (a[b[1]] = b[0], a), {});
+
+// Events
+load();
+
+for (let key in keySettingMap) {
+    let value = keySettingMap[key];
+    let check = document.querySelector("#" + key)
+    
+    check.addEventListener("click", evt => {
+        savedata[value] = !!check.checked;
+        save();
+    });
+}
+
+timerInput.addEventListener("input", evt => {
+    const el = evt.target;
+    timerTime = el.value;
+    timerCount = el.value;
+    el.style.width = (el.value.length + 3) + 'ch';
+    savedata.timer = el.value;
+    save();
+});
+
+timerToggle.addEventListener("click", evt => {
+    timerToggled = evt.target.checked;
+    if (timerToggled) startCountDown();
+    else stopCountDown();
+});
+
+// Functions
+function save() {
+    localStorage.setItem(
+        localKey,
+        JSON.stringify(savedata)
+    );
+}
+
+function load() {
+    const LSEntry = localStorage.getItem(localKey);
+    let savedData;
+    if (LSEntry) {
+        savedData = JSON.parse(LSEntry);
+    }
+    if (!savedData) {
+        return save();
+    }
+    Object.assign(savedata, savedData);
+    for (let key in savedData) {
+        if (!(key in keySettingMapInverse)) continue;
+        let value = savedData[key];
+        let id = keySettingMapInverse[key];
+        document.querySelector("#" + id).checked = value;
+    }
+    timerInput.value = savedData.timer;
+    timerTime = timerInput.value;
+}
+
 function createSameOpposite(length) {
     if (length < 3) {
         length = 3;
@@ -865,40 +994,6 @@ function pickUniqueItems(array, n) {
     return picked;
 }
 
-let validRules = [
-    "0001",
-    "1011",
-    "0221",
-    "1231",
-    "0021",
-    "1031",
-    "0112",
-    "1012",
-    "1232",
-    "0332",
-    "0132",
-    "1032",
-    "0223",
-    "2023",
-    "3033",
-    "1233",
-    "0023",
-    "1033",
-    "0114",
-    "2024",
-    "1234",
-    "0134",
-    "1034",
-    "0024"
-];
-
-let forms = [
-    'All <span class="subject">$</span> is <span class="subject">$</span>',
-    'No <span class="subject">$</span> is <span class="subject">$</span>',
-    'Some <span class="subject">$</span> is <span class="subject">$</span>',
-    'Some <span class="subject">$</span> is not <span class="subject">$</span>'
-];
-
 function getRandomInvalidRule() {
     let rule;
     while (!rule || validRules.includes(rule)) {
@@ -994,34 +1089,6 @@ function createSyllogism(length) {
         conclusion
     }
 }
-
-const premisesEl = document.querySelector(".premises");
-const conclusionEl = document.querySelector(".conclusion");
-const correctlyAnsweredEl = document.querySelector(".correctly-answered");
-const nextLevelEl = document.querySelector(".next-level");
-const lsKey = "SYLLOGIMOUSv3"
-
-const timerInput = document.querySelector("#timer-input");
-const timerToggle = document.querySelector("#timer-toggle");
-const timerBar = document.querySelector(".timer__bar");
-let timerToggled = false;
-let timerTime = 10;
-let timerCount = 10;
-let timerInstance;
-let timerRunning = false;
-
-timerInput.addEventListener("input", evt => {
-    const el = evt.target;
-    timerTime = el.value;
-    timerCount = el.value;
-    el.style.width = (el.value.length + 3) + 'ch';
-});
-
-timerToggle.addEventListener("click", evt => {
-    timerToggled = evt.target.checked;
-    if (timerToggled) startCountDown();
-    else stopCountDown();
-});
 
 function startCountDown() {
     timerRunning = true;

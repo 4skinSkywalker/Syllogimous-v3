@@ -12,6 +12,104 @@
 
 		<div class="codec">
 
+			<input id="offcanvas-settings"
+				   type="checkbox"
+				   hidden>
+			<div class="offcanvas offcanvas--left">
+				<label class="offcanvas-close" for="offcanvas-settings">✕</label>
+				<div class="offcanvas-body ffmono">
+					<div class="mb-1">
+						<div class="ctrl">
+							<div>
+								<input hidden id="p-1" type="checkbox" checked>
+								<label class="switch" for="p-1"></label>
+							</div>
+							<span>Enable Distinction</span>
+						</div>
+						<ul class="explainer">
+							<li>A is the same as B</li>
+							<li>A is opposite to B</span>
+						</ul>
+					</div>
+					<div class="mb-1">
+						<div class="ctrl">
+							<div>
+								<input hidden id="p-2" type="checkbox" checked>
+								<label class="switch" for="p-2"></label>
+							</div>
+							<span>Enable Comparison</span>
+						</div>
+						<ul class="explainer">
+							<li>A is less than B</li>
+							<li>A is greater than B</span>
+						</ul>
+					</div>
+					<div class="mb-1">
+						<div class="ctrl">
+							<div>
+								<input hidden id="p-3" type="checkbox" checked>
+								<label class="switch" for="p-3"></label>
+							</div>
+							<span> Enable Syllogism</span>
+						</div>
+						<ul class="explainer">
+							<li>All A is B</li>
+							<li>Some A is B</span>
+						</ul>
+					</div>
+					<div class="mb-2">
+						<div class="ctrl">
+							<div>
+								<input hidden id="p-4" type="checkbox" checked>
+								<label class="switch" for="p-4"></label>
+							</div>
+							<span>Enable Analogy</span>
+						</div>
+						<ul class="explainer">
+							<li>A is to B as B is to C</li>
+						</ul>
+					</div>
+					<div>
+						<div class="ctrl">
+							<div>
+								<input hidden id="p-5" type="checkbox">
+								<label class="switch" for="p-5"></label>
+							</div>
+							<span>Enable Carousel Mode</span>
+						</div>
+						<div class="explainer">Premises are shown one at time</div>
+					</div>
+				</div>
+			</div>
+			<input id="offcanvas-history"
+				   type="checkbox"
+				   hidden>
+			<div class="offcanvas offcanvas--right">
+				<label class="offcanvas-close" for="offcanvas-history">✕</label>
+				<div class="offcanvas-body ffmono" style="max-width: 320px;">
+					<div>All your questions, last to first.</div>
+					<div class="hql">
+						<div class="hqli hqli--wrong">
+							<div class="inner">
+								<div class="hqli-premise">All Treasure is Token</div>
+								<div class="hqli-premise">All Token is Titan</div>
+								<div class="hqli-conclusion">All Titan is Treasure</div>
+								<div class="hqli-answer-user">True</div>
+								<div class="hqli-answer">False</div>
+								<div class="hqli-footer">
+									<div>11</div>
+									<div>Analogy</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<label class="open metal-gear"
+			       for="offcanvas-settings">SETTINGS</label>
+			<label class="open metal-gear"
+			       for="offcanvas-history">HISTORY</label>
+
 			<div class="background-image"></div>
 
 			<header class="metal-gear">
@@ -40,7 +138,7 @@
 				<div class="bracket-lip-top-right"></div>
 				<div class="border-right"></div>
 				<div class="bracket-lip-bottom-right"></div>
-				<h2>Premises</h2>
+				<h4>Premises</h4>
 				<ul class="premises"></ul>
 			</div>
 	
@@ -51,7 +149,7 @@
 				<div class="bracket-lip-top-right"></div>
 				<div class="border-right"></div>
 				<div class="bracket-lip-bottom-right"></div>
-				<h2>Conclusion</h2>
+				<h4>Conclusion</h4>
 				<ul class="conclusions">
 					<li class="conclusion"></li>
 				</ul>
