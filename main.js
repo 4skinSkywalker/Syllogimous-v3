@@ -1166,8 +1166,6 @@ function createHQLI(question, answerUser) {
         answerUser = "TRUE";
     else
         answerUser = "FALSE";
-
-    question.isValid = ("" + question.isValid).toUpperCase();
     
     const html =
 `<div class="hqli ${classModifier}">
@@ -1175,7 +1173,7 @@ function createHQLI(question, answerUser) {
         ${htmlPremises}
         <div class="hqli-conclusion">${question.conclusion}</div>
         <div class="hqli-answer-user">${answerUser}</div>
-        <div class="hqli-answer">${question.isValid}</div>
+        <div class="hqli-answer">${("" + question.isValid).toUpperCase()}</div>
         <div class="hqli-footer">
             <div class="index"></div>
             <div>${question.category}</div>
