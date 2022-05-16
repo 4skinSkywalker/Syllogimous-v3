@@ -647,6 +647,7 @@ function load() {
 function carouselInit() {
     carouselIndex = 0;
     confirmationButtons.style.opacity = 0;
+    confirmationButtons.style.pointerEvents = "none";
     carouselBackButton.disabled = true;
     carouselNextButton.disabled = false;
 
@@ -676,6 +677,7 @@ function carouselNext() {
     
     // Conclusion appears
     if (carouselIndex === question.premises.length) {
+        confirmationButtons.style.pointerEvents = "all";
         carouselDisplayLabelType.textContent = "Conclusion";
         carouselDisplayLabelProgress.textContent = "";
         carouselDisplayText.innerHTML = question.conclusion;

@@ -111,6 +111,7 @@ button:not(:disabled):hover {
     height: 0vh;
     left: 0;
     opacity: 0;
+    pointer-events: none;
     position: fixed;
     top: 50%;
     width: 100%;
@@ -315,13 +316,19 @@ button:not(:disabled):hover {
     letter-spacing: 0.15em;
     justify-content: space-between;
     margin-top: -0.5rem;
-    padding: 0 0.5rem 0 0.85rem;
+    padding: 0 0.5rem 0 calc(0.5rem + 4px);
     position: absolute;
     width: 100%;
 }
 
 .carousel_display_label_progress {
     font-family: monospace;
+}
+
+.carousel_controls {
+    display: inline-flex;
+    gap: 150px;
+    margin: 0.5rem auto 0 auto;
 }
 
 .border-left,
@@ -381,13 +388,11 @@ button:not(:disabled):hover {
 
 .level-wrapper {
     justify-self: center;
-    display: flex;
-    gap: 2em;
 }
 
 .level {
     position: relative;
-    padding: 0 1em;
+    padding: 0 0.5rem 0 calc(4px + 0.5rem);
 }
 
 .sign {
