@@ -20,6 +20,7 @@ let timerRunning = false;
 const historyList = document.getElementById("history-list");
 
 let carouselIndex = 0;
+let question;
 const carousel = document.querySelector(".carousel");
 const carouselDisplayLabelType = carousel.querySelector(".carousel_display_label_type");
 const carouselDisplayLabelProgress = carousel.querySelector(".carousel_display_label_progress");
@@ -561,6 +562,7 @@ const forms = [
 ];
 
 let savedata = {
+    "premises": 2,
     "timer": 10,
     "score": 0,
     "enableDistinction": true,
@@ -574,7 +576,8 @@ const keySettingMap = {
     "p-1": "enableDistinction",
     "p-2": "enableComparison",
     "p-3": "enableSyllogism",
-    "p-4": "enableAnalogy"
+    "p-4": "enableAnalogy",
+    "p-5": "premises"
 };
 const keySettingMapInverse = Object.entries(keySettingMap)
     .reduce((a, b) => (a[b[1]] = b[0], a), {});
@@ -582,17 +585,28 @@ const keySettingMapInverse = Object.entries(keySettingMap)
 // Events
 load();
 
+
+init();
+
 carouselBackButton.addEventListener("click", carouselBack);
 carouselNextButton.addEventListener("click", carouselNext);
 
 for (let key in keySettingMap) {
     let value = keySettingMap[key];
-    let check = document.querySelector("#" + key)
+    let input = document.querySelector("#" + key);
     
-    check.addEventListener("click", evt => {
-        savedata[value] = !!check.checked;
-        save();
-    });
+    if (input.type === "checkbox")
+        input.addEventListener("input", evt => {
+            savedata[value] = !!input.checked;
+            save();
+            init();
+        });
+    else if (input.type === "number")
+        input.addEventListener("input", evt => {
+            savedata[value] = +input.value;
+            save();
+            init();
+        });
 }
 
 timerInput.addEventListener("input", evt => {
@@ -635,7 +649,12 @@ function load() {
         if (!(key in keySettingMapInverse)) continue;
         let value = savedData[key];
         let id = keySettingMapInverse[key];
-        document.querySelector("#" + id).checked = value;
+        
+        const input = document.querySelector("#" + id);
+        if (input.type === "checkbox")
+            input.checked = value;
+        else if (input.type === "number")
+            input.value = value;
     }
 
     timerInput.value = savedData.timer;
@@ -786,8 +805,6 @@ function createMoreLess(length) {
             }
         }
     }
-
-    console.log(bucket, sign);
 
     let conclusion;
     let a = Math.floor(Math.random() * bucket.length);
@@ -1032,7 +1049,6 @@ function timeElapsed() {
     wowFeedbackMissed(init);
 }
 
-let question;
 function init() {
 
     stopCountDown();
@@ -1044,23 +1060,23 @@ function init() {
     let rnd = Math.random();
 
     // Can use same/different kind of questions 1/4 of the time if user is experienced
-    if (savedata.score > 100) {
+    if (savedata.premises > 2) {
         if (rnd < 0.25)
-            question = createSameDifferent(3 + Math.floor(savedata.score / 100));
+            question = createSameDifferent(savedata.premises + 1);
         else if (rnd < 0.5)
-            question = createSyllogism(3 + Math.floor(savedata.score / 100));
+            question = createSyllogism(savedata.premises + 1);
         else if (rnd < 0.75)
-            question = createMoreLess(3 + Math.floor(savedata.score / 100));
+            question = createMoreLess(savedata.premises + 1);
         else
-            question = createSameOpposite(3 + Math.floor(savedata.score / 100));
+            question = createSameOpposite(savedata.premises + 1);
     } 
     else {
         if (rnd < 0.33)
-            question = createSyllogism(3 + Math.floor(savedata.score / 100));
+            question = createSyllogism(savedata.premises + 1);
         else if (rnd < 0.66)
-            question = createMoreLess(3 + Math.floor(savedata.score / 100));
+            question = createMoreLess(savedata.premises + 1);
         else
-            question = createSameOpposite(3 + Math.floor(savedata.score / 100));
+            question = createSameOpposite(savedata.premises + 1);
     }
 
     carouselInit();
@@ -1178,6 +1194,3 @@ function createHQLI(question, answerUser) {
     parent.innerHTML = html;
     return parent.firstElementChild;
 }
-
-
-init();

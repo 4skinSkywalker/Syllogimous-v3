@@ -72,7 +72,7 @@
 							<li>Some A is B</span>
 						</ul>
 					</div>
-					<div>
+					<div class="mb-1">
 						<div class="ctrl">
 							<div>
 								<input hidden id="p-4" type="checkbox" checked>
@@ -82,6 +82,17 @@
 						</div>
 						<ul class="explainer">
 							<li>A is to B as B is to C</li>
+						</ul>
+					</div>
+					<div>
+						<div class="inline-input__outer">
+							Premises
+							<span class="inline-input__inner">
+								<input id="p-5" type="number" min="2" value="2" style="width: 5ch">qty
+							</span>
+						</div>
+						<ul class="explainer">
+							<li>Insert 3 or more premises to play Analogies</li>
 						</ul>
 					</div>
 				</div>
@@ -111,10 +122,10 @@
 			<div class="timer-wrap">
 				<div class="timer">
 					<div class="timer__bar" style="width: 100%"></div>
-					<div class="timer__header">
+					<div class="inline-input__outer" style="position: absolute; top: 0; transform: translate(12px, 12px);">
 						Timer
-						<span class="timer__time">
-							<input id="timer-input" type="number" value="10" style="width: 5ch">sec
+						<span class="inline-input__inner">
+							<input id="timer-input" type="number" min="1" value="10" style="width: 5ch">sec
 						</span>
 						<input id="timer-toggle" type="checkbox">
 					</div>
