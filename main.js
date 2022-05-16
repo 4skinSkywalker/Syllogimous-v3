@@ -1133,6 +1133,14 @@ function checkIfFalse() {
     renderHQL();
 }
 
+function resetApp() {
+    const confirmed = confirm("Are you sure?");
+    if (confirmed) {
+        localStorage.removeItem(localKey);
+        window.location.reload();
+    }
+}
+
 function renderHQL() {
     historyList.innerHTML = "";
 
