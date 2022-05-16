@@ -1057,27 +1057,22 @@ function init() {
     correctlyAnsweredEl.innerText = savedata.score;
     nextLevelEl.innerText = savedata.questions.length;
 
-    let rnd = Math.random();
+    const rnd = Math.random();
 
-    // Can use same/different kind of questions 1/4 of the time if user is experienced
-    if (savedata.premises > 2) {
-        if (rnd < 0.25)
-            question = createSameDifferent(savedata.premises + 1);
-        else if (rnd < 0.5)
-            question = createSyllogism(savedata.premises + 1);
-        else if (rnd < 0.75)
-            question = createMoreLess(savedata.premises + 1);
-        else
-            question = createSameOpposite(savedata.premises + 1);
-    } 
-    else {
-        if (rnd < 0.33)
-            question = createSyllogism(savedata.premises + 1);
-        else if (rnd < 0.66)
-            question = createMoreLess(savedata.premises + 1);
-        else
-            question = createSameOpposite(savedata.premises + 1);
-    }
+    const choices = [];
+    if (savedata.enableDistinction)
+        choices.push(createSameOpposite(savedata.premises + 1));
+    if (savedata.enableComparison)
+        choices.push(createMoreLess(savedata.premises + 1));
+    if (savedata.enableSyllogism)
+        choices.push(createSyllogism(savedata.premises + 1));
+    if (savedata.premises > 2 && savedata.enableAnalogy)
+        choices.push(createSameDifferent(savedata.premises + 1));
+
+    if (choices.length < 1)
+        alert("You must select at least one category of question.");
+
+    question = choices[Math.floor(Math.random() * choices.length)];
 
     carouselInit();
 }
