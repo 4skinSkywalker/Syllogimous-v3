@@ -1,11 +1,10 @@
 // Constants and variables
-const localKey = "syllogimous-v3";
+const localKey = "sllgms-v3";
 
 const premisesEl = document.querySelector(".premises");
 const conclusionEl = document.querySelector(".conclusion");
 const correctlyAnsweredEl = document.querySelector(".correctly-answered");
 const nextLevelEl = document.querySelector(".next-level");
-const lsKey = "SYLLOGIMOUSv3"
 
 const timerInput = document.querySelector("#timer-input");
 const timerToggle = document.querySelector("#timer-toggle");
@@ -15,6 +14,17 @@ let timerTime = 10;
 let timerCount = 10;
 let timerInstance;
 let timerRunning = false;
+
+const historyList = document.getElementById("history-list");
+
+let carouselIndex = 0;
+const carousel = document.querySelector(".carousel");
+const carouselDisplayLabelType = carousel.querySelector(".carousel_display_label_type");
+const carouselDisplayLabelProgress = carousel.querySelector(".carousel_display_label_progress");
+const carouselDisplayText = carousel.querySelector(".carousel_display_text");
+const carouselBackButton = carousel.querySelector("#carousel-back");
+const carouselNextButton = carousel.querySelector("#carousel-next");
+const confirmationButtons = carousel.querySelector(".confirmation-buttons");
 
 const nouns = [
     "Ability",
@@ -26,13 +36,9 @@ const nouns = [
     "Actor",
     "Addition",
     "Address",
-    "Administration",
-    "Advantage",
-    "Advertising",
     "Advice",
     "Affair",
     "Agency",
-    "Agreement",
     "Airport",
     "Alcohol",
     "Ambition",
@@ -42,30 +48,18 @@ const nouns = [
     "Animal",
     "Answer",
     "Anxiety",
-    "Apartment",
-    "Appearance",
     "Apple",
-    "Application",
-    "Appointment",
     "Area",
     "Argument",
     "Army",
     "Arrival",
     "Article",
     "Aspect",
-    "Assignment",
-    "Assistance",
-    "Assistant",
-    "Association",
-    "Assumption",
-    "Atmosphere",
     "Attempt",
-    "Attention",
     "Attitude",
     "Audience",
     "Aunt",
     "Average",
-    "Awareness",
     "Back",
     "Balance",
     "Ball",
@@ -77,7 +71,6 @@ const nouns = [
     "Bathroom",
     "Bedroom",
     "Beer",
-    "Beginning",
     "Benefit",
     "Bird",
     "Birth",
@@ -90,7 +83,6 @@ const nouns = [
     "Book",
     "Boss",
     "Bottom",
-    "Boyfriend",
     "Bread",
     "Breath",
     "Brother",
@@ -100,7 +92,6 @@ const nouns = [
     "Cabinet",
     "Camera",
     "Cancer",
-    "Candidate",
     "Capital",
     "Card",
     "Care",
@@ -109,54 +100,31 @@ const nouns = [
     "Cash",
     "Category",
     "Cause",
-    "Celebration",
     "Cell",
-    "Championship",
     "Chance",
     "Chapter",
     "Charity",
     "Cheek",
-    "Chemistry",
     "Chest",
     "Chicken",
     "Child",
-    "Childhood",
-    "Chocolate",
     "Choice",
     "Church",
-    "Cigarette",
     "City",
     "Class",
-    "Classroom",
     "Client",
     "Climate",
     "Clothes",
     "Coast",
     "Coffee",
-    "Collection",
     "College",
-    "Combination",
-    "Committee",
-    "Communication",
-    "Community",
     "Company",
-    "Comparison",
-    "Competition",
-    "Complaint",
     "Computer",
     "Concept",
-    "Conclusion",
-    "Condition",
-    "Confusion",
-    "Connection",
-    "Consequence",
-    "Construction",
     "Contact",
     "Context",
     "Contract",
-    "Contribution",
     "Control",
-    "Conversation",
     "Cookie",
     "Country",
     "County",
@@ -165,7 +133,6 @@ const nouns = [
     "Cousin",
     "Craft",
     "Credit",
-    "Criticism",
     "Culture",
     "Currency",
     "Customer",
@@ -177,42 +144,27 @@ const nouns = [
     "Death",
     "Debt",
     "Decision",
-    "Definition",
     "Delivery",
     "Demand",
-    "Department",
-    "Departure",
-    "Depression",
     "Depth",
-    "Description",
     "Design",
     "Desk",
-    "Development",
     "Device",
     "Diamond",
-    "Difference",
-    "Difficulty",
     "Dinner",
-    "Direction",
     "Director",
     "Dirt",
     "Disaster",
-    "Discipline",
-    "Discussion",
     "Disease",
     "Disk",
-    "Distribution",
     "Drama",
     "Drawer",
     "Drawing",
     "Driver",
     "Earth",
-    "Economics",
     "Economy",
     "Editor",
-    "Education",
     "Effect",
-    "Efficiency",
     "Effort",
     "Election",
     "Elevator",
@@ -220,27 +172,16 @@ const nouns = [
     "Emphasis",
     "Employee",
     "Employer",
-    "Employment",
     "Energy",
     "Engine",
-    "Entertainment",
-    "Enthusiasm",
     "Entry",
-    "Environment",
-    "Equipment",
     "Error",
-    "Establishment",
     "Estate",
     "Event",
     "Exam",
-    "Examination",
     "Example",
     "Exchange",
-    "Excitement",
     "Exercise",
-    "Experience",
-    "Explanation",
-    "Expression",
     "Extent",
     "Face",
     "Fact",
@@ -262,10 +203,8 @@ const nouns = [
     "Force",
     "Form",
     "Fortune",
-    "Foundation",
     "Frame",
     "Freedom",
-    "Friendship",
     "Funeral",
     "Future",
     "Game",
@@ -275,10 +214,7 @@ const nouns = [
     "Gene",
     "Gift",
     "Girl",
-    "Girlfriend",
     "Goal",
-    "Government",
-    "Grandmother",
     "Grocery",
     "Group",
     "Growth",
@@ -297,7 +233,6 @@ const nouns = [
     "Heat",
     "Height",
     "Highway",
-    "Historian",
     "History",
     "Home",
     "Homework",
@@ -309,44 +244,25 @@ const nouns = [
     "Housing",
     "Idea",
     "Image",
-    "Imagination",
     "Impact",
-    "Importance",
-    "Impression",
-    "Improvement",
     "Income",
-    "Independence",
-    "Indication",
     "Industry",
-    "Inflation",
-    "Information",
-    "Initiative",
     "Injury",
     "Insect",
     "Inside",
-    "Inspection",
-    "Inspector",
     "Instance",
-    "Instruction",
-    "Insurance",
-    "Intention",
-    "Interaction",
     "Interest",
     "Internet",
-    "Introduction",
-    "Investment",
     "Issue",
     "Item",
     "Judgment",
     "Kind",
     "King",
-    "Knowledge",
     "Ladder",
     "Lady",
     "Lake",
     "Language",
     "Leader",
-    "Leadership",
     "Length",
     "Level",
     "Library",
@@ -355,32 +271,25 @@ const nouns = [
     "Line",
     "Link",
     "List",
-    "Literature",
     "Location",
     "Loss",
     "Love",
     "Machine",
     "Magazine",
-    "Maintenance",
     "Mall",
-    "Management",
     "Manager",
-    "Manufacturer",
     "Market",
-    "Marketing",
     "Marriage",
     "Material",
     "Math",
     "Matter",
     "Meal",
     "Meaning",
-    "Measurement",
     "Meat",
     "Media",
     "Medicine",
     "Medium",
     "Member",
-    "Membership",
     "Memory",
     "Menu",
     "Message",
@@ -402,23 +311,17 @@ const nouns = [
     "Name",
     "Nation",
     "Nature",
-    "Negotiation",
     "Network",
     "News",
-    "Newspaper",
     "Night",
     "Note",
     "Nothing",
     "Number",
     "Object",
-    "Obligation",
     "Office",
-    "Operation",
     "Opinion",
-    "Opportunity",
     "Orange",
     "Order",
-    "Organization",
     "Outcome",
     "Outside",
     "Oven",
@@ -428,21 +331,13 @@ const nouns = [
     "Painting",
     "Paper",
     "Part",
-    "Passenger",
     "Passion",
     "Patience",
     "Payment",
     "Penalty",
     "People",
-    "Percentage",
-    "Perception",
-    "Performance",
     "Period",
-    "Permission",
     "Person",
-    "Personality",
-    "Perspective",
-    "Philosophy",
     "Phone",
     "Photo",
     "Physics",
@@ -461,36 +356,22 @@ const nouns = [
     "Police",
     "Policy",
     "Politics",
-    "Pollution",
-    "Population",
     "Position",
-    "Possession",
-    "Possibility",
     "Post",
     "Potato",
     "Power",
     "Practice",
-    "Preference",
-    "Preparation",
     "Presence",
-    "Presentation",
-    "President",
     "Pressure",
     "Price",
     "Priority",
     "Problem",
-    "Procedure",
     "Process",
     "Product",
-    "Profession",
-    "Professor",
     "Profit",
     "Program",
-    "Promotion",
     "Property",
     "Proposal",
-    "Protection",
-    "Psychology",
     "Purpose",
     "Quality",
     "Quantity",
@@ -503,31 +384,17 @@ const nouns = [
     "Reaction",
     "Reality",
     "Reason",
-    "Reception",
     "Recipe",
-    "Recognition",
-    "Recommendation",
     "Record",
-    "Recording",
-    "Reflection",
-    "Refrigerator",
     "Region",
     "Relation",
-    "Relationship",
-    "Replacement",
     "Republic",
-    "Reputation",
-    "Requirement",
     "Research",
-    "Resolution",
     "Resource",
     "Response",
-    "Responsibility",
-    "Restaurant",
     "Result",
     "Revenue",
     "Review",
-    "Revolution",
     "Risk",
     "River",
     "Road",
@@ -539,17 +406,14 @@ const nouns = [
     "Salad",
     "Salt",
     "Sample",
-    "Satisfaction",
     "Scale",
     "Scene",
     "School",
     "Science",
     "Screen",
-    "Secretary",
     "Section",
     "Sector",
     "Security",
-    "Selection",
     "Sense",
     "Series",
     "Service",
@@ -560,12 +424,9 @@ const nouns = [
     "Shirt",
     "Side",
     "Sign",
-    "Signature",
-    "Significance",
     "Singer",
     "Sister",
     "Site",
-    "Situation",
     "Size",
     "Skill",
     "Society",
@@ -584,7 +445,6 @@ const nouns = [
     "Standard",
     "Star",
     "State",
-    "Statement",
     "Steak",
     "Step",
     "Stock",
@@ -594,15 +454,12 @@ const nouns = [
     "Stranger",
     "Strategy",
     "Stress",
-    "Structure",
     "Student",
     "Studio",
     "Study",
     "Style",
     "Subject",
     "Success",
-    "Suggestion",
-    "Supermarket",
     "Surgery",
     "Sympathy",
     "System",
@@ -610,9 +467,6 @@ const nouns = [
     "Tale",
     "Task",
     "Teacher",
-    "Technology",
-    "Television",
-    "Temperature",
     "Tennis",
     "Tension",
     "Term",
@@ -629,20 +483,15 @@ const nouns = [
     "Topic",
     "Town",
     "Trade",
-    "Tradition",
     "Trainer",
     "Training",
-    "Transportation",
     "Truth",
     "Type",
     "Uncle",
-    "Understanding",
     "Union",
     "Unit",
-    "University",
     "User",
     "Value",
-    "Variation",
     "Variety",
     "Vehicle",
     "Version",
@@ -711,12 +560,11 @@ const forms = [
 
 let savedata = {
     "timer": 10,
-    "completed": 0,
+    "score": 0,
     "enableDistinction": true,
     "enableComparison": true,
     "enableSyllogism": true,
     "enableAnalogy": true,
-    "enableCarouselMode": false,
     "questions": []
 };
 
@@ -724,14 +572,16 @@ const keySettingMap = {
     "p-1": "enableDistinction",
     "p-2": "enableComparison",
     "p-3": "enableSyllogism",
-    "p-4": "enableAnalogy",
-    "p-5": "enableCarouselMode"
+    "p-4": "enableAnalogy"
 };
 const keySettingMapInverse = Object.entries(keySettingMap)
     .reduce((a, b) => (a[b[1]] = b[0], a), {});
 
 // Events
 load();
+
+carouselBackButton.addEventListener("click", carouselBack);
+carouselNextButton.addEventListener("click", carouselNext);
 
 for (let key in keySettingMap) {
     let value = keySettingMap[key];
@@ -768,6 +618,7 @@ function save() {
 
 function load() {
     const LSEntry = localStorage.getItem(localKey);
+
     let savedData;
     if (LSEntry) {
         savedData = JSON.parse(LSEntry);
@@ -775,15 +626,65 @@ function load() {
     if (!savedData) {
         return save();
     }
+
     Object.assign(savedata, savedData);
+
     for (let key in savedData) {
         if (!(key in keySettingMapInverse)) continue;
         let value = savedData[key];
         let id = keySettingMapInverse[key];
         document.querySelector("#" + id).checked = value;
     }
+
     timerInput.value = savedData.timer;
     timerTime = timerInput.value;
+
+    renderHQL();
+}
+
+function carouselInit() {
+    carouselIndex = 0;
+    confirmationButtons.style.opacity = 0;
+    carouselBackButton.disabled = true;
+    carouselNextButton.disabled = false;
+
+    carouselDisplayLabelType.textContent = "Premise";
+    carouselDisplayLabelProgress.textContent = "1/" + question.premises.length;
+    carouselDisplayText.innerHTML = question.premises[0];
+}
+
+function carouselBack() {
+    carouselIndex--;
+    if (carouselIndex < 1)
+        carouselBackButton.disabled = true;
+    if (carouselIndex < question.premises.length) {
+        carouselNextButton.disabled = false;
+        confirmationButtons.style.opacity = 0;
+    }
+    
+    carouselDisplayLabelType.textContent = "Premise";
+    carouselDisplayLabelProgress.textContent = (carouselIndex + 1) + "/" + question.premises.length;
+    carouselDisplayText.innerHTML = question.premises[carouselIndex];
+}
+  
+function carouselNext() {
+    carouselIndex++;
+    if (carouselIndex > 0)
+        carouselBackButton.disabled = false;
+    
+    // Conclusion appears
+    if (carouselIndex === question.premises.length) {
+        carouselDisplayLabelType.textContent = "Conclusion";
+        carouselDisplayLabelProgress.textContent = "";
+        carouselDisplayText.innerHTML = question.conclusion;
+        carouselNextButton.disabled = true;
+        confirmationButtons.style.opacity = 1;
+        return;
+    }
+    
+    carouselDisplayLabelType.textContent = "Premise";
+    carouselDisplayLabelProgress.textContent = (carouselIndex + 1) + "/" + question.premises.length;
+    carouselDisplayText.innerHTML = question.premises[carouselIndex];
 }
 
 function createSameOpposite(length) {
@@ -835,6 +736,7 @@ function createSameOpposite(length) {
     }
 
     return {
+        category: "Distinction",
         buckets,
         isValid,
         premises,
@@ -900,6 +802,7 @@ function createMoreLess(length) {
     shuffle(premises);
 
     return {
+        category: "Comparison",
         bucket,
         isValid,
         premises,
@@ -975,6 +878,8 @@ function createSameDifferent(length) {
 
     choice.isValid = isValid;
     choice.conclusion = conclusion;
+
+    choice.category = "Analogy";
 
     return choice;
 }
@@ -1083,6 +988,7 @@ function createSyllogism(length) {
     premises = shuffle(premises);
 
     return {
+        category: "Syllogism",
         bucket,
         isValid,
         premises,
@@ -1114,85 +1020,130 @@ function animateTimerBar() {
 }
 
 function timeElapsed() {
-    correctlyAnswered--;
-    dataLS(correctlyAnswered);
+    savedata.score--;
+    question.answerUser = undefined;
+    savedata.questions.push(question);
+    save();
+    renderHQL();
     init();
 }
 
-function dataLS(update) {
-    if (update) {
-        localStorage.setItem(lsKey, update);
-        return;
-    }
-    let correctlyAnsweredLS = localStorage.getItem(lsKey);
-    if (correctlyAnsweredLS) {
-        return +correctlyAnsweredLS;
-    } else {
-        return 0;
-    }
-}
-
-let correctlyAnswered = dataLS();
 let question;
 function init() {
 
     stopCountDown();
     if (timerToggled) startCountDown();
 
-    correctlyAnsweredEl.innerText = correctlyAnswered;
-    nextLevelEl.innerText = Math.floor((correctlyAnswered + 100) / 100) * 100;
+    correctlyAnsweredEl.innerText = savedata.score;
+    nextLevelEl.innerText = savedata.questions.length;
 
     let rnd = Math.random();
 
     // Can use same/different kind of questions 1/4 of the time if user is experienced
-    if (correctlyAnswered > 100) {
+    if (savedata.score > 100) {
         if (rnd < 0.25)
-            question = createSameDifferent(3 + Math.floor(correctlyAnswered / 100));
+            question = createSameDifferent(3 + Math.floor(savedata.score / 100));
         else if (rnd < 0.5)
-            question = createSyllogism(3 + Math.floor(correctlyAnswered / 100));
+            question = createSyllogism(3 + Math.floor(savedata.score / 100));
         else if (rnd < 0.75)
-            question = createMoreLess(3 + Math.floor(correctlyAnswered / 100));
+            question = createMoreLess(3 + Math.floor(savedata.score / 100));
         else
-            question = createSameOpposite(3 + Math.floor(correctlyAnswered / 100));
+            question = createSameOpposite(3 + Math.floor(savedata.score / 100));
     } 
     else {
         if (rnd < 0.33)
-            question = createSyllogism(3 + Math.floor(correctlyAnswered / 100));
+            question = createSyllogism(3 + Math.floor(savedata.score / 100));
         else if (rnd < 0.66)
-            question = createMoreLess(3 + Math.floor(correctlyAnswered / 100));
+            question = createMoreLess(3 + Math.floor(savedata.score / 100));
         else
-            question = createSameOpposite(3 + Math.floor(correctlyAnswered / 100));
+            question = createSameOpposite(3 + Math.floor(savedata.score / 100));
     }
 
-
-    premisesEl.innerHTML = "";
-    question.premises.forEach(premise => {
-        let li = document.createElement("LI");
-        li.innerHTML = premise;
-        premisesEl.appendChild(li);
-    });
-
-    conclusionEl.innerHTML = question.conclusion;
+    carouselInit();
 }
 
 function checkIfTrue() {
     if (question.isValid) {
-        correctlyAnswered++;
+        savedata.score++;
     } else {
-        correctlyAnswered--;
+        savedata.score--;
     }
-    dataLS(correctlyAnswered);
+    delete question.bucket;
+    delete question.buckets;
+    question.answerUser = true;
+    savedata.questions.push(question);
+    save();
+    renderHQL();
     init();
 }
 
 function checkIfFalse() {
     if (!question.isValid) {
-        correctlyAnswered++;
+        savedata.score++;
     } else {
-        correctlyAnswered--;
+        savedata.score--;
     }
-    dataLS(correctlyAnswered);
+    delete question.bucket;
+    delete question.buckets;
+    question.answerUser = false;
+    savedata.questions.push(question);
+    save();
+    renderHQL();
     init();
 }
+
+function renderHQL() {
+    historyList.innerHTML = "";
+
+    savedata.questions
+        .map((q, i) => {
+            const el = createHQLI(q, q.answerUser);
+            el.querySelector(".index").textContent = i + 1;
+            return el;
+        })
+        .reverse()
+        .forEach(el => historyList.appendChild(el));
+}
+
+function createHQLI(question, answerUser) {
+    const parent = document.createElement("DIV");
+
+    let classModifier;
+    if (answerUser === undefined)
+        classModifier = '';
+    else if (question.isValid === answerUser)
+        classModifier = "hqli--right";
+    else
+        classModifier = "hqli--wrong";
+    const htmlPremises = question.premises
+        .map(p => `<div class="hqli-premise">${p}</div>`)
+        .join("\n");
+
+    if (answerUser === undefined)
+        answerUser = "(TIMED OUT)";
+    else if (answerUser === "true")
+        answerUser = "TRUE";
+    else
+        answerUser = "FALSE";
+
+    question.isValid = ("" + question.isValid).toUpperCase();
+    
+    const html =
+`<div class="hqli ${classModifier}">
+    <div class="inner">
+        ${htmlPremises}
+        <div class="hqli-conclusion">${question.conclusion}</div>
+        <div class="hqli-answer-user">${answerUser}</div>
+        <div class="hqli-answer">${question.isValid}</div>
+        <div class="hqli-footer">
+            <div class="index"></div>
+            <div>${question.category}</div>
+        </div>
+    </div>
+</div>`;
+    parent.innerHTML = html;
+    return parent.firstElementChild;
+}
+
 
 init();

@@ -57,7 +57,7 @@
 							<li>Some A is B</span>
 						</ul>
 					</div>
-					<div class="mb-2">
+					<div>
 						<div class="ctrl">
 							<div>
 								<input hidden id="p-4" type="checkbox" checked>
@@ -69,16 +69,6 @@
 							<li>A is to B as B is to C</li>
 						</ul>
 					</div>
-					<div>
-						<div class="ctrl">
-							<div>
-								<input hidden id="p-5" type="checkbox">
-								<label class="switch" for="p-5"></label>
-							</div>
-							<span>Enable Carousel Mode</span>
-						</div>
-						<div class="explainer">Premises are shown one at time</div>
-					</div>
 				</div>
 			</div>
 			<input id="offcanvas-history"
@@ -88,21 +78,7 @@
 				<label class="offcanvas-close" for="offcanvas-history">✕</label>
 				<div class="offcanvas-body ffmono" style="max-width: 320px;">
 					<div>All your questions, last to first.</div>
-					<div class="hql">
-						<div class="hqli hqli--wrong">
-							<div class="inner">
-								<div class="hqli-premise">All Treasure is Token</div>
-								<div class="hqli-premise">All Token is Titan</div>
-								<div class="hqli-conclusion">All Titan is Treasure</div>
-								<div class="hqli-answer-user">True</div>
-								<div class="hqli-answer">False</div>
-								<div class="hqli-footer">
-									<div>11</div>
-									<div>Analogy</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					<div id="history-list" class="hql"></div>
 				</div>
 			</div>
 			<label class="open metal-gear"
@@ -116,48 +92,49 @@
 				<h1>Syllogimous <div class="v3"><img src="metal-gear-fox.png">v3</div></h1>
 				<span>Definitive Relational Game</span>
 			</header>
-	
-			<div class="premises-wrapper">
 
-				<div class="timer-wrap">
-					<div class="timer">
-						<div class="timer__bar" style="width: 100%"></div>
-						<div class="timer__header">
-							Timer
-							<span class="timer__time">
-								<input id="timer-input" type="number" value="10" style="width: 5ch">sec
-							</span>
-							<input id="timer-toggle" type="checkbox">
-						</div>
+			<div class="timer-wrap">
+				<div class="timer">
+					<div class="timer__bar" style="width: 100%"></div>
+					<div class="timer__header">
+						Timer
+						<span class="timer__time">
+							<input id="timer-input" type="number" value="10" style="width: 5ch">sec
+						</span>
+						<input id="timer-toggle" type="checkbox">
 					</div>
 				</div>
+			</div>
 
-				<div class="bracket-lip-top-left"></div>
-				<div class="border-left"></div>
-				<div class="bracket-lip-bottom-left"></div>
-				<div class="bracket-lip-top-right"></div>
-				<div class="border-right"></div>
-				<div class="bracket-lip-bottom-right"></div>
-				<h4>Premises</h4>
-				<ul class="premises"></ul>
+			<div class="carousel">
+				<div class="carousel_display">
+			
+					<div class="carousel_display_label-wrapper">
+						<div class="bracket-lip-top-left"></div>
+						<div class="border-left"></div>
+						<div class="bracket-lip-bottom-left"></div>
+						<div class="bracket-lip-top-right"></div>
+						<div class="border-right"></div>
+						<div class="bracket-lip-bottom-right"></div>
+						<h2>
+							<span class="carousel_display_label_type"></span>
+							<span class="carousel_display_label_progress"></span>
+						</h2>
+						<div class="carousel_display_text"></div>
+					</div>
+				</div>
+				<div class="carousel_controls">
+					<button id="carousel-back" disabled>Back</button>
+					<button id="carousel-next">Next</button>
+				</div>
+				<div class="confirmation-buttons" style="opacity: 0">
+					<button class="confirmation-true" onclick="checkIfTrue()">True</button>
+					<button class="confirmation-false" onclick="checkIfFalse()">False</button>
+				</div>
 			</div>
-	
-			<div class="conclusion-wrapper">
-				<div class="bracket-lip-top-left"></div>
-				<div class="border-left"></div>
-				<div class="bracket-lip-bottom-left"></div>
-				<div class="bracket-lip-top-right"></div>
-				<div class="border-right"></div>
-				<div class="bracket-lip-bottom-right"></div>
-				<h4>Conclusion</h4>
-				<ul class="conclusions">
-					<li class="conclusion"></li>
-				</ul>
-			</div>
-	
-			<div class="buttons-wrapper">
-				<button onclick="checkIfFalse();">False</button>
-				<div class="level-wrapper">
+
+			<div class="level-wrapper">
+				<div class="level">
 					<div class="bracket-lip-top-left"></div>
 					<div class="border-left"></div>
 					<div class="bracket-lip-bottom-left"></div>
@@ -166,7 +143,6 @@
 					<div class="bracket-lip-bottom-right"></div>
 					<h3><span class="correctly-answered">0</span> / <span class="next-level">N</span></h3>
 				</div>
-				<button onclick="checkIfTrue();">True</button>
 			</div>
 
 			<a class="sign" tabindex="-1" target="_blank" href="https://www.linkedin.com/in/f3d3r1c07r0774/">LinkedIn</a>
