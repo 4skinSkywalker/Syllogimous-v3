@@ -1170,7 +1170,7 @@ function createHQLI(question, answerUser) {
 
     if (answerUser === undefined)
         answerUser = "(TIMED OUT)";
-    else if (answerUser === "true")
+    else if (answerUser === true)
         answerUser = "TRUE";
     else
         answerUser = "FALSE";
