@@ -585,7 +585,6 @@ const keySettingMapInverse = Object.entries(keySettingMap)
 // Events
 load();
 
-
 init();
 
 carouselBackButton.addEventListener("click", carouselBack);
@@ -1057,8 +1056,6 @@ function init() {
     correctlyAnsweredEl.innerText = savedata.score;
     nextLevelEl.innerText = savedata.questions.length;
 
-    const rnd = Math.random();
-
     const choices = [];
     if (savedata.enableDistinction)
         choices.push(createSameOpposite(savedata.premises + 1));
@@ -1070,7 +1067,7 @@ function init() {
         choices.push(createSameDifferent(savedata.premises + 1));
 
     if (choices.length < 1)
-        alert("You must select at least one category of question.");
+        return alert("Please select at least one category of question.");
 
     question = choices[Math.floor(Math.random() * choices.length)];
 
@@ -1134,7 +1131,6 @@ function checkIfFalse() {
     savedata.questions.push(question);
     save();
     renderHQL();
-    setTimeout(() => init(), 500);
 }
 
 function renderHQL() {
