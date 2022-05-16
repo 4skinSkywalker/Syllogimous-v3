@@ -1,8 +1,10 @@
 // Constants and variables
 const localKey = "sllgms-v3";
 
-const premisesEl = document.querySelector(".premises");
-const conclusionEl = document.querySelector(".conclusion");
+const feedbackWrong = document.querySelector(".feedback--wrong");
+const feedbackMissed = document.querySelector(".feedback--missed");
+const feedbackRight = document.querySelector(".feedback--right");
+
 const correctlyAnsweredEl = document.querySelector(".correctly-answered");
 const nextLevelEl = document.querySelector(".next-level");
 
@@ -1025,7 +1027,7 @@ function timeElapsed() {
     savedata.questions.push(question);
     save();
     renderHQL();
-    init();
+    wowFeedbackMissed(init);
 }
 
 let question;
@@ -1062,10 +1064,39 @@ function init() {
     carouselInit();
 }
 
+function wowFeedbackWrong(cb) {
+    feedbackWrong.style.transitionDuration = "1s";
+    feedbackWrong.classList.add("active");
+    setTimeout(() => {
+        feedbackWrong.classList.remove("active");
+        cb();
+    }, 1200);
+}
+
+function wowFeedbackMissed(cb) {
+    feedbackMissed.style.transitionDuration = "0.9s";
+    feedbackMissed.classList.add("active");
+    setTimeout(() => {
+        feedbackMissed.classList.remove("active");
+        cb();
+    }, 1100);
+}
+
+function wowFeedbackRight(cb) {
+    feedbackRight.style.transitionDuration = "0.8s";
+    feedbackRight.classList.add("active");
+    setTimeout(() => {
+        feedbackRight.classList.remove("active");
+        cb();
+    }, 1000);
+}
+
 function checkIfTrue() {
     if (question.isValid) {
         savedata.score++;
+        wowFeedbackRight(init);
     } else {
+        wowFeedbackWrong(init);
         savedata.score--;
     }
     delete question.bucket;
@@ -1074,13 +1105,14 @@ function checkIfTrue() {
     savedata.questions.push(question);
     save();
     renderHQL();
-    init();
 }
 
 function checkIfFalse() {
     if (!question.isValid) {
         savedata.score++;
+        wowFeedbackRight(init);
     } else {
+        wowFeedbackWrong(init);
         savedata.score--;
     }
     delete question.bucket;
@@ -1089,7 +1121,7 @@ function checkIfFalse() {
     savedata.questions.push(question);
     save();
     renderHQL();
-    init();
+    setTimeout(() => init(), 500);
 }
 
 function renderHQL() {

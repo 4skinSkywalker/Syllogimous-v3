@@ -103,6 +103,82 @@ button:not(:disabled):hover {
 }
 /* end of Utils */
 
+.feedback {
+    background-image: url(noize_bg_black.png);
+    border: 8px solid;
+    border-left: none;
+    border-right: none;
+    height: 0vh;
+    left: 0;
+    opacity: 0;
+    position: fixed;
+    top: 50%;
+    width: 100%;
+    z-index: 2000;
+    transition: all 0s ease;
+}
+
+.feedback--wrong {
+    color: #f00a;
+}
+
+.feedback--missed {
+    color: #bbba;
+}
+
+.feedback--right {
+    color: #0f0a;
+    background-image: url(feedback-right-bg.png);
+    background-size: auto 100vh;
+    background-position: center;
+}
+
+.feedback.active {
+    height: 100vh;
+    opacity: 0.5;
+    top: 0%;
+}
+
+.feedback span {
+    font-size: 3rem;
+    left: 50%;
+    padding: 0.75rem;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(calc(-100% - 1rem));
+}
+
+.feedback--wrong span {
+    border: 4px solid #f00a;
+}
+
+.feedback--missed span {
+    border: 4px solid #bbba;
+}
+
+.feedback--right span {
+    border: 4px solid #0f0a;
+}
+
+.feedback .line {
+    height: 4px;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+}
+
+.feedback--wrong .line {
+    background-color: #f00a;
+}
+
+.feedback--missed .line {
+    background-color: #bbba;
+}
+
+.feedback--right .line {
+    background-color: #0f0a;
+}
+
 .codec {
     align-content: center;
     align-items: center;
