@@ -1,3 +1,12 @@
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function() {
+      navigator.serviceWorker
+        .register("/serviceWorker.js")
+        .then(res => console.log("service worker registered"))
+        .catch(err => console.log("service worker not registered", err))
+    })
+}
+
 // Constants and variables
 const localKey = "sllgms-v3";
 
@@ -714,51 +723,57 @@ function createSameOpposite(length) {
         length = 3;
     }
 
-    let rnd = Math.floor(Math.random() * nouns.length);
-    let first = nouns[rnd]
-    let prev = first;
-    let curr;
-    let seen = [rnd];
-
-    let buckets = [[prev], []];
-    let prevBucket = 0;
-
-    let premises = [];
-
-    for (let i = 0; i < length - 1; i++) {
+    const category = "Distinction";
+    let buckets;
+    let isValid;
+    let premises;
+    let conclusion;
+    do {
         let rnd = Math.floor(Math.random() * nouns.length);
-        while (seen.includes(rnd)) {
-            rnd = Math.floor(Math.random() * nouns.length);
-        }
-        curr = nouns[rnd];
-        seen.push(rnd);
+        let first = nouns[rnd]
+        let prev = first;
+        let curr;
+        let seen = [rnd];
 
+        buckets = [[prev], []];
+        let prevBucket = 0;
+
+        premises = [];
+
+        for (let i = 0; i < length - 1; i++) {
+            let rnd = Math.floor(Math.random() * nouns.length);
+            while (seen.includes(rnd)) {
+                rnd = Math.floor(Math.random() * nouns.length);
+            }
+            curr = nouns[rnd];
+            seen.push(rnd);
+
+            if (coinFlip()) {
+                premises.push(`<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`);
+                buckets[prevBucket].push(curr);
+            } else {
+                premises.push(`<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`);
+                prevBucket = (prevBucket + 1) % 2;
+                buckets[prevBucket].push(curr);
+            }
+
+            prev = curr;
+        }
+
+        let isValid;
         if (coinFlip()) {
-            premises.push(`<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`);
-            buckets[prevBucket].push(curr);
+            conclusion = `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`;
+            isValid = buckets[0].includes(curr);
         } else {
-            premises.push(`<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`);
-            prevBucket = (prevBucket + 1) % 2;
-            buckets[prevBucket].push(curr);
+            conclusion = `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`;
+            isValid = buckets[1].includes(curr);
         }
-
-        prev = curr;
-    }
+    } while(isPremiseEqualToConclusion(premises, conclusion));
 
     shuffle(premises);
 
-    let conclusion;
-    let isValid;
-    if (coinFlip()) {
-        conclusion = `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`;
-        isValid = buckets[0].includes(curr);
-    } else {
-        conclusion = `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`;
-        isValid = buckets[1].includes(curr);
-    }
-
     return {
-        category: "Distinction",
+        category,
         buckets,
         isValid,
         premises,
@@ -771,58 +786,64 @@ function createMoreLess(length) {
         length = 3;
     }
 
-    let seen = [];
-    let bucket = Array(length).fill(0)
-        .map(() => {
-            let rnd = Math.floor(Math.random() * nouns.length);
-            while (seen.includes(rnd)) {
-                rnd = Math.floor(Math.random() * nouns.length);
-            }
-            seen.push(rnd);
-            return nouns[rnd];
-        });
+    const category = "Comparison";
+    let bucket;
+    let isValid;
+    let premises;
+    let conclusion;
+    do {
+        let seen = [];
+        bucket = Array(length).fill(0)
+            .map(() => {
+                let rnd = Math.floor(Math.random() * nouns.length);
+                while (seen.includes(rnd)) {
+                    rnd = Math.floor(Math.random() * nouns.length);
+                }
+                seen.push(rnd);
+                return nouns[rnd];
+            });
 
-    let sign = [-1, 1][Math.floor(Math.random() * 2)];
+        let sign = [-1, 1][Math.floor(Math.random() * 2)];
 
-    let premises = [];
-    let next;
+        premises = [];
+        let next;
 
-    for (let i = 0; i < length - 1; i++) {
-        let curr = bucket[i];
-        next = bucket[i + 1];
-        if (coinFlip()) {
-            if (sign === 1) {
-                premises.push(`<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`);
+        for (let i = 0; i < length - 1; i++) {
+            let curr = bucket[i];
+            next = bucket[i + 1];
+            if (coinFlip()) {
+                if (sign === 1) {
+                    premises.push(`<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`);
+                } else {
+                    premises.push(`<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>`);
+                }
             } else {
-                premises.push(`<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>`);
-            }
-        } else {
-            if (sign === 1) {
-                premises.push(`<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>`);
-            } else {
-                premises.push(`<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>`);
+                if (sign === 1) {
+                    premises.push(`<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>`);
+                } else {
+                    premises.push(`<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>`);
+                }
             }
         }
-    }
 
-    let conclusion;
-    let a = Math.floor(Math.random() * bucket.length);
-    let b = Math.floor(Math.random() * bucket.length);
-    while (a === b) {
-        b = Math.floor(Math.random() * bucket.length);
-    }
-    if (coinFlip()) {
-        conclusion = `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`;
-        isValid = sign === 1 && a < b || sign === -1 && a > b;
-    } else {
-        conclusion = `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`;
-        isValid = sign === 1 && a > b || sign === -1 && a < b;
-    }
+        let a = Math.floor(Math.random() * bucket.length);
+        let b = Math.floor(Math.random() * bucket.length);
+        while (a === b) {
+            b = Math.floor(Math.random() * bucket.length);
+        }
+        if (coinFlip()) {
+            conclusion = `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`;
+            isValid = sign === 1 && a < b || sign === -1 && a > b;
+        } else {
+            conclusion = `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`;
+            isValid = sign === 1 && a > b || sign === -1 && a < b;
+        }
+    } while(isPremiseEqualToConclusion(premises, conclusion));
 
     shuffle(premises);
 
     return {
-        category: "Comparison",
+        category,
         bucket,
         isValid,
         premises,
@@ -847,7 +868,7 @@ function createSameDifferent(length) {
     }
 
     const kindOfQuestions = [createSameOpposite(length), createMoreLess(length)];
-    const flip = 0; // coinFlip();
+    const flip = coinFlip();
     const choice = kindOfQuestions[(flip ? 1 : 0)];
     let conclusion = "";
     let isValid, isValidSame;
@@ -878,21 +899,30 @@ function createSameDifferent(length) {
         [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
         // Pick a relation (same/different), determine the truth
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
-        // Find index of a and index of b
+        // Find indices of elements
         [indexOfA, indexOfB] = [choice.bucket.indexOf(a), choice.bucket.indexOf(b)];
-        // Find index of c and index of d
         [indexOfC, indexOfD] = [choice.bucket.indexOf(c), choice.bucket.indexOf(d)];
-        conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
         isValidSame = indexOfA > indexOfB && indexOfC > indexOfD
                    || indexOfA < indexOfB && indexOfC < indexOfD;
     }
+
     if (coinFlip()) {
         isValid = isValidSame;
-        conclusion += '<br>is same as<br>';
+        if (!flip) {
+            conclusion += '<div style="margin: 2px 0;">is same as</div>';
+        }
+        else {
+            conclusion += '<div style="font-size: 14px; margin: 2px 0;">has the same relation as</div>';
+        }
     }
     else {
         isValid = !isValidSame;
-        conclusion += '<br>is different from<br>';
+        if (!flip) {
+            conclusion += '<div style="margin: 2px 0;">is different from</div>';
+        }
+        else {
+            conclusion += '<div style="font-size: 12px; margin: 4px 0;">has a different relation from</div>';
+        }
     }
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
 
@@ -976,44 +1006,55 @@ function createSyllogism(length) {
         length = 3;
     }
 
-    let seen = [];
-    let bucket = Array(length).fill(0)
-        .map(() => {
-            let rnd = Math.floor(Math.random() * nouns.length);
-            while (seen.includes(rnd)) {
-                rnd = Math.floor(Math.random() * nouns.length);
-            }
-            seen.push(rnd);
-            return nouns[rnd];
-        });
-
-    let premises = [];
-
+    const category = "Syllogism";
+    let bucket;
+    let isValid;
+    let premises;
     let conclusion;
-    let isValid = coinFlip();
-    if (isValid) {
-        [premises[0], premises[1], conclusion] = getSyllogism(bucket[0], bucket[1], bucket[2], validRules[Math.floor(Math.random() * validRules.length)]);
-    } else {
-        [premises[0], premises[1], conclusion] = getSyllogism(bucket[0], bucket[1], bucket[2], getRandomInvalidRule());
-    }
+    do {
+        let seen = [];
+        bucket = Array(length).fill(0)
+            .map(() => {
+                let rnd = Math.floor(Math.random() * nouns.length);
+                while (seen.includes(rnd)) {
+                    rnd = Math.floor(Math.random() * nouns.length);
+                }
+                seen.push(rnd);
+                return nouns[rnd];
+            });
 
-    for (let i = 3; i < length; i++) {
-        let rnd = Math.floor(Math.random() * (i - 1));
-        let flip = coinFlip();
-        let p = flip ? bucket[i] : bucket[rnd];
-        let m = flip ? bucket[rnd] : bucket[i];
-        premises.push(getSyllogism("#####", p, m, getRandomInvalidRule())[0]);
-    }
+        premises = [];
+
+        conclusion;
+        isValid = coinFlip();
+        if (isValid) {
+            [premises[0], premises[1], conclusion] = getSyllogism(bucket[0], bucket[1], bucket[2], validRules[Math.floor(Math.random() * validRules.length)]);
+        } else {
+            [premises[0], premises[1], conclusion] = getSyllogism(bucket[0], bucket[1], bucket[2], getRandomInvalidRule());
+        }
+
+        for (let i = 3; i < length; i++) {
+            let rnd = Math.floor(Math.random() * (i - 1));
+            let flip = coinFlip();
+            let p = flip ? bucket[i] : bucket[rnd];
+            let m = flip ? bucket[rnd] : bucket[i];
+            premises.push(getSyllogism("#####", p, m, getRandomInvalidRule())[0]);
+        }
+    } while(isPremiseEqualToConclusion(premises, conclusion));
 
     premises = shuffle(premises);
 
     return {
-        category: "Syllogism",
+        category,
         bucket,
         isValid,
         premises,
         conclusion
     }
+}
+
+function isPremiseEqualToConclusion(premises, conclusion) {
+    return premises.some(p => p === conclusion);
 }
 
 function startCountDown() {
