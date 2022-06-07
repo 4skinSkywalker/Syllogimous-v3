@@ -948,9 +948,9 @@ function createDirectionQuestion(length) {
         "East",
         "South-East",
         "South",
-        "South-Ovest",
-        "Ovest",
-        "North-Ovest"
+        "South-West",
+        "West",
+        "North-West"
     ];
     const dirCoords = [
         [0, 0],
