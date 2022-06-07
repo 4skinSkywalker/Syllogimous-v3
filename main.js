@@ -578,6 +578,7 @@ let savedata = {
     "enableComparison": true,
     "enableSyllogism": true,
     "enableAnalogy": true,
+    "enableDirection": true,
     "questions": []
 };
 
@@ -586,7 +587,8 @@ const keySettingMap = {
     "p-2": "enableComparison",
     "p-3": "enableSyllogism",
     "p-4": "enableAnalogy",
-    "p-5": "premises"
+    "p-5": "premises",
+    "p-6": "enableDirection"
 };
 const keySettingMapInverse = Object.entries(keySettingMap)
     .reduce((a, b) => (a[b[1]] = b[0], a), {});
@@ -934,6 +936,81 @@ function createSameDifferent(length) {
     return choice;
 }
 
+function createDirectionQuestion(length) {
+    if (length < 3) {
+        length = 3;
+    }
+
+    const dirNames = [
+        "same position",
+        "North",
+        "North-East",
+        "East",
+        "South-East",
+        "South",
+        "South-Ovest",
+        "Ovest",
+        "North-Ovest"
+    ];
+    const dirCoords = [
+        [0, 0],
+        [0, -1],
+        [1, -1],
+        [1, 0],
+        [1, 1],
+        [0, 1],
+        [-1, 1],
+        [-1, 0],
+        [-1, -1]
+    ];
+    const words = pickUniqueItems(nouns, length);
+
+    const wordCoordMap = {};
+    const premises = [];
+    for (let i = 0; i < words.length - 1; i++) {
+        const dirIndex = 1 + Math.floor(Math.random()*(dirNames.length - 1));
+        const dirName = dirNames[dirIndex];
+        const dirCoord = dirCoords[dirIndex];
+        if (i === 0) {
+            wordCoordMap[words[i]] = [0,0];
+        }
+        wordCoordMap[words[i+1]] = [
+            wordCoordMap[words[i]][0] + dirCoord[0], // x
+            wordCoordMap[words[i]][1] + dirCoord[1]  // y
+        ];
+        premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
+    }
+    let conclusion;
+    const x = wordCoordMap[words[0]][0];
+    const y = wordCoordMap[words[0]][1];
+    const x2 = wordCoordMap[words[words.length-1]][0];
+    const y2 = wordCoordMap[words[words.length-1]][1];
+    const dx = ((x - x2)/Math.abs(x - x2)) || 0;
+    const dy = ((y - y2)/Math.abs(y - y2)) || 0;
+    const dirIndex = dirCoords.findIndex(c => c[0] === dx && c[1] === dy)
+    const dirName = dirNames[dirIndex];
+    let isValid;
+    if (coinFlip()) { // correct
+        isValid = true;
+        conclusion = `<span class="subject">${words[0]}</span> is at ${dirName} of <span class="subject">${words[words.length-1]}</span>`;
+    }
+    else {            // wrong
+        isValid = false;
+        let invalid = dirName;
+        while (invalid === dirName) {
+            invalid = pickUniqueItems(dirNames, 1).pop();
+        }
+        conclusion = `<span class="subject">${words[0]}</span> is at ${invalid} of <span class="subject">${words[words.length-1]}</span>`;
+    }
+    
+    return {
+        category: "Direction",
+        isValid,
+        premises,
+        conclusion
+    }
+}
+
 function coinFlip() {
     return Math.random() > 0.5;
 }
@@ -1106,6 +1183,8 @@ function init() {
         choices.push(createSyllogism(savedata.premises + 1));
     if (savedata.premises > 2 && savedata.enableAnalogy)
         choices.push(createSameDifferent(savedata.premises + 1));
+    if (savedata.enableDirection)
+        choices.push(createDirectionQuestion(savedata.premises + 1));
 
     if (choices.length < 1)
         return alert("Please select at least one category of question.");
