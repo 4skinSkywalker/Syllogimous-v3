@@ -897,7 +897,7 @@ function createSameDifferent(length) {
         createMoreLess(length),
         createDirectionQuestion(length)
     ];
-    const choiceIndex = Math.floor(Math.random*kindOfQuestions.length);
+    const choiceIndex = Math.floor(Math.random()*kindOfQuestions.length);
     const choice = kindOfQuestions[choiceIndex];
     let conclusion = "";
     let isValid, isValidSame;
