@@ -570,6 +570,29 @@ const forms = [
     'Some <span class="subject">$</span> is not <span class="subject">$</span>'
 ];
 
+const dirNames = [
+    "same position",
+    "North",
+    "North-East",
+    "East",
+    "South-East",
+    "South",
+    "South-West",
+    "West",
+    "North-West"
+];
+const dirCoords = [
+    [0, 0],
+    [0, -1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+    [-1, -1]
+];
+
 let savedata = {
     "premises": 2,
     "timer": 10,
@@ -869,17 +892,20 @@ function createSameDifferent(length) {
         length = 4;
     }
 
-    const kindOfQuestions = [createSameOpposite(length), createMoreLess(length)];
-    const flip = coinFlip();
-    const choice = kindOfQuestions[(flip ? 1 : 0)];
+    const kindOfQuestions = [
+        createSameOpposite(length),
+        createMoreLess(length),
+        createDirectionQuestion(length)
+    ];
+    const choiceIndex = 2 // Math.floor(Math.random*kindOfQuestions.length);
+    const choice = kindOfQuestions[choiceIndex];
     let conclusion = "";
     let isValid, isValidSame;
     let a, b, c, d;
     let indexOfA, indexOfB, indexOfC, indexOfD;
-    if (!flip) {
+    if (choiceIndex === 0) {
         // Pick 4 different items
         [a, b, c, d] = pickUniqueItems([...choice.buckets[0], ...choice.buckets[1]], 4);
-        // Pick a relation (same/different), determine the truth
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
         // Find in which side a, b, c and d are
         [
@@ -896,10 +922,9 @@ function createSameDifferent(length) {
         isValidSame = indexOfA === indexOfB && indexOfC === indexOfD
                    || indexOfA !== indexOfB && indexOfC !== indexOfD;
     }
-    else {
+    else if (choiceIndex === 1) {
         // Pick 4 different items
         [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
-        // Pick a relation (same/different), determine the truth
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
         // Find indices of elements
         [indexOfA, indexOfB] = [choice.bucket.indexOf(a), choice.bucket.indexOf(b)];
@@ -907,10 +932,17 @@ function createSameDifferent(length) {
         isValidSame = indexOfA > indexOfB && indexOfC > indexOfD
                    || indexOfA < indexOfB && indexOfC < indexOfD;
     }
+    else {
+        // Pick 4 different items
+        [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
+        conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+        // Find if A to B has same relation of C to D
+        isValidSame = findDirection(choice.wordCoordMap[a], choice.wordCoordMap[b]) === findDirection(choice.wordCoordMap[c], choice.wordCoordMap[d]);
+    }
 
     if (coinFlip()) {
         isValid = isValidSame;
-        if (!flip) {
+        if (choiceIndex < 1) {
             conclusion += '<div style="margin: 2px 0;">is same as</div>';
         }
         else {
@@ -919,7 +951,7 @@ function createSameDifferent(length) {
     }
     else {
         isValid = !isValidSame;
-        if (!flip) {
+        if (choiceIndex < 1) {
             conclusion += '<div style="margin: 2px 0;">is different from</div>';
         }
         else {
@@ -936,33 +968,23 @@ function createSameDifferent(length) {
     return choice;
 }
 
+function findDirection(aCoord, bCoord) {
+    const x = aCoord[0];
+    const y = aCoord[1];
+    const x2 = bCoord[0];
+    const y2 = bCoord[1];
+    const dx = ((x - x2)/Math.abs(x - x2)) || 0;
+    const dy = ((y - y2)/Math.abs(y - y2)) || 0;
+    const dirIndex = dirCoords.findIndex(c => c[0] === dx && c[1] === dy)
+    const dirName = dirNames[dirIndex];
+    return dirName;
+}
+
 function createDirectionQuestion(length) {
     if (length < 3) {
         length = 3;
     }
 
-    const dirNames = [
-        "same position",
-        "North",
-        "North-East",
-        "East",
-        "South-East",
-        "South",
-        "South-West",
-        "West",
-        "North-West"
-    ];
-    const dirCoords = [
-        [0, 0],
-        [0, -1],
-        [1, -1],
-        [1, 0],
-        [1, 1],
-        [0, 1],
-        [-1, 1],
-        [-1, 0],
-        [-1, -1]
-    ];
     const words = pickUniqueItems(nouns, length);
 
     const wordCoordMap = {};
@@ -981,14 +1003,7 @@ function createDirectionQuestion(length) {
         premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
     }
     let conclusion;
-    const x = wordCoordMap[words[0]][0];
-    const y = wordCoordMap[words[0]][1];
-    const x2 = wordCoordMap[words[words.length-1]][0];
-    const y2 = wordCoordMap[words[words.length-1]][1];
-    const dx = ((x - x2)/Math.abs(x - x2)) || 0;
-    const dy = ((y - y2)/Math.abs(y - y2)) || 0;
-    const dirIndex = dirCoords.findIndex(c => c[0] === dx && c[1] === dy)
-    const dirName = dirNames[dirIndex];
+    const dirName = findDirection(wordCoordMap[words[0]], wordCoordMap[words[length-1]]);
     let isValid;
     if (coinFlip()) { // correct
         isValid = true;
@@ -1005,6 +1020,7 @@ function createDirectionQuestion(length) {
     
     return {
         category: "Direction",
+        wordCoordMap,
         isValid,
         premises,
         conclusion
