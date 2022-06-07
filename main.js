@@ -1017,6 +1017,8 @@ function createDirectionQuestion(length) {
         }
         conclusion = `<span class="subject">${words[0]}</span> is at ${invalid} of <span class="subject">${words[words.length-1]}</span>`;
     }
+
+    shuffle(premises);
     
     return {
         category: "Direction",
