@@ -784,8 +784,7 @@ function createSameOpposite(length) {
 
             prev = curr;
         }
-
-        let isValid;
+        
         if (coinFlip()) {
             conclusion = `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`;
             isValid = buckets[0].includes(curr);
