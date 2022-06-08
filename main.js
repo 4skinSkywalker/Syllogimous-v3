@@ -602,6 +602,7 @@ let savedata = {
     "enableSyllogism": true,
     "enableAnalogy": true,
     "enableDirection": true,
+    "enableBinary": true,
     "questions": []
 };
 
@@ -611,7 +612,8 @@ const keySettingMap = {
     "p-3": "enableSyllogism",
     "p-4": "enableAnalogy",
     "p-5": "premises",
-    "p-6": "enableDirection"
+    "p-6": "enableDirection",
+    "p-7": "enableBinary"
 };
 const keySettingMapInverse = Object.entries(keySettingMap)
     .reduce((a, b) => (a[b[1]] = b[0], a), {});
@@ -744,9 +746,7 @@ function carouselNext() {
 }
 
 function createSameOpposite(length) {
-    if (length < 3) {
-        length = 3;
-    }
+    length++;
 
     const category = "Distinction";
     let buckets;
@@ -806,9 +806,7 @@ function createSameOpposite(length) {
 }
 
 function createMoreLess(length) {
-    if (length < 3) {
-        length = 3;
-    }
+    length++;
 
     const category = "Comparison";
     let bucket;
@@ -885,11 +883,55 @@ function shuffle(array) {
     return array;
 }
 
-function createSameDifferent(length) {
-    // This kind of questions need at least a length of 4 which is why they will only be played after the number of premises has increased
-    if (length < 4) {
-        length = 4;
+function createBinaryQuestion(length) {
+
+    const operands = [
+        "a&&b",                 // and
+        "a||b",                 // or
+        "!(a&&b)&&(a||b)",      // xor
+    ];
+
+    const [choice, choice2] = pickUniqueItems([
+        createSameOpposite(length-2),
+        createMoreLess(length-2),
+        createDirectionQuestion(length-2)
+    ], 2);
+
+    const premises = [...choice.premises, ...choice2.premises];
+    shuffle(premises);
+
+    const operandIndex = Math.floor(Math.random()*operands.length);
+    const operand = operands[operandIndex];
+    let conclusion = "";
+    // and
+    if (operandIndex === 0) {
+        conclusion += choice.conclusion;
+        conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">AND</div>';
     }
+    // or
+    else if (operandIndex === 1) {
+        conclusion += choice.conclusion;
+        conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">OR</div>';
+    }
+    // xor
+    else if (operandIndex === 2) {
+        conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">EITHER</div>';
+        conclusion += choice.conclusion;
+        conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">OR</div>';
+    }
+    conclusion += choice2.conclusion;
+
+    const isValid = eval(operand.replaceAll("a", choice.isValid).replaceAll("b", choice2.isValid));
+
+    return {
+        category: `Binary: ${choice.category} + ${choice2.category}`,
+        isValid,
+        premises,
+        conclusion
+    };
+}
+
+function createSameDifferent(length) {
 
     // There are 3 choices:
     // 0. Same/Opposite;
@@ -977,7 +1019,7 @@ function createSameDifferent(length) {
     }
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
 
-    choice.category = "Analogy - " + subtype;
+    choice.category = "Analogy: " + subtype;
     choice.isValid = isValid;
     choice.conclusion = conclusion;
 
@@ -997,9 +1039,7 @@ function findDirection(aCoord, bCoord) {
 }
 
 function createDirectionQuestion(length) {
-    if (length < 3) {
-        length = 3;
-    }
+    length++;
 
     const words = pickUniqueItems(nouns, length);
 
@@ -1113,9 +1153,7 @@ function getSyllogism(s, p, m, rule) {
 }
 
 function createSyllogism(length) {
-    if (length < 3) {
-        length = 3;
-    }
+    length++;
 
     const category = "Syllogism";
     let bucket;
@@ -1210,18 +1248,29 @@ function init() {
 
     const choices = [];
     if (savedata.enableDistinction)
-        choices.push(createSameOpposite(savedata.premises + 1));
+        choices.push(createSameOpposite(savedata.premises));
     if (savedata.enableComparison)
-        choices.push(createMoreLess(savedata.premises + 1));
+        choices.push(createMoreLess(savedata.premises));
     if (savedata.enableSyllogism)
-        choices.push(createSyllogism(savedata.premises + 1));
+        choices.push(createSyllogism(savedata.premises));
     if (savedata.premises > 2 && savedata.enableAnalogy)
-        choices.push(createSameDifferent(savedata.premises + 1));
+        choices.push(createSameDifferent(savedata.premises));
     if (savedata.enableDirection)
-        choices.push(createDirectionQuestion(savedata.premises + 1));
+        choices.push(createDirectionQuestion(savedata.premises));
+    if (savedata.premises > 3 && savedata.enableBinary)
+        choices.push(createBinaryQuestion(savedata.premises));
 
-    if (choices.length < 1)
-        return alert("Please select at least one category of question.");
+    if (choices.length < 1) {
+        if (savedata.premises < 3 && savedata.enableAnalogy) {
+            return alert("To play Analogy you need to input at least 3 premises.");
+        }
+        else if (savedata.premises < 4 && savedata.enableBinary) {
+            return alert("To play Binary you need to input at least 4 premises.");
+        }
+        else {
+            return alert("Please select at least one category of question.");
+        }
+    }
 
     question = choices[Math.floor(Math.random() * choices.length)];
 
