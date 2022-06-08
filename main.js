@@ -784,7 +784,7 @@ function createSameOpposite(length) {
 
             prev = curr;
         }
-        
+
         if (coinFlip()) {
             conclusion = `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`;
             isValid = buckets[0].includes(curr);
@@ -891,18 +891,23 @@ function createSameDifferent(length) {
         length = 4;
     }
 
-    const kindOfQuestions = [
-        createSameOpposite(length),
-        createMoreLess(length),
-        createDirectionQuestion(length)
-    ];
-    const choiceIndex = Math.floor(Math.random()*kindOfQuestions.length);
-    const choice = kindOfQuestions[choiceIndex];
+    // There are 3 choices:
+    // 0. Same/Opposite;
+    // 1. More/Less;
+    // 2. Direction.
+    const choiceIndex = Math.floor(Math.random()*3);
+    let choice;
     let conclusion = "";
+    let subtype;
     let isValid, isValidSame;
     let a, b, c, d;
     let indexOfA, indexOfB, indexOfC, indexOfD;
+
     if (choiceIndex === 0) {
+
+        choice = createSameOpposite(length);
+        subtype = "Same/Opposite";
+
         // Pick 4 different items
         [a, b, c, d] = pickUniqueItems([...choice.buckets[0], ...choice.buckets[1]], 4);
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
@@ -922,6 +927,10 @@ function createSameDifferent(length) {
                    || indexOfA !== indexOfB && indexOfC !== indexOfD;
     }
     else if (choiceIndex === 1) {
+
+        choice = createMoreLess(length);
+        subtype = "More/Less";
+
         // Pick 4 different items
         [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
@@ -932,11 +941,20 @@ function createSameDifferent(length) {
                    || indexOfA < indexOfB && indexOfC < indexOfD;
     }
     else {
-        // Pick 4 different items
-        [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
-        conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
-        // Find if A to B has same relation of C to D
-        isValidSame = findDirection(choice.wordCoordMap[a], choice.wordCoordMap[b]) === findDirection(choice.wordCoordMap[c], choice.wordCoordMap[d]);
+
+        subtype = "Direction";
+
+        const flip = coinFlip();
+        while (flip !== isValidSame) {
+            conclusion = "";
+            choice = createDirectionQuestion(length);
+
+            // Pick 4 different items
+            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
+            conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+            // Find if A to B has same relation of C to D
+            isValidSame = findDirection(choice.wordCoordMap[a], choice.wordCoordMap[b]) === findDirection(choice.wordCoordMap[c], choice.wordCoordMap[d]);
+        }
     }
 
     if (coinFlip()) {
@@ -959,10 +977,9 @@ function createSameDifferent(length) {
     }
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
 
+    choice.category = "Analogy - " + subtype;
     choice.isValid = isValid;
     choice.conclusion = conclusion;
-
-    choice.category = "Analogy";
 
     return choice;
 }
