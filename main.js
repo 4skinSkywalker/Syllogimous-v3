@@ -891,37 +891,45 @@ function createBinaryQuestion(length) {
         "!(a&&b)&&(a||b)",      // xor
     ];
 
-    const [choice, choice2] = pickUniqueItems([
-        createSameOpposite(length-2),
-        createMoreLess(length-2),
-        createDirectionQuestion(length-2)
-    ], 2);
-
-    const premises = [...choice.premises, ...choice2.premises];
-    shuffle(premises);
-
+    let choice;
+    let premises;
+    let conclusion = "";
+    const flip = coinFlip();
+    let isValid;
     const operandIndex = Math.floor(Math.random()*operands.length);
     const operand = operands[operandIndex];
-    let conclusion = "";
-    // and
-    if (operandIndex === 0) {
-        conclusion += choice.conclusion;
-        conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">AND</div>';
-    }
-    // or
-    else if (operandIndex === 1) {
-        conclusion += choice.conclusion;
-        conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">OR</div>';
-    }
-    // xor
-    else if (operandIndex === 2) {
-        conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">EITHER</div>';
-        conclusion += choice.conclusion;
-        conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">OR</div>';
-    }
-    conclusion += choice2.conclusion;
+    while (flip !== isValid) {
+        conclusion = "";
 
-    const isValid = eval(operand.replaceAll("a", choice.isValid).replaceAll("b", choice2.isValid));
+        [choice, choice2] = pickUniqueItems([
+            createSameOpposite(length-2),
+            createMoreLess(length-2),
+            createDirectionQuestion(length-2)
+        ], 2);
+    
+        premises = [...choice.premises, ...choice2.premises];
+        shuffle(premises);
+    
+        // and
+        if (operandIndex === 0) {
+            conclusion += choice.conclusion;
+            conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">AND</div>';
+        }
+        // or
+        else if (operandIndex === 1) {
+            conclusion += choice.conclusion;
+            conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">OR</div>';
+        }
+        // xor
+        else if (operandIndex === 2) {
+            conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">EITHER</div>';
+            conclusion += choice.conclusion;
+            conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">OR</div>';
+        }
+        conclusion += choice2.conclusion;
+
+        isValid = eval(operand.replaceAll("a", choice.isValid).replaceAll("b", choice2.isValid));
+    }
 
     return {
         category: `Binary: ${choice.category} + ${choice2.category}`,
