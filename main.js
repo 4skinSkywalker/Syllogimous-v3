@@ -909,7 +909,7 @@ function createBinaryQuestion(length) {
         '$a <div class="logic-conn">or</div> $b',
         '<div class="logic-conn">Neither</div> $a <div class="logic-conn">nor</div> $b',
         '<div class="logic-conn">Either</div> $a <div class="logic-conn">or</div> $b',
-        '<div class="logic-conn">Both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">have the same validity</div>'
+        '<div class="logic-conn">Both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">are the same</div>'
     ];
 
     let choice;
