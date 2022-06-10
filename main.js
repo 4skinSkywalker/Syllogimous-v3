@@ -887,8 +887,20 @@ function createBinaryQuestion(length) {
 
     const operands = [
         "a&&b",                 // and
+        "!(a&&b)",              // nand
         "a||b",                 // or
+        "!(a||b)",              // nor
         "!(a&&b)&&(a||b)",      // xor
+        "!(!(a&&b)&&(a||b))"    // xnor
+    ];
+
+    const operandTemplates = [
+        '$a <div class="logic-conn">and</div> $b',
+        '<div class="logic-conn">Except both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">hold true</div>',
+        '$a <div class="logic-conn">or</div> $b',
+        '<div class="logic-conn">Neither</div> $a <div class="logic-conn">nor</div> $b',
+        '<div class="logic-conn">Either</div> $a <div class="logic-conn">or</div> $b',
+        '<div class="logic-conn">Both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">have the same validity</div>'
     ];
 
     let choice;
@@ -910,25 +922,15 @@ function createBinaryQuestion(length) {
         premises = [...choice.premises, ...choice2.premises];
         shuffle(premises);
     
-        // and
-        if (operandIndex === 0) {
-            conclusion += choice.conclusion;
-            conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">AND</div>';
-        }
-        // or
-        else if (operandIndex === 1) {
-            conclusion += choice.conclusion;
-            conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">OR</div>';
-        }
-        // xor
-        else if (operandIndex === 2) {
-            conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">EITHER</div>';
-            conclusion += choice.conclusion;
-            conclusion += '<div style="margin: 5px 0; color: #f00; text-transform: uppercase;">OR</div>';
-        }
-        conclusion += choice2.conclusion;
+        conclusion = operandTemplates[operandIndex]
+            .replace("$a", choice.conclusion)
+            .replace("$b", choice2.conclusion);
 
-        isValid = eval(operand.replaceAll("a", choice.isValid).replaceAll("b", choice2.isValid));
+        isValid = eval(
+            operand
+                .replaceAll("a", choice.isValid)
+                .replaceAll("b", choice2.isValid)
+        );
     }
 
     return {
