@@ -894,6 +894,15 @@ function createBinaryQuestion(length) {
         "!(!(a&&b)&&(a||b))"    // xnor
     ];
 
+    const operandNames = [
+        "AND",
+        "NAND",
+        "OR",
+        "NOR",
+        "XOR",
+        "XNOR"
+    ];
+
     const operandTemplates = [
         '$a <div class="logic-conn">and</div> $b',
         '<div class="logic-conn">Except both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">hold true</div>',
@@ -934,7 +943,7 @@ function createBinaryQuestion(length) {
     }
 
     return {
-        category: `Binary: ${choice.category} + ${choice2.category}`,
+        category: `Binary: ${choice.category} ${operandNames[operandIndex]} ${choice2.category}`,
         isValid,
         premises,
         conclusion
