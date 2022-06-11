@@ -571,7 +571,7 @@ const forms = [
 ];
 
 const dirNames = [
-    "same position",
+    null,
     "North",
     "North-East",
     "East",
@@ -1052,7 +1052,7 @@ function findDirection(aCoord, bCoord) {
     const y2 = bCoord[1];
     const dx = ((x - x2)/Math.abs(x - x2)) || 0;
     const dy = ((y - y2)/Math.abs(y - y2)) || 0;
-    const dirIndex = dirCoords.findIndex(c => c[0] === dx && c[1] === dy)
+    const dirIndex = dirCoords.findIndex(c => c[0] === dx && c[1] === dy);
     const dirName = dirNames[dirIndex];
     return dirName;
 }
@@ -1064,21 +1064,28 @@ function createDirectionQuestion(length) {
 
     const wordCoordMap = {};
     const premises = [];
-    for (let i = 0; i < words.length - 1; i++) {
-        const dirIndex = 1 + Math.floor(Math.random()*(dirNames.length - 1));
-        const dirName = dirNames[dirIndex];
-        const dirCoord = dirCoords[dirIndex];
-        if (i === 0) {
-            wordCoordMap[words[i]] = [0,0];
-        }
-        wordCoordMap[words[i+1]] = [
-            wordCoordMap[words[i]][0] + dirCoord[0], // x
-            wordCoordMap[words[i]][1] + dirCoord[1]  // y
-        ];
-        premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
-    }
     let conclusion;
-    const dirName = findDirection(wordCoordMap[words[0]], wordCoordMap[words[length-1]]);
+    let dirName;
+    while (!dirName) {
+        for (let i = 0; i < words.length - 1; i++) {
+            const dirIndex = 1 + Math.floor(Math.random()*(dirNames.length - 1));
+            const dirName = dirNames[dirIndex];
+            const dirCoord = dirCoords[dirIndex];
+            if (i === 0) {
+                wordCoordMap[words[i]] = [0,0];
+            }
+            wordCoordMap[words[i+1]] = [
+                wordCoordMap[words[i]][0] + dirCoord[0], // x
+                wordCoordMap[words[i]][1] + dirCoord[1]  // y
+            ];
+            premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
+        }
+        dirName = findDirection(
+            wordCoordMap[words[0]],
+            wordCoordMap[words[length-1]]
+        );
+    }
+
     let isValid;
     if (coinFlip()) { // correct
         isValid = true;
@@ -1086,11 +1093,11 @@ function createDirectionQuestion(length) {
     }
     else {            // wrong
         isValid = false;
-        let invalid = dirName;
-        while (invalid === dirName) {
-            invalid = pickUniqueItems(dirNames, 1).pop();
-        }
-        conclusion = `<span class="subject">${words[0]}</span> is at ${invalid} of <span class="subject">${words[words.length-1]}</span>`;
+        let oppositeDirection = findDirection(
+            wordCoordMap[words[length-1]],
+            wordCoordMap[words[0]]
+        );
+        conclusion = `<span class="subject">${words[0]}</span> is at ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`;
     }
 
     shuffle(premises);
