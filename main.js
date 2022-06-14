@@ -913,6 +913,7 @@ function createBinaryQuestion(length) {
     ];
 
     let choice;
+    let choice2;
     let premises;
     let conclusion = "";
     const flip = coinFlip();
@@ -920,13 +921,16 @@ function createBinaryQuestion(length) {
     const operandIndex = Math.floor(Math.random()*operands.length);
     const operand = operands[operandIndex];
     while (flip !== isValid) {
-        conclusion = "";
-
-        [choice, choice2] = pickUniqueItems([
-            createSameOpposite(length-2),
-            createMoreLess(length-2),
-            createDirectionQuestion(length-2)
+        let [generator, generator2] = pickUniqueItems([
+            createSameOpposite,
+            createMoreLess,
+            createDirectionQuestion
         ], 2);
+
+        [choice, choice2] = [
+            generator(Math.floor(length/2)),
+            generator2(Math.ceil(length/2))
+        ];
     
         premises = [...choice.premises, ...choice2.premises];
         shuffle(premises);
@@ -1062,11 +1066,15 @@ function createDirectionQuestion(length) {
 
     const words = pickUniqueItems(nouns, length);
 
-    const wordCoordMap = {};
-    const premises = [];
+    let wordCoordMap = {};
+    let premises = [];
     let conclusion;
-    let dirName;
-    while (!dirName) {
+    let conclusionDirName;
+    while (!conclusionDirName) {
+
+        wordCoordMap = {};
+        premises = [];
+
         for (let i = 0; i < words.length - 1; i++) {
             const dirIndex = 1 + Math.floor(Math.random()*(dirNames.length - 1));
             const dirName = dirNames[dirIndex];
@@ -1080,7 +1088,8 @@ function createDirectionQuestion(length) {
             ];
             premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
         }
-        dirName = findDirection(
+
+        conclusionDirName = findDirection(
             wordCoordMap[words[0]],
             wordCoordMap[words[length-1]]
         );
@@ -1089,7 +1098,7 @@ function createDirectionQuestion(length) {
     let isValid;
     if (coinFlip()) { // correct
         isValid = true;
-        conclusion = `<span class="subject">${words[0]}</span> is at ${dirName} of <span class="subject">${words[words.length-1]}</span>`;
+        conclusion = `<span class="subject">${words[0]}</span> is at ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`;
     }
     else {            // wrong
         isValid = false;
@@ -1116,7 +1125,7 @@ function coinFlip() {
 }
 
 function pickUniqueItems(array, n) {
-    const copy = JSON.parse(JSON.stringify(array));
+    const copy = [...array];
     const picked = [];
     while (n > 0) {
         const rnd = Math.floor(Math.random()*copy.length);
