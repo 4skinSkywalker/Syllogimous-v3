@@ -55,6 +55,7 @@ let savedata = {
     "enableDirection": true,
     "enableBinary": true,
     "enableMeaningfulWords": true,
+    "enableCarouselMode": true,
     "questions": []
 };
 
@@ -81,7 +82,8 @@ for (let key in keySettingMap) {
         });
     else if (input.type === "number")
         input.addEventListener("input", evt => {
-            savedata[value] = +input.value;
+            if (+input.value > 0)
+                savedata[value] = +input.value;
             save();
             init();
         });
