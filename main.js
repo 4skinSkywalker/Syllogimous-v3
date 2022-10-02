@@ -1,11 +1,9 @@
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-      navigator.serviceWorker
-        .register("/serviceWorker.js")
-        .then(res => console.log("service worker registered"))
-        .catch(err => console.log("service worker not registered", err))
-    })
-}
+navigator.serviceWorker.getRegistrations()
+    .then((registrations) => {
+        for(let registration of registrations) {
+            registration.unregister();
+        }
+    });
 
 // Constants and variables
 const localKey = "sllgms-v3";
@@ -36,562 +34,15 @@ const carouselDisplayLabelProgress = carousel.querySelector(".carousel_display_l
 const carouselDisplayText = carousel.querySelector(".carousel_display_text");
 const carouselBackButton = carousel.querySelector("#carousel-back");
 const carouselNextButton = carousel.querySelector("#carousel-next");
+
+const display = document.querySelector(".display-outer");
+const displayLabelType = display.querySelector(".display_label_type");
+const displayLabelLevel = display.querySelector(".display_label_level");;
+const displayText = display.querySelector(".display_text");;
+
 const confirmationButtons = carousel.querySelector(".confirmation-buttons");
 
-const nouns = [
-    "Ability",
-    "Access",
-    "Accident",
-    "Account",
-    "Action",
-    "Activity",
-    "Actor",
-    "Addition",
-    "Address",
-    "Advice",
-    "Affair",
-    "Agency",
-    "Airport",
-    "Alcohol",
-    "Ambition",
-    "Amount",
-    "Analysis",
-    "Analyst",
-    "Animal",
-    "Answer",
-    "Anxiety",
-    "Apple",
-    "Area",
-    "Argument",
-    "Army",
-    "Arrival",
-    "Article",
-    "Aspect",
-    "Attempt",
-    "Attitude",
-    "Audience",
-    "Aunt",
-    "Average",
-    "Back",
-    "Balance",
-    "Ball",
-    "Bank",
-    "Baseball",
-    "Basis",
-    "Basket",
-    "Bath",
-    "Bathroom",
-    "Bedroom",
-    "Beer",
-    "Benefit",
-    "Bird",
-    "Birth",
-    "Birthday",
-    "Blood",
-    "Board",
-    "Boat",
-    "Body",
-    "Bonus",
-    "Book",
-    "Boss",
-    "Bottom",
-    "Bread",
-    "Breath",
-    "Brother",
-    "Building",
-    "Business",
-    "Buyer",
-    "Cabinet",
-    "Camera",
-    "Cancer",
-    "Capital",
-    "Card",
-    "Care",
-    "Career",
-    "Case",
-    "Cash",
-    "Category",
-    "Cause",
-    "Cell",
-    "Chance",
-    "Chapter",
-    "Charity",
-    "Cheek",
-    "Chest",
-    "Chicken",
-    "Child",
-    "Choice",
-    "Church",
-    "City",
-    "Class",
-    "Client",
-    "Climate",
-    "Clothes",
-    "Coast",
-    "Coffee",
-    "College",
-    "Company",
-    "Computer",
-    "Concept",
-    "Contact",
-    "Context",
-    "Contract",
-    "Control",
-    "Cookie",
-    "Country",
-    "County",
-    "Courage",
-    "Course",
-    "Cousin",
-    "Craft",
-    "Credit",
-    "Culture",
-    "Currency",
-    "Customer",
-    "Cycle",
-    "Data",
-    "Database",
-    "Date",
-    "Dealer",
-    "Death",
-    "Debt",
-    "Decision",
-    "Delivery",
-    "Demand",
-    "Depth",
-    "Design",
-    "Desk",
-    "Device",
-    "Diamond",
-    "Dinner",
-    "Director",
-    "Dirt",
-    "Disaster",
-    "Disease",
-    "Disk",
-    "Drama",
-    "Drawer",
-    "Drawing",
-    "Driver",
-    "Earth",
-    "Economy",
-    "Editor",
-    "Effect",
-    "Effort",
-    "Election",
-    "Elevator",
-    "Emotion",
-    "Emphasis",
-    "Employee",
-    "Employer",
-    "Energy",
-    "Engine",
-    "Entry",
-    "Error",
-    "Estate",
-    "Event",
-    "Exam",
-    "Example",
-    "Exchange",
-    "Exercise",
-    "Extent",
-    "Face",
-    "Fact",
-    "Failure",
-    "Family",
-    "Farmer",
-    "Feature",
-    "Feedback",
-    "Field",
-    "Figure",
-    "Film",
-    "Finding",
-    "Fire",
-    "Fish",
-    "Flight",
-    "Focus",
-    "Food",
-    "Football",
-    "Force",
-    "Form",
-    "Fortune",
-    "Frame",
-    "Freedom",
-    "Funeral",
-    "Future",
-    "Game",
-    "Garbage",
-    "Garden",
-    "Gate",
-    "Gene",
-    "Gift",
-    "Girl",
-    "Goal",
-    "Grocery",
-    "Group",
-    "Growth",
-    "Guest",
-    "Guidance",
-    "Guide",
-    "Guitar",
-    "Hair",
-    "Half",
-    "Hall",
-    "Hand",
-    "Head",
-    "Health",
-    "Hearing",
-    "Heart",
-    "Heat",
-    "Height",
-    "Highway",
-    "History",
-    "Home",
-    "Homework",
-    "Honey",
-    "Hope",
-    "Hospital",
-    "Hotel",
-    "House",
-    "Housing",
-    "Idea",
-    "Image",
-    "Impact",
-    "Income",
-    "Industry",
-    "Injury",
-    "Insect",
-    "Inside",
-    "Instance",
-    "Interest",
-    "Internet",
-    "Issue",
-    "Item",
-    "Judgment",
-    "Kind",
-    "King",
-    "Ladder",
-    "Lady",
-    "Lake",
-    "Language",
-    "Leader",
-    "Length",
-    "Level",
-    "Library",
-    "Life",
-    "Light",
-    "Line",
-    "Link",
-    "List",
-    "Location",
-    "Loss",
-    "Love",
-    "Machine",
-    "Magazine",
-    "Mall",
-    "Manager",
-    "Market",
-    "Marriage",
-    "Material",
-    "Math",
-    "Matter",
-    "Meal",
-    "Meaning",
-    "Meat",
-    "Media",
-    "Medicine",
-    "Medium",
-    "Member",
-    "Memory",
-    "Menu",
-    "Message",
-    "Metal",
-    "Method",
-    "Midnight",
-    "Mind",
-    "Mixture",
-    "Mode",
-    "Model",
-    "Moment",
-    "Money",
-    "Month",
-    "Mood",
-    "Morning",
-    "Mouse",
-    "Movie",
-    "Music",
-    "Name",
-    "Nation",
-    "Nature",
-    "Network",
-    "News",
-    "Night",
-    "Note",
-    "Nothing",
-    "Number",
-    "Object",
-    "Office",
-    "Opinion",
-    "Orange",
-    "Order",
-    "Outcome",
-    "Outside",
-    "Oven",
-    "Owner",
-    "Page",
-    "Paint",
-    "Painting",
-    "Paper",
-    "Part",
-    "Passion",
-    "Patience",
-    "Payment",
-    "Penalty",
-    "People",
-    "Period",
-    "Person",
-    "Phone",
-    "Photo",
-    "Physics",
-    "Piano",
-    "Picture",
-    "Piece",
-    "Pizza",
-    "Place",
-    "Plan",
-    "Platform",
-    "Player",
-    "Poem",
-    "Poet",
-    "Poetry",
-    "Point",
-    "Police",
-    "Policy",
-    "Politics",
-    "Position",
-    "Post",
-    "Potato",
-    "Power",
-    "Practice",
-    "Presence",
-    "Pressure",
-    "Price",
-    "Priority",
-    "Problem",
-    "Process",
-    "Product",
-    "Profit",
-    "Program",
-    "Property",
-    "Proposal",
-    "Purpose",
-    "Quality",
-    "Quantity",
-    "Queen",
-    "Question",
-    "Radio",
-    "Range",
-    "Rate",
-    "Ratio",
-    "Reaction",
-    "Reality",
-    "Reason",
-    "Recipe",
-    "Record",
-    "Region",
-    "Relation",
-    "Republic",
-    "Research",
-    "Resource",
-    "Response",
-    "Result",
-    "Revenue",
-    "Review",
-    "Risk",
-    "River",
-    "Road",
-    "Rock",
-    "Role",
-    "Room",
-    "Rule",
-    "Safety",
-    "Salad",
-    "Salt",
-    "Sample",
-    "Scale",
-    "Scene",
-    "School",
-    "Science",
-    "Screen",
-    "Section",
-    "Sector",
-    "Security",
-    "Sense",
-    "Series",
-    "Service",
-    "Session",
-    "Setting",
-    "Shape",
-    "Share",
-    "Shirt",
-    "Side",
-    "Sign",
-    "Singer",
-    "Sister",
-    "Site",
-    "Size",
-    "Skill",
-    "Society",
-    "Software",
-    "Soil",
-    "Solution",
-    "Song",
-    "Sound",
-    "Soup",
-    "Source",
-    "Space",
-    "Speaker",
-    "Speech",
-    "Sport",
-    "Square",
-    "Standard",
-    "Star",
-    "State",
-    "Steak",
-    "Step",
-    "Stock",
-    "Storage",
-    "Store",
-    "Story",
-    "Stranger",
-    "Strategy",
-    "Stress",
-    "Student",
-    "Studio",
-    "Study",
-    "Style",
-    "Subject",
-    "Success",
-    "Surgery",
-    "Sympathy",
-    "System",
-    "Table",
-    "Tale",
-    "Task",
-    "Teacher",
-    "Tennis",
-    "Tension",
-    "Term",
-    "Test",
-    "Thanks",
-    "Theory",
-    "Thing",
-    "Thought",
-    "Throat",
-    "Time",
-    "Tongue",
-    "Tool",
-    "Tooth",
-    "Topic",
-    "Town",
-    "Trade",
-    "Trainer",
-    "Training",
-    "Truth",
-    "Type",
-    "Uncle",
-    "Union",
-    "Unit",
-    "User",
-    "Value",
-    "Variety",
-    "Vehicle",
-    "Version",
-    "Video",
-    "View",
-    "Village",
-    "Virus",
-    "Voice",
-    "Volume",
-    "Warning",
-    "Water",
-    "Weakness",
-    "Wealth",
-    "Weather",
-    "Wedding",
-    "Week",
-    "While",
-    "Wife",
-    "Wind",
-    "Winner",
-    "Woman",
-    "Wood",
-    "Word",
-    "Work",
-    "Worker",
-    "World",
-    "Writer",
-    "Writing",
-    "Year",
-    "Youth"
-];
-
-const validRules = [
-    "0001",
-    "1011",
-    "0221",
-    "1231",
-    "0021",
-    "1031",
-    "0112",
-    "1012",
-    "1232",
-    "0332",
-    "0132",
-    "1032",
-    "0223",
-    "2023",
-    "3033",
-    "1233",
-    "0023",
-    "1033",
-    "0114",
-    "2024",
-    "1234",
-    "0134",
-    "1034",
-    "0024"
-];
-
-const forms = [
-    'All <span class="subject">$</span> is <span class="subject">$</span>',
-    'No <span class="subject">$</span> is <span class="subject">$</span>',
-    'Some <span class="subject">$</span> is <span class="subject">$</span>',
-    'Some <span class="subject">$</span> is not <span class="subject">$</span>'
-];
-
-const dirNames = [
-    null,
-    "North",
-    "North-East",
-    "East",
-    "South-East",
-    "South",
-    "South-West",
-    "West",
-    "North-West"
-];
-const dirCoords = [
-    [0, 0],
-    [0, -1],
-    [1, -1],
-    [1, 0],
-    [1, 1],
-    [0, 1],
-    [-1, 1],
-    [-1, 0],
-    [-1, -1]
-];
+let symbols;
 
 let savedata = {
     "premises": 2,
@@ -603,18 +54,10 @@ let savedata = {
     "enableAnalogy": true,
     "enableDirection": true,
     "enableBinary": true,
+    "enableMeaningfulWords": true,
     "questions": []
 };
 
-const keySettingMap = {
-    "p-1": "enableDistinction",
-    "p-2": "enableComparison",
-    "p-3": "enableSyllogism",
-    "p-4": "enableAnalogy",
-    "p-5": "premises",
-    "p-6": "enableDirection",
-    "p-7": "enableBinary"
-};
 const keySettingMapInverse = Object.entries(keySettingMap)
     .reduce((a, b) => (a[b[1]] = b[0], a), {});
 
@@ -710,6 +153,15 @@ function carouselInit() {
     carouselDisplayText.innerHTML = question.premises[0];
 }
 
+function displayInit() {
+    displayLabelType.textContent = question.category.split(":")[0];
+    displayLabelLevel.textContent = question.premises.length + " ps";
+    displayText.innerHTML = [
+        ...question.premises,
+        '<div class="formatted-conclusion">'+question.conclusion+'</div>'
+    ].join("<br>");
+}
+
 function carouselBack() {
     carouselIndex--;
     if (carouselIndex < 1)
@@ -754,8 +206,8 @@ function createSameOpposite(length) {
     let premises;
     let conclusion;
     do {
-        let rnd = Math.floor(Math.random() * nouns.length);
-        let first = nouns[rnd]
+        let rnd = Math.floor(Math.random() * symbols.length);
+        let first = symbols[rnd]
         let prev = first;
         let curr;
         let seen = [rnd];
@@ -766,11 +218,11 @@ function createSameOpposite(length) {
         premises = [];
 
         for (let i = 0; i < length - 1; i++) {
-            let rnd = Math.floor(Math.random() * nouns.length);
+            let rnd = Math.floor(Math.random() * symbols.length);
             while (seen.includes(rnd)) {
-                rnd = Math.floor(Math.random() * nouns.length);
+                rnd = Math.floor(Math.random() * symbols.length);
             }
-            curr = nouns[rnd];
+            curr = symbols[rnd];
             seen.push(rnd);
 
             if (coinFlip()) {
@@ -817,12 +269,12 @@ function createMoreLess(length) {
         let seen = [];
         bucket = Array(length).fill(0)
             .map(() => {
-                let rnd = Math.floor(Math.random() * nouns.length);
+                let rnd = Math.floor(Math.random() * symbols.length);
                 while (seen.includes(rnd)) {
-                    rnd = Math.floor(Math.random() * nouns.length);
+                    rnd = Math.floor(Math.random() * symbols.length);
                 }
                 seen.push(rnd);
-                return nouns[rnd];
+                return symbols[rnd];
             });
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
@@ -1064,7 +516,7 @@ function findDirection(aCoord, bCoord) {
 function createDirectionQuestion(length) {
     length++;
 
-    const words = pickUniqueItems(nouns, length);
+    const words = pickUniqueItems(symbols, length);
 
     let wordCoordMap = {};
     let premises = [];
@@ -1199,12 +651,12 @@ function createSyllogism(length) {
         let seen = [];
         bucket = Array(length).fill(0)
             .map(() => {
-                let rnd = Math.floor(Math.random() * nouns.length);
+                let rnd = Math.floor(Math.random() * symbols.length);
                 while (seen.includes(rnd)) {
-                    rnd = Math.floor(Math.random() * nouns.length);
+                    rnd = Math.floor(Math.random() * symbols.length);
                 }
                 seen.push(rnd);
-                return nouns[rnd];
+                return symbols[rnd];
             });
 
         premises = [];
@@ -1282,6 +734,17 @@ function init() {
     nextLevelEl.innerText = savedata.questions.length;
 
     const choices = [];
+    if (savedata.enableCarouselMode) {
+        carousel.classList.add("visible");
+        display.classList.remove("visible");
+    } else {
+        display.classList.add("visible");
+        carousel.classList.remove("visible");
+    }
+    if (savedata.enableMeaningfulWords)
+        symbols = nouns;
+    else
+        symbols = strings;
     if (savedata.enableDistinction)
         choices.push(createSameOpposite(savedata.premises));
     if (savedata.enableComparison)
@@ -1310,6 +773,7 @@ function init() {
     question = choices[Math.floor(Math.random() * choices.length)];
 
     carouselInit();
+    displayInit();
 }
 
 function wowFeedbackWrong(cb) {

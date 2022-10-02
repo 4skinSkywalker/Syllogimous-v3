@@ -270,11 +270,20 @@ button:not(:disabled):hover {
     color: #fff;
 }
 
-.carousel {
+.carousel, .display-outer {
     margin: 0 auto;
-    padding: 5rem 0;
     text-align: center;
     max-width: 460px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.carousel.visible, .display-outer.visible {
+    opacity: 1;
+    height: unset;
+    overflow: unset;
+    padding: 5em 0;
 }
 
 .confirmation-buttons {
@@ -302,14 +311,21 @@ button:not(:disabled):hover {
     box-shadow: 0 3px 5px 0 #a008!important;
 }
 
-.carousel_display_label-wrapper {
+.carousel_display_label-wrapper, .display-inner {
     position: relative;
     display: grid;
     gap: 1em;
+}
+
+.carousel_display_label-wrapper {
     padding: 1em;
 }
 
-.carousel_display_label-wrapper h2 {
+.display-inner {
+    padding: 1em 0 1em 1em;
+}
+
+.carousel_display_label-wrapper h2, .display-inner h2 {
     display: flex;
     font-family: "Espionage", sans-serif;
     font-size: 1rem;
@@ -321,8 +337,22 @@ button:not(:disabled):hover {
     width: 100%;
 }
 
-.carousel_display_label_progress {
+.carousel_display_label_progress, .display_label_level {
     font-family: monospace;
+}
+
+.display_text {
+    max-height: 300px;
+    line-height: 1.5;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.display_text .formatted-conclusion {
+    background-color: #0008;
+    margin-top: 1em;
+    margin-right: 1em;
+    padding: 0.5em;
 }
 
 .carousel_controls {
