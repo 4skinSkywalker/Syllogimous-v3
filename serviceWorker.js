@@ -1,4 +1,4 @@
-const version = "syllogimous-v17"
+const version = "syllogimous-v18"
 const assets = [
     "/",
     "/index.html",
