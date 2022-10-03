@@ -123,14 +123,11 @@ button:not(:disabled):hover {
 }
 
 .feedback--missed {
-    color: #bbba;
+    color: #fff;
 }
 
 .feedback--right {
     color: #0f0a;
-    background-image: url(feedback-right-bg.png);
-    background-size: auto 100vh;
-    background-position: center;
 }
 
 .feedback.active {

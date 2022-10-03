@@ -2797,6 +2797,7 @@ function timeElapsed() {
     savedata.questions.push(question);
     save();
     renderHQL();
+
     wowFeedbackMissed(init);
 }
 
@@ -2852,33 +2853,40 @@ function init() {
 }
 
 function wowFeedbackWrong(cb) {
-    feedbackWrong.style.transitionDuration = "1s";
+    feedbackWrong.style.transitionDuration = "0.5s";
     feedbackWrong.classList.add("active");
     setTimeout(() => {
         feedbackWrong.classList.remove("active");
         cb();
-    }, 1200);
+    }, 600);
 }
 
 function wowFeedbackMissed(cb) {
-    feedbackMissed.style.transitionDuration = "0.9s";
+    feedbackMissed.style.transitionDuration = "0.5s";
     feedbackMissed.classList.add("active");
     setTimeout(() => {
         feedbackMissed.classList.remove("active");
         cb();
-    }, 1100);
+    }, 600);
 }
 
 function wowFeedbackRight(cb) {
-    feedbackRight.style.transitionDuration = "0.8s";
+    feedbackRight.style.transitionDuration = "0.5s";
     feedbackRight.classList.add("active");
     setTimeout(() => {
         feedbackRight.classList.remove("active");
         cb();
-    }, 1000);
+    }, 600);
 }
 
 function checkIfTrue() {
+    delete question.bucket;
+    delete question.buckets;
+    question.answerUser = true;
+    savedata.questions.push(question);
+    save();
+    renderHQL();
+
     if (question.isValid) {
         savedata.score++;
         wowFeedbackRight(init);
@@ -2886,15 +2894,16 @@ function checkIfTrue() {
         wowFeedbackWrong(init);
         savedata.score--;
     }
-    delete question.bucket;
-    delete question.buckets;
-    question.answerUser = true;
-    savedata.questions.push(question);
-    save();
-    renderHQL();
 }
 
 function checkIfFalse() {
+    delete question.bucket;
+    delete question.buckets;
+    question.answerUser = false;
+    savedata.questions.push(question);
+    save();
+    renderHQL();
+
     if (!question.isValid) {
         savedata.score++;
         wowFeedbackRight(init);
@@ -2902,12 +2911,6 @@ function checkIfFalse() {
         wowFeedbackWrong(init);
         savedata.score--;
     }
-    delete question.bucket;
-    delete question.buckets;
-    question.answerUser = false;
-    savedata.questions.push(question);
-    save();
-    renderHQL();
 }
 
 function resetApp() {
