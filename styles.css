@@ -111,7 +111,6 @@ button:not(:disabled):hover {
     height: 0vh;
     left: 0;
     opacity: 0;
-    pointer-events: none;
     position: fixed;
     top: 50%;
     width: 100%;
@@ -318,11 +317,11 @@ button:not(:disabled):hover {
 }
 
 .carousel_display_label-wrapper {
-    padding: 1em;
+    padding: 1.5em 1em;
 }
 
 .display-inner {
-    padding: 1em 0 1em 1em;
+    padding: 1.5em 0 0 1em;
 }
 
 .carousel_display_label-wrapper h2, .display-inner h2 {
