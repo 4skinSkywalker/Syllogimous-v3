@@ -58,6 +58,7 @@ let savedata = {
     "enableBinary": true,
     "enableMeaningfulWords": true,
     "enableCarouselMode": true,
+    "enableTemporal": true,
     "questions": []
 };
 
@@ -70,7 +71,8 @@ const keySettingMap = {
     "p-6": "enableDirection",
     "p-7": "enableBinary",
     "p-8": "enableMeaningfulWords",
-    "p-9": "enableCarouselMode"
+    "p-9": "enableCarouselMode",
+    "p-10": "enableTemporal"
 };
 
 const strings = [
@@ -1645,7 +1647,6 @@ const nouns = [
     "Blade",
     "Blazer",
     "Blender",
-    "Blouse",
     "Board",
     "Boat",
     "Bones",
@@ -2400,6 +2401,74 @@ function createMoreLess(length) {
     }
 }
 
+function createBeforeAfter(length) {
+    length++;
+
+    const category = "Temporal";
+    let bucket;
+    let isValid;
+    let premises;
+    let conclusion;
+    do {
+        let seen = [];
+        bucket = Array(length).fill(0)
+            .map(() => {
+                let rnd = Math.floor(Math.random() * symbols.length);
+                while (seen.includes(rnd)) {
+                    rnd = Math.floor(Math.random() * symbols.length);
+                }
+                seen.push(rnd);
+                return symbols[rnd];
+            });
+
+        let sign = [-1, 1][Math.floor(Math.random() * 2)];
+
+        premises = [];
+        let next;
+
+        for (let i = 0; i < length - 1; i++) {
+            let curr = bucket[i];
+            next = bucket[i + 1];
+            if (coinFlip()) {
+                if (sign === 1) {
+                    premises.push(`<span class="subject">${next}</span> is after <span class="subject">${curr}</span>`);
+                } else {
+                    premises.push(`<span class="subject">${curr}</span> is after <span class="subject">${next}</span>`);
+                }
+            } else {
+                if (sign === 1) {
+                    premises.push(`<span class="subject">${curr}</span> is before <span class="subject">${next}</span>`);
+                } else {
+                    premises.push(`<span class="subject">${next}</span> is before <span class="subject">${curr}</span>`);
+                }
+            }
+        }
+
+        let a = Math.floor(Math.random() * bucket.length);
+        let b = Math.floor(Math.random() * bucket.length);
+        while (a === b) {
+            b = Math.floor(Math.random() * bucket.length);
+        }
+        if (coinFlip()) {
+            conclusion = `<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>`;
+            isValid = sign === 1 && a < b || sign === -1 && a > b;
+        } else {
+            conclusion = `<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`;
+            isValid = sign === 1 && a > b || sign === -1 && a < b;
+        }
+    } while(isPremiseEqualToConclusion(premises, conclusion));
+
+    shuffle(premises);
+
+    return {
+        category,
+        bucket,
+        isValid,
+        premises,
+        conclusion
+    }
+}
+
 function shuffle(array) {
     let currentIndex = array.length, randomIndex;
     while (currentIndex != 0) {
@@ -2451,6 +2520,7 @@ function createBinaryQuestion(length) {
         let [generator, generator2] = pickUniqueItems([
             createSameOpposite,
             createMoreLess,
+            createBeforeAfter,
             createDirectionQuestion
         ], 2);
 
@@ -2486,8 +2556,9 @@ function createSameDifferent(length) {
     // There are 3 choices:
     // 0. Same/Opposite;
     // 1. More/Less;
-    // 2. Direction.
-    const choiceIndex = Math.floor(Math.random()*3);
+    // 2. Before/After;
+    // 3. Direction.
+    const choiceIndex = Math.floor(Math.random()*4);
     let choice;
     let conclusion = "";
     let subtype;
@@ -2522,6 +2593,20 @@ function createSameDifferent(length) {
 
         choice = createMoreLess(length);
         subtype = "More/Less";
+
+        // Pick 4 different items
+        [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
+        conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+        // Find indices of elements
+        [indexOfA, indexOfB] = [choice.bucket.indexOf(a), choice.bucket.indexOf(b)];
+        [indexOfC, indexOfD] = [choice.bucket.indexOf(c), choice.bucket.indexOf(d)];
+        isValidSame = indexOfA > indexOfB && indexOfC > indexOfD
+                   || indexOfA < indexOfB && indexOfC < indexOfD;
+    }
+    else if (choiceIndex === 2) {
+
+        choice = createBeforeAfter(length);
+        subtype = "Before/After";
 
         // Pick 4 different items
         [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
@@ -2825,6 +2910,8 @@ function init() {
         choices.push(createSameOpposite(savedata.premises));
     if (savedata.enableComparison)
         choices.push(createMoreLess(savedata.premises));
+    if (savedata.enableTemporal)
+        choices.push(createBeforeAfter(savedata.premises));
     if (savedata.enableSyllogism)
         choices.push(createSyllogism(savedata.premises));
     if (savedata.premises > 2 && savedata.enableAnalogy)
