@@ -2836,7 +2836,7 @@ function createSyllogism(length) {
             let m = flip ? bucket[rnd] : bucket[i];
             premises.push(getSyllogism("#####", p, m, getRandomInvalidRule())[0]);
         }
-    } while(isPremiseEqualToConclusion(premises, conclusion));
+    } while(isPremiseSimilarToConlusion(premises, conclusion));
 
     premises = shuffle(premises);
 
@@ -2861,10 +2861,6 @@ function isPremiseSimilarToConlusion(premises, conclusion) {
          || subjects[1]+subjects[0] === subjectsOfConclusion[0]+subjectsOfConclusion[1])
             return true;
     }
-}
-
-function isPremiseEqualToConclusion(premises, conclusion) {
-    return premises.some(p => p === conclusion);
 }
 
 function startCountDown() {
