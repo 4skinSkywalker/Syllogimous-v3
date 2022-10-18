@@ -1656,7 +1656,7 @@ const nouns = [
     "Boots",
     "Bow",
     "Box",
-    "Boxers",
+    "Boxer",
     "Boy",
     "Bra",
     "Brain",
@@ -2320,7 +2320,7 @@ function createSameOpposite(length) {
             conclusion = `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`;
             isValid = buckets[1].includes(curr);
         }
-    } while(isPremiseEqualToConclusion(premises, conclusion));
+    } while(isPremiseSimilarToConlusion(premises, conclusion));
 
     shuffle(premises);
 
@@ -2388,7 +2388,7 @@ function createMoreLess(length) {
             conclusion = `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`;
             isValid = sign === 1 && a > b || sign === -1 && a < b;
         }
-    } while(isPremiseEqualToConclusion(premises, conclusion));
+    } while(isPremiseSimilarToConlusion(premises, conclusion));
 
     shuffle(premises);
 
@@ -2456,7 +2456,7 @@ function createBeforeAfter(length) {
             conclusion = `<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`;
             isValid = sign === 1 && a > b || sign === -1 && a < b;
         }
-    } while(isPremiseEqualToConclusion(premises, conclusion));
+    } while(isPremiseSimilarToConlusion(premises, conclusion));
 
     shuffle(premises);
 
@@ -2846,6 +2846,20 @@ function createSyllogism(length) {
         isValid,
         premises,
         conclusion
+    }
+}
+
+function extractSubjects(phrase) {
+    return [...phrase.matchAll(/<span class="subject">(.*?)<\/span>/g)].map(a => a[1]);
+}
+
+function isPremiseSimilarToConlusion(premises, conclusion) {
+    const subjectsOfPremises = premises.map(p => extractSubjects(p));
+    const subjectsOfConclusion = extractSubjects(conclusion);
+    for (const subjects of subjectsOfPremises) {
+        if (subjects[0]+subjects[1] === subjectsOfConclusion[0]+subjectsOfConclusion[1]
+         || subjects[1]+subjects[0] === subjectsOfConclusion[0]+subjectsOfConclusion[1])
+            return true;
     }
 }
 
