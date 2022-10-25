@@ -2863,6 +2863,16 @@ function isPremiseSimilarToConlusion(premises, conclusion) {
     }
 }
 
+function switchButtons() {
+    const parent = document.querySelectorAll(".confirmation-buttons");
+    for (let p of parent) {
+        const firstChild = p.firstElementChild;
+        p.removeChild(firstChild);
+        p.appendChild(firstChild);
+    }
+}
+switchButtons();
+
 function startCountDown() {
     timerRunning = true;
     animateTimerBar();
@@ -2944,6 +2954,11 @@ function init() {
     }
 
     question = choices[Math.floor(Math.random() * choices.length)];
+
+    // Switch confirmation buttons a random amount of times
+    for (let i = Math.floor(Math.random()*10); i > 0; i--) {
+        switchButtons();
+    }
 
     carouselInit();
     displayInit();

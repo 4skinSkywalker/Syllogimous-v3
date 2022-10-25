@@ -283,6 +283,9 @@ button:not(:disabled):hover {
 }
 
 .confirmation-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
     margin-top: 3rem;
     transition: all 0.3s ease-out;
 }
@@ -485,9 +488,9 @@ label.open[for="offcanvas-history"]:hover {
     align-content: start;
     background-image: radial-gradient(circle at top center, #000, #100);
     color: #fffff0;
+    display: flex;
     height: 100%;
     max-width: 360px;
-    overflow: auto;
     position: absolute;
     top: 0;
     transition: all 0.3s ease-out;
@@ -495,14 +498,26 @@ label.open[for="offcanvas-history"]:hover {
     z-index: 1000;
 }
 
+.offcanvas-body {
+    overflow: auto;
+    padding: 1rem;
+    width: calc(100% - 2rem)
+}
+
+.offcanvas-side {
+    width: 2rem;
+}
+
 .offcanvas--left {
     left: 0;
-    padding: 1rem 3rem 1rem 1rem;
     transform: translateX(-100%);
 }
 
+.offcanvas--left .offcanvas-body {
+    direction: rtl;
+}
+
 .offcanvas--right {
-    padding: 1rem 1rem 1rem 3rem;
     right: 0;
     transform: translateX(100%);
 }
@@ -512,7 +527,7 @@ label.open[for="offcanvas-history"]:hover {
     font-size: 1.5rem;
     line-height: 1;
     padding: 0.5rem;
-    position: absolute;
+    position: sticky;
     top: 0;
 }
 
