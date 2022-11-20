@@ -1780,7 +1780,6 @@ const nouns = [
     "Fox",
     "Freezer",
     "Fridge",
-    "Frock",
     "Frog",
     "Fruit",
     "Gadgets",
@@ -1954,7 +1953,6 @@ const nouns = [
     "Sandals",
     "Sandals",
     "Sandwich",
-    "Sari",
     "Saw",
     "Saxophone",
     "Scale",
@@ -2103,10 +2101,36 @@ const validRules = [
 ];
 
 const forms = [
-    'All <span class="subject">$</span> is <span class="subject">$</span>',
-    'No <span class="subject">$</span> is <span class="subject">$</span>',
-    'Some <span class="subject">$</span> is <span class="subject">$</span>',
-    'Some <span class="subject">$</span> is not <span class="subject">$</span>'
+    [
+        'All <span class="subject">$</span> is <span class="subject">$</span>',
+        'No <span class="subject">$</span> is <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is not <span class="subject">$</span>'
+    ],
+    [
+        'All <span class="subject">$</span> is <span class="subject">$</span>',
+        'All <span class="subject">$</span> is not <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is <span class="subject">$</span>',
+        'Not all <span class="subject">$</span> is <span class="subject">$</span>'
+    ],
+    [
+        '<span class="subject">$</span> is inside <span class="subject">$</span>',
+        '<span class="subject">$</span> is not inside <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is inside <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is not inside <span class="subject">$</span>'
+    ],
+    [
+        '<span class="subject">$</span> is not outside <span class="subject">$</span>',
+        '<span class="subject">$</span> is outside <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is not outside <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is outside <span class="subject">$</span>'
+    ],
+    [
+        '<span class="subject">$</span> is contained in <span class="subject">$</span>',
+        '<span class="subject">$</span> is not contained in <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is contained in <span class="subject">$</span>',
+        'Some <span class="subject">$</span> is not contained in <span class="subject">$</span>'
+    ]
 ];
 
 const dirNames = [
@@ -2301,11 +2325,20 @@ function createSameOpposite(length) {
             curr = symbols[rnd];
             seen.push(rnd);
 
+            let premise;
             if (coinFlip()) {
-                premises.push(`<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`);
+                if (coinFlip())
+                    premise = `<span class="subject">${prev}</span> is the same as <span class="subject">${curr}</span>`;
+                else
+                    premise = `<span class="subject">${prev}</span> is not the opposite of <span class="subject">${curr}</span>`;
+                premises.push(premise);
                 buckets[prevBucket].push(curr);
             } else {
-                premises.push(`<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`);
+                if (coinFlip())
+                    premise = `<span class="subject">${prev}</span> is not the same as <span class="subject">${curr}</span>`;
+                else
+                    premise = `<span class="subject">${prev}</span> is the opposite of <span class="subject">${curr}</span>`;
+                premises.push(premise);
                 prevBucket = (prevBucket + 1) % 2;
                 buckets[prevBucket].push(curr);
             }
@@ -2314,10 +2347,16 @@ function createSameOpposite(length) {
         }
 
         if (coinFlip()) {
-            conclusion = `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`;
+            if (coinFlip())
+                conclusion = `<span class="subject">${first}</span> is the same as <span class="subject">${curr}</span>`;
+            else
+                conclusion = `<span class="subject">${first}</span> is not the opposite of <span class="subject">${curr}</span>`;
             isValid = buckets[0].includes(curr);
         } else {
-            conclusion = `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`;
+            if (coinFlip())
+                conclusion = `<span class="subject">${first}</span> is not the same as <span class="subject">${curr}</span>`;
+            else
+                conclusion = `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`;
             isValid = buckets[1].includes(curr);
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
@@ -2361,17 +2400,35 @@ function createMoreLess(length) {
         for (let i = 0; i < length - 1; i++) {
             let curr = bucket[i];
             next = bucket[i + 1];
+
+            let premise;
             if (coinFlip()) {
                 if (sign === 1) {
-                    premises.push(`<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`);
+                    if (coinFlip())
+                        premise = `<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`;
+                    else
+                        premise = `<span class="subject">${next}</span> is not ≤ to <span class="subject">${curr}</span>`;
+                    premises.push(premise);
                 } else {
-                    premises.push(`<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>`);
+                    if (coinFlip())
+                        premise = `<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>`;
+                    else
+                        premise = `<span class="subject">${curr}</span> is not ≤ to <span class="subject">${next}</span>`;
+                    premises.push(premise);
                 }
             } else {
                 if (sign === 1) {
-                    premises.push(`<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>`);
+                    if (coinFlip())
+                        premise = `<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>`;
+                    else
+                        premise = `<span class="subject">${curr}</span> is not ≥ to <span class="subject">${next}</span>`;
+                    premises.push(premise);
                 } else {
-                    premises.push(`<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>`);
+                    if (coinFlip())
+                        premise = `<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>`;
+                    else
+                        premise = `<span class="subject">${next}</span> is not ≥ to <span class="subject">${curr}</span>`;
+                    premises.push(premise);
                 }
             }
         }
@@ -2382,10 +2439,16 @@ function createMoreLess(length) {
             b = Math.floor(Math.random() * bucket.length);
         }
         if (coinFlip()) {
-            conclusion = `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`;
+            if (coinFlip())
+                conclusion = `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`;
+            else
+                conclusion = `<span class="subject">${bucket[a]}</span> is not ≥ to <span class="subject">${bucket[b]}</span>`;
             isValid = sign === 1 && a < b || sign === -1 && a > b;
         } else {
-            conclusion = `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`;
+            if (coinFlip())
+                conclusion = `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`;
+            else
+                conclusion = `<span class="subject">${bucket[a]}</span> is not ≤ to <span class="subject">${bucket[b]}</span>`;
             isValid = sign === 1 && a > b || sign === -1 && a < b;
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
@@ -2429,17 +2492,34 @@ function createBeforeAfter(length) {
         for (let i = 0; i < length - 1; i++) {
             let curr = bucket[i];
             next = bucket[i + 1];
+            let premise;
             if (coinFlip()) {
                 if (sign === 1) {
-                    premises.push(`<span class="subject">${next}</span> is after <span class="subject">${curr}</span>`);
+                    if (coinFlip())
+                        premise = `<span class="subject">${next}</span> is after <span class="subject">${curr}</span>`;
+                    else
+                        premise = `<span class="subject">${next}</span> is not before <span class="subject">${curr}</span>`;
+                    premises.push(premise);
                 } else {
-                    premises.push(`<span class="subject">${curr}</span> is after <span class="subject">${next}</span>`);
+                    if (coinFlip())
+                        premise = `<span class="subject">${curr}</span> is after <span class="subject">${next}</span>`
+                    else
+                        premise = `<span class="subject">${curr}</span> is not before <span class="subject">${next}</span>`;
+                    premises.push(premise);
                 }
             } else {
                 if (sign === 1) {
-                    premises.push(`<span class="subject">${curr}</span> is before <span class="subject">${next}</span>`);
+                    if (coinFlip())
+                        premise = `<span class="subject">${curr}</span> is before <span class="subject">${next}</span>`;
+                    else
+                        premise = `<span class="subject">${curr}</span> is not after <span class="subject">${next}</span>`;
+                    premises.push(premise);
                 } else {
-                    premises.push(`<span class="subject">${next}</span> is before <span class="subject">${curr}</span>`);
+                    if (coinFlip())
+                        premise = `<span class="subject">${next}</span> is before <span class="subject">${curr}</span>`;
+                    else
+                        premise = `<span class="subject">${next}</span> is not after <span class="subject">${curr}</span>`;
+                    premises.push(premise);
                 }
             }
         }
@@ -2450,10 +2530,16 @@ function createBeforeAfter(length) {
             b = Math.floor(Math.random() * bucket.length);
         }
         if (coinFlip()) {
-            conclusion = `<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>`;
+            if (coinFlip())
+                conclusion = `<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>`;
+            else
+                conclusion = `<span class="subject">${bucket[a]}</span> is not after <span class="subject">${bucket[b]}</span>`;
             isValid = sign === 1 && a < b || sign === -1 && a > b;
         } else {
-            conclusion = `<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`;
+            if (coinFlip())
+                conclusion = `<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`;
+            else
+                conclusion = `<span class="subject">${bucket[a]}</span> is not before <span class="subject">${bucket[b]}</span>`;
             isValid = sign === 1 && a > b || sign === -1 && a < b;
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
@@ -2761,9 +2847,11 @@ function getRandomInvalidRule() {
 
 function getSyllogism(s, p, m, rule) {
 
-    let major = forms[rule[0]];
-    let minor = forms[rule[1]];
-    let conclusion = forms[rule[2]];
+    const _forms = pickUniqueItems(forms, 1).pop();
+
+    let major = _forms[rule[0]];
+    let minor = _forms[rule[1]];
+    let conclusion = _forms[rule[2]];
 
     let figure = +rule[3];
 
@@ -2970,7 +3058,7 @@ function wowFeedbackWrong(cb) {
     setTimeout(() => {
         feedbackWrong.classList.remove("active");
         cb();
-    }, 600);
+    }, 1200);
 }
 
 function wowFeedbackMissed(cb) {
@@ -2979,7 +3067,7 @@ function wowFeedbackMissed(cb) {
     setTimeout(() => {
         feedbackMissed.classList.remove("active");
         cb();
-    }, 600);
+    }, 1200);
 }
 
 function wowFeedbackRight(cb) {
@@ -2988,7 +3076,7 @@ function wowFeedbackRight(cb) {
     setTimeout(() => {
         feedbackRight.classList.remove("active");
         cb();
-    }, 600);
+    }, 1200);
 }
 
 function checkIfTrue() {
