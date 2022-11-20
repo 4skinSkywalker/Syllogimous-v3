@@ -2723,19 +2723,32 @@ function createSameDifferent(length) {
     if (coinFlip()) {
         isValid = isValidSame;
         if (choiceIndex < 1) {
-            conclusion += '<div style="margin: 2px 0;">is same as</div>';
+            if (coinFlip())
+                conclusion += '<div style="margin: 2px 0;">is the same as</div>';
+            else
+                conclusion += '<div style="margin: 2px 0;">is not different from</div>';
         }
         else {
-            conclusion += '<div style="font-size: 14px; margin: 2px 0;">has the same relation as</div>';
+            if (coinFlip())
+                conclusion += '<div style="font-size: 14px; margin: 2px 0;">has the same relation as</div>';
+            else
+                conclusion += '<div style="font-size: 14px; margin: 2px 0;">has not a different relation from</div>';
         }
     }
     else {
         isValid = !isValidSame;
         if (choiceIndex < 1) {
-            conclusion += '<div style="margin: 2px 0;">is different from</div>';
+            if (coinFlip())
+                conclusion += '<div style="margin: 2px 0;">is different from</div>';
+            else
+                conclusion += '<div style="margin: 2px 0;">is not the same as</div>';
+
         }
         else {
-            conclusion += '<div style="font-size: 12px; margin: 4px 0;">has a different relation from</div>';
+            if (coinFlip())
+                conclusion += '<div style="font-size: 12px; margin: 4px 0;">has a different relation from</div>';
+            else
+                conclusion += '<div style="font-size: 12px; margin: 4px 0;">has not the same relation as</div>';
         }
     }
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
