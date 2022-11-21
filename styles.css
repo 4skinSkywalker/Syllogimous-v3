@@ -670,7 +670,7 @@ input[type="checkbox"]:checked + .switch::after {
         font-size: 20px;
     }
 
-    .carousel {
+    .carousel, .display-outer {
         max-width: 320px;
     }
 }
