@@ -2328,15 +2328,15 @@ function createSameOpposite(length) {
             let premise;
             if (coinFlip()) {
                 const ps = [
-                    `<span class="subject">${prev}</span> is the same as <span class="subject">${curr}</span>`,
-                    `Inverse of <span class="subject">${prev}</span> is the opposite of <span class="subject">${curr}</span>`,
+                    `<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`,
+                    `Inverse of <span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`,
                 ];
                 premises.push(pickUniqueItems(ps, 1)[0]);
                 buckets[prevBucket].push(curr);
             } else {
                 const ps = [
-                    `Inverse of <span class="subject">${prev}</span> is the same as <span class="subject">${curr}</span>`,
-                    `<span class="subject">${prev}</span> is the opposite of <span class="subject">${curr}</span>`,
+                    `Inverse of <span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`,
+                    `<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`,
                 ];
                 premises.push(pickUniqueItems(ps, 1)[0]);
                 prevBucket = (prevBucket + 1) % 2;
@@ -2348,14 +2348,14 @@ function createSameOpposite(length) {
 
         if (coinFlip()) {
             const cs = [
-                `<span class="subject">${first}</span> is the same as <span class="subject">${curr}</span>`,
-                `Inverse of <span class="subject">${first}</span> is the opposite of <span class="subject">${curr}</span>`,
+                `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
+                `Inverse of <span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
             ];
             conclusion = pickUniqueItems(cs, 1)[0];
             isValid = buckets[0].includes(curr);
         } else {
             const cs = [
-                `Inverse of <span class="subject">${first}</span> is the same as <span class="subject">${curr}</span>`,
+                `Inverse of <span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
                 `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
             ];
             conclusion = pickUniqueItems(cs, 1)[0];
