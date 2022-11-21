@@ -2330,12 +2330,12 @@ function createSameOpposite(length) {
                 if (coinFlip())
                     premise = `<span class="subject">${prev}</span> is the same as <span class="subject">${curr}</span>`;
                 else
-                    premise = `<span class="subject">${prev}</span> is not the opposite of <span class="subject">${curr}</span>`;
+                    premise = `Inverted <span class="subject">${prev}</span> is the opposite of <span class="subject">${curr}</span>`;
                 premises.push(premise);
                 buckets[prevBucket].push(curr);
             } else {
                 if (coinFlip())
-                    premise = `<span class="subject">${prev}</span> is not the same as <span class="subject">${curr}</span>`;
+                    premise = `Inverted <span class="subject">${prev}</span> is the same as <span class="subject">${curr}</span>`;
                 else
                     premise = `<span class="subject">${prev}</span> is the opposite of <span class="subject">${curr}</span>`;
                 premises.push(premise);
@@ -2350,11 +2350,11 @@ function createSameOpposite(length) {
             if (coinFlip())
                 conclusion = `<span class="subject">${first}</span> is the same as <span class="subject">${curr}</span>`;
             else
-                conclusion = `<span class="subject">${first}</span> is not the opposite of <span class="subject">${curr}</span>`;
+                conclusion = `Inverted <span class="subject">${first}</span> is the opposite of <span class="subject">${curr}</span>`;
             isValid = buckets[0].includes(curr);
         } else {
             if (coinFlip())
-                conclusion = `<span class="subject">${first}</span> is not the same as <span class="subject">${curr}</span>`;
+                conclusion = `Inverted <span class="subject">${first}</span> is the same as <span class="subject">${curr}</span>`;
             else
                 conclusion = `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`;
             isValid = buckets[1].includes(curr);
