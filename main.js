@@ -2605,7 +2605,8 @@ function createBinaryQuestion(length) {
             createSameOpposite,
             createMoreLess,
             createBeforeAfter,
-            createDirectionQuestion
+            createDirectionQuestion,
+            createSyllogism
         ], 2);
 
         [choice, choice2] = [
