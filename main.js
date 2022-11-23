@@ -2535,7 +2535,7 @@ function createBeforeAfter(length) {
         } else {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`,
-                `<span class="subject">${bucket[a]}</span> is not before <span class="subject">${bucket[b]}</span>`,
+                `Opposite of <span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>`,
             ];
             conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
             isValid = sign === 1 && a > b || sign === -1 && a < b;
