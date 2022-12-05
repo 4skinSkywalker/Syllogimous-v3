@@ -2349,8 +2349,8 @@ function createSameOpposite(length) {
             isValid = buckets[0].includes(curr);
         } else {
             const cs = [
-                `Opposite of <span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
                 `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
+                `Opposite of <span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
             ];
             conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
             isValid = buckets[1].includes(curr);
