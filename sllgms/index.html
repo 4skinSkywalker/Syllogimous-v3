@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Syllogimous v3</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no">
+		<meta name="mobile-web-app-capable" content="yes">
+		<link rel="stylesheet" href="styles.css">
+	</head>
+	<body>
+
+		<div class="main">
+			<pre class="list"></pre>
+			<div class="settings">
+				<div>
+					# of premises <input type="number" min="2" value="2" id="premise-num">
+				</div>
+				<div>
+					Enable negation <input type="checkbox" id="negation">
+				</div>
+				<div>
+					Only valid <input type="checkbox" id="valid">
+				</div>
+				<div>
+					Only invalid <input type="checkbox" id="invalid">
+				</div>
+				<div>
+					<button onClick="generate('createSameOpposite')">createSameOpposite(<input type="number" min="1" value="1" id="same-opposite-qty">)</button>
+				</div>
+				<div>
+					<button onClick="generate('createMoreLess')">createMoreLess(<input type="number" min="1" value="1" id="more-less-qty">)</button>
+				</div>
+				<div>
+					<button onClick="generate('createBeforeAfter')">createBeforeAfter(<input type="number" min="1" value="1" id="before-after-qty">)</button>
+				</div>
+				<div>
+					<button onClick="generate('createSyllogism')">createSyllogism(<input type="number" min="1" value="1" id="syllogism-qty">)</button>
+				</div>
+				<div>
+					<button onClick="generate('createSameDifferent')">createSameDifferent(<input type="number" min="1" value="1" id="same-different-qty">)</button>
+				</div>
+				<div>
+					<button onClick="generate('createDirectionQuestion')">createDirectionQuestion(<input type="number" min="1" value="1" id="direction-question-qty">)</button>
+				</div>
+				<div>
+					<fieldset>
+						<button onClick="generate('createBinaryQuestion')">createBinaryQuestion(<input type="number" min="1" value="1" id="binary-question-qty">)</button>
+						<label for="bin-type">Binary Type</label>
+						<select name="bin-type" id="bin-type">
+							<option value="$">Every type</option>
+						</select>
+					</fieldset>
+				</div>
+		</div>
+
+		<script src="main.js"></script>
+	</body>
+</html>

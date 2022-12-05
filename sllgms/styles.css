@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+}
+
+.main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    justify-items: center;
+    padding: 0 2rem;
+}
+
+.list {
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 0 5rem;
+}
+
+.settings {
+    align-content: center;
+    display: grid;
+    gap: 0.5rem;
+}
+
+.settings input {
+    width: 5ch;
+}
