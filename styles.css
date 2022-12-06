@@ -132,7 +132,7 @@ button:not(:disabled):hover {
 
 .feedback.active {
     height: 100vh;
-    opacity: 0.8;
+    opacity: 0.88;
     top: 0%;
 }
 
