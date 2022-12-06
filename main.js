@@ -48,13 +48,15 @@ let symbols;
 
 let savedata = {
     "premises": 2,
-    "timer": 10,
+    "timer": 30,
     "score": 0,
     "enableDistinction": true,
     "enableComparison": true,
     "enableSyllogism": true,
     "enableAnalogy": true,
     "enableDirection": true,
+    "enableDirection3D": true,
+    "enableDirection4D": true,
     "enableBinary": true,
     "enableMeaningfulWords": true,
     "enableCarouselMode": true,
@@ -74,7 +76,9 @@ const keySettingMap = {
     "p-8": "enableMeaningfulWords",
     "p-9": "enableCarouselMode",
     "p-10": "enableTemporal",
-    "p-11": "enableNegation"
+    "p-11": "enableNegation",
+    "p-12": "enableDirection3D",
+    "p-13": "enableDirection4D"
 };
 
 const strings = [
@@ -2152,6 +2156,65 @@ const dirCoords = [
     [-1, -1]
 ];
 
+const dirNames3D = [];
+const nameInverseDir3D = {};
+const dirString = (x, y, z) => {
+    let str = '';
+    if (z === 1) str = 'Above';
+    if (z === -1) str = 'Below';
+    if (z && (x || y)) str += ' and ';
+    if (y === 1) str += 'North';
+    if (y === -1) str += 'South';
+    if (y && x) str += '-';
+    if (x === 1) str += 'East';
+    if (x === -1) str += 'West';
+    return str;
+}
+const xs = Array(3).fill(0).map((_, i) => i-1)
+const dirCoords3D = [];
+xs.map(x =>
+    xs.map(y =>
+        xs.map(z => {
+            if (x === 0 && y === 0 && z === 0) return;
+            dirCoords3D.push([ x, y, z ]);
+            dirNames3D.push(dirString(x, y, z));
+            nameInverseDir3D[dirString(x, y, z)] = dirString(-x, -y, -z);
+        })
+    )
+);
+
+const dirNames4D = [];
+const nameInverseDir4D = {};
+const dirString4D = (x, y, z, a) => {
+    let str = '';
+    if (a === 1) str = 'After';
+    if (a === -1) str = 'Before';
+    if (a && z && (x || y)) str += ', ';
+    if (a && z && !(x || y) || a && !z && (x || y)) str += ' and ';
+    if (z === 1) str += 'Above';
+    if (z === -1) str += 'Below';
+    if (z && (x || y)) str += ' and ';
+    if (y === 1) str += 'North';
+    if (y === -1) str += 'South';
+    if (y && x) str += '-';
+    if (x === 1) str += 'East';
+    if (x === -1) str += 'West';
+    return str;
+}
+const dirCoords4D = [];
+xs.map(x =>
+    xs.map(y =>
+        xs.map(z =>
+            xs.map(a => {
+                if (x === 0 && y === 0 && z === 0 && a === 0) return;
+                dirCoords4D.push([ x, y, z, a ]);
+                dirNames4D.push(dirString4D(x, y, z, a));
+                nameInverseDir4D[dirString4D(x, y, z, a)] = dirString4D(-x, -y, -z, -a);
+            })
+        )
+    )
+);
+
 const keySettingMapInverse = Object.entries(keySettingMap)
     .reduce((a, b) => (a[b[1]] = b[0], a), {});
 
@@ -2846,6 +2909,189 @@ function createDirectionQuestion(length) {
     }
 }
 
+function findDirection3D(aCoord, bCoord) {
+    const x = aCoord[0];
+    const y = aCoord[1];
+    const z = aCoord[2];
+    const x2 = bCoord[0];
+    const y2 = bCoord[1];
+    const z2 = bCoord[2];
+    const dx = ((x - x2)/Math.abs(x - x2)) || 0;
+    const dy = ((y - y2)/Math.abs(y - y2)) || 0;
+    const dz = ((z - z2)/Math.abs(z - z2)) || 0;
+    const dirIndex = dirCoords3D.findIndex(c => c[0] === dx && c[1] === dy && c[2] === dz);
+    const dirName = dirNames3D[dirIndex];
+    return dirName;
+}
+
+function createDirectionQuestion3D(length) {
+    length++;
+
+    const words = pickUniqueItems(symbols, length);
+
+    let wordCoordMap = {};
+    let premises = [];
+    let conclusion;
+    let conclusionDirName;
+    while (!conclusionDirName) {
+
+        wordCoordMap = {};
+        premises = [];
+
+        for (let i = 0; i < words.length - 1; i++) {
+            const dirIndex = 1 + Math.floor(Math.random()*(dirNames3D.length - 1));
+            const dirName = dirNames3D[dirIndex];
+            const dirCoord = dirCoords3D[dirIndex];
+            if (i === 0) {
+                wordCoordMap[words[i]] = [0,0,0];
+            }
+            wordCoordMap[words[i+1]] = [
+                wordCoordMap[words[i]][0] + dirCoord[0], // x
+                wordCoordMap[words[i]][1] + dirCoord[1], // y
+                wordCoordMap[words[i]][2] + dirCoord[2], // z
+            ];
+            const ps = [
+                `<span class="subject">${words[i+1]}</span> is ${dirName} of <span class="subject">${words[i]}</span>`,
+                `<span class="subject">${words[i+1]}</span> is opposite of ${nameInverseDir3D[dirName]} of <span class="subject">${words[i]}</span>`,
+            ];
+            premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+        }
+
+        conclusionDirName = findDirection3D(
+            wordCoordMap[words[0]],
+            wordCoordMap[words[length-1]]
+        );
+    }
+
+    let isValid;
+    if (coinFlip()) { // correct
+        isValid = true;
+        const cs = [
+            `<span class="subject">${words[0]}</span> is ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`,
+            `<span class="subject">${words[0]}</span> is opposite of ${nameInverseDir3D[conclusionDirName]} of <span class="subject">${words[words.length-1]}</span>`,
+        ];
+        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+    }
+    else {            // wrong
+        isValid = false;
+        let oppositeDirection = findDirection3D(
+            wordCoordMap[words[length-1]],
+            wordCoordMap[words[0]]
+        );
+        const cs = [
+            `<span class="subject">${words[0]}</span> is ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`,
+            `<span class="subject">${words[0]}</span> is opposite of ${nameInverseDir3D[oppositeDirection]} of <span class="subject">${words[words.length-1]}</span>`
+        ];
+        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];;
+    }
+
+    shuffle(premises);
+    
+    return {
+        category: "Direction Three D",
+        wordCoordMap,
+        isValid,
+        premises,
+        conclusion
+    }
+}
+
+function findDirection4D(aCoord, bCoord) {
+    const x = aCoord[0];
+    const y = aCoord[1];
+    const z = aCoord[2];
+    const a = aCoord[3];
+    const x2 = bCoord[0];
+    const y2 = bCoord[1];
+    const z2 = bCoord[2];
+    const a2 = bCoord[2];
+    const dx = ((x - x2)/Math.abs(x - x2)) || 0;
+    const dy = ((y - y2)/Math.abs(y - y2)) || 0;
+    const dz = ((z - z2)/Math.abs(z - z2)) || 0;
+    const da = ((a - a2)/Math.abs(a - a2)) || 0;
+    const dirIndex = dirCoords4D.findIndex(c =>
+        c[0] === dx
+     && c[1] === dy
+     && c[2] === dz
+     && c[3] === da
+    );
+    const dirName = dirNames4D[dirIndex];
+    return dirName;
+}
+
+function createDirectionQuestion4D(length) {
+    length++;
+
+    const words = pickUniqueItems(symbols, length);
+
+    let wordCoordMap = {};
+    let premises = [];
+    let conclusion;
+    let conclusionDirName;
+    while (!conclusionDirName) {
+
+        wordCoordMap = {};
+        premises = [];
+
+        for (let i = 0; i < words.length - 1; i++) {
+            const dirIndex = 1 + Math.floor(Math.random()*(dirNames4D.length - 1));
+            const dirName = dirNames4D[dirIndex];
+            const dirCoord = dirCoords4D[dirIndex];
+            if (i === 0) {
+                wordCoordMap[words[i]] = [0,0,0,0];
+            }
+            wordCoordMap[words[i+1]] = [
+                wordCoordMap[words[i]][0] + dirCoord[0], // x
+                wordCoordMap[words[i]][1] + dirCoord[1], // y
+                wordCoordMap[words[i]][2] + dirCoord[2], // z
+                wordCoordMap[words[i]][3] + dirCoord[3], // a
+            ];
+            const ps = [
+                `<span class="subject">${words[i+1]}</span> is ${dirName} of <span class="subject">${words[i]}</span>`,
+                `<span class="subject">${words[i+1]}</span> is opposite of ${nameInverseDir4D[dirName]} of <span class="subject">${words[i]}</span>`,
+            ];
+            premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+        }
+
+        conclusionDirName = findDirection4D(
+            wordCoordMap[words[0]],
+            wordCoordMap[words[length-1]]
+        );
+    }
+
+    let isValid;
+    if (coinFlip()) { // correct
+        isValid = true;
+        const cs = [
+            `<span class="subject">${words[0]}</span> is ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`,
+            `<span class="subject">${words[0]}</span> is opposite of ${nameInverseDir4D[conclusionDirName]} of <span class="subject">${words[words.length-1]}</span>`,
+        ];
+        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+    }
+    else {            // wrong
+        isValid = false;
+        let oppositeDirection = findDirection4D(
+            wordCoordMap[words[length-1]],
+            wordCoordMap[words[0]]
+        );
+        const cs = [
+            `<span class="subject">${words[0]}</span> is ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`,
+            `<span class="subject">${words[0]}</span> is opposite of ${nameInverseDir4D[oppositeDirection]} of <span class="subject">${words[words.length-1]}</span>`
+        ];
+        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];;
+    }
+
+    shuffle(premises);
+    
+    return {
+        category: "Space Time",
+        wordCoordMap,
+        isValid,
+        premises,
+        conclusion
+    }
+}
+
 function coinFlip() {
     return Math.random() > 0.5;
 }
@@ -3054,6 +3300,10 @@ function init() {
         choices.push(createSameDifferent(savedata.premises));
     if (savedata.enableDirection)
         choices.push(createDirectionQuestion(savedata.premises));
+    if (savedata.enableDirection3D)
+        choices.push(createDirectionQuestion3D(savedata.premises));
+    if (savedata.enableDirection4D)
+        choices.push(createDirectionQuestion4D(savedata.premises));
     if (savedata.premises > 3 && savedata.enableBinary)
         choices.push(createBinaryQuestion(savedata.premises));
 
