@@ -479,6 +479,23 @@ function createBinaryQuestion(length) {
         '<div class="logic-conn">Both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">are the same</div>'
     ];
 
+    const pool = [];
+
+    if (savedata.enableDistinction)
+        pool.push(createSameOpposite, createSameOpposite);
+    if (savedata.enableComparison)
+        pool.push(createMoreLess, createMoreLess);
+    if (savedata.enableTemporal)
+        pool.push(createBeforeAfter, createBeforeAfter);
+    if (savedata.enableDirection)
+        pool.push(createDirectionQuestion, createDirectionQuestion);
+    if (savedata.enableDirection3D)
+        pool.push(createDirectionQuestion3D, createDirectionQuestion3D);
+    if (savedata.enableDirection4D)
+        pool.push(createDirectionQuestion4D, createDirectionQuestion4D);
+    if (savedata.enableSyllogism)
+        pool.push(createSyllogism, createSyllogism);
+
     let choice;
     let choice2;
     let premises;
@@ -488,15 +505,7 @@ function createBinaryQuestion(length) {
     const operandIndex = Math.floor(Math.random()*operands.length);
     const operand = operands[operandIndex];
     while (flip !== isValid) {
-        let [generator, generator2] = pickUniqueItems([
-            createSameOpposite,
-            createMoreLess,
-            createBeforeAfter,
-            createDirectionQuestion,
-            createDirectionQuestion3D,
-            createDirectionQuestion4D,
-            createSyllogism
-        ], 2);
+        let [generator, generator2] = pickUniqueItems(pool, 2);
 
         [choice, choice2] = [
             generator(Math.floor(length/2)),
@@ -528,14 +537,23 @@ function createBinaryQuestion(length) {
 
 function createSameDifferent(length) {
 
-    // There are 3 choices:
-    // 0. Same/Opposite;
-    // 1. More/Less;
-    // 2. Before/After;
-    // 3. Direction;
-    // 4. Direction 3D;
-    // 5. Direction 4D.
-    const choiceIndex = Math.floor(Math.random()*6);
+    // Create a pool based on user preferences
+    const choiceIndices = [];
+
+    if (savedata.enableDistinction)
+        choiceIndices.push(0);
+    if (savedata.enableComparison)
+        choiceIndices.push(1);
+    if (savedata.enableTemporal)
+        choiceIndices.push(2);
+    if (savedata.enableDirection)
+        choiceIndices.push(3);
+    if (savedata.enableDirection3D)
+        choiceIndices.push(4);
+    if (savedata.enableDirection4D)
+        choiceIndices.push(5);
+
+    const choiceIndex = pickUniqueItems(choiceIndices, 1)[0];
     let choice;
     let conclusion = "";
     let subtype;
@@ -1208,24 +1226,51 @@ function init() {
         choices.push(createBeforeAfter(savedata.premises));
     if (savedata.enableSyllogism)
         choices.push(createSyllogism(savedata.premises));
-    if (savedata.premises > 2 && savedata.enableAnalogy)
-        choices.push(createSameDifferent(savedata.premises));
     if (savedata.enableDirection)
         choices.push(createDirectionQuestion(savedata.premises));
     if (savedata.enableDirection3D)
         choices.push(createDirectionQuestion3D(savedata.premises));
     if (savedata.enableDirection4D)
         choices.push(createDirectionQuestion4D(savedata.premises));
-    if (savedata.premises > 3 && savedata.enableBinary)
+    if (
+        savedata.premises > 2
+     && savedata.enableAnalogy
+     && (
+            savedata.enableDistinction
+         || savedata.enableComparison
+         || savedata.enableTemporal
+         || savedata.enableDirection
+         || savedata.enableDirection3D
+         || savedata.enableDirection4D
+        )
+    )
+        choices.push(createSameDifferent(savedata.premises));
+    if (
+        savedata.premises > 3
+     && savedata.enableBinary
+     && (
+            savedata.enableDistinction
+         || savedata.enableComparison
+         || savedata.enableTemporal
+         || savedata.enableDirection
+         || savedata.enableDirection3D
+         || savedata.enableDirection4D
+         || savedata.enableSyllogism
+        )
+    )
         choices.push(createBinaryQuestion(savedata.premises));
 
     if (choices.length < 1)
-        if (savedata.premises < 3 && savedata.enableAnalogy)
+        if (savedata.enableAnalogy && savedata.enableBinary)
+            return alert("To play Analogy or Binary you need at least one other category.");
+        else if (savedata.enableAnalogy && savedata.premises < 3)
             return alert("To play Analogy you need to input at least 3 premises.");
-        else if (savedata.premises < 4 && savedata.enableBinary)
+        else if (savedata.enableBinary && savedata.premises < 4)
             return alert("To play Binary you need to input at least 4 premises.");
-        else
-            return alert("Please select at least one category of question.");
+        else if (savedata.enableAnalogy)
+            return alert("To play Analogy you need at least one other category.");
+        else if (savedata.enableBinary)
+            return alert("To play Binary you need at least one other category.");
 
     question = choices[Math.floor(Math.random() * choices.length)];
 
