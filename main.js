@@ -493,6 +493,8 @@ function createBinaryQuestion(length) {
             createMoreLess,
             createBeforeAfter,
             createDirectionQuestion,
+            createDirectionQuestion3D,
+            createDirectionQuestion4D,
             createSyllogism
         ], 2);
 
@@ -530,8 +532,10 @@ function createSameDifferent(length) {
     // 0. Same/Opposite;
     // 1. More/Less;
     // 2. Before/After;
-    // 3. Direction.
-    const choiceIndex = Math.floor(Math.random()*4);
+    // 3. Direction;
+    // 4. Direction 3D;
+    // 5. Direction 4D.
+    const choiceIndex = Math.floor(Math.random()*6);
     let choice;
     let conclusion = "";
     let subtype;
@@ -547,6 +551,7 @@ function createSameDifferent(length) {
         // Pick 4 different items
         [a, b, c, d] = pickUniqueItems([...choice.buckets[0], ...choice.buckets[1]], 4);
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
         // Find in which side a, b, c and d are
         [
             indexOfA,
@@ -570,6 +575,7 @@ function createSameDifferent(length) {
         // Pick 4 different items
         [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
         // Find indices of elements
         [indexOfA, indexOfB] = [choice.bucket.indexOf(a), choice.bucket.indexOf(b)];
         [indexOfC, indexOfD] = [choice.bucket.indexOf(c), choice.bucket.indexOf(d)];
@@ -584,13 +590,14 @@ function createSameDifferent(length) {
         // Pick 4 different items
         [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
         // Find indices of elements
         [indexOfA, indexOfB] = [choice.bucket.indexOf(a), choice.bucket.indexOf(b)];
         [indexOfC, indexOfD] = [choice.bucket.indexOf(c), choice.bucket.indexOf(d)];
         isValidSame = indexOfA > indexOfB && indexOfC > indexOfD
                    || indexOfA < indexOfB && indexOfC < indexOfD;
     }
-    else {
+    else if (choiceIndex === 3) {
 
         subtype = "Direction";
 
@@ -602,8 +609,49 @@ function createSameDifferent(length) {
             // Pick 4 different items
             [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
             conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
             // Find if A to B has same relation of C to D
             isValidSame = findDirection(choice.wordCoordMap[a], choice.wordCoordMap[b]) === findDirection(choice.wordCoordMap[c], choice.wordCoordMap[d]);
+        }
+    } else if (choiceIndex === 4) {
+
+        subtype = "Direction Three D";
+
+        const flip = coinFlip();
+        while (flip !== isValidSame) {
+            conclusion = "";
+            choice = createDirectionQuestion3D(length);
+
+            // Pick 4 different items
+            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
+            conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
+            // Find if A to B has same relation of C to D
+            isValidSame = findDirection3D(choice.wordCoordMap[a], choice.wordCoordMap[b]) === findDirection3D(choice.wordCoordMap[c], choice.wordCoordMap[d]);
+        }
+    } else {
+
+        subtype = "Space Time";
+
+        const flip = coinFlip();
+        while (flip !== isValidSame) {
+            conclusion = "";
+            choice = createDirectionQuestion4D(length);
+
+            // Pick 4 different items
+            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
+            conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
+            // Find if A to B has same relation of C to D
+            const {
+                spatial,
+                temporal
+            } = findDirection4D(choice.wordCoordMap[a], choice.wordCoordMap[b]);
+            const {
+                spatial: spatial2,
+                temporal: temporal2
+            } = findDirection4D(choice.wordCoordMap[c], choice.wordCoordMap[d]);
+            isValidSame = spatial === spatial2 && temporal === temporal2;
         }
     }
 
@@ -645,7 +693,7 @@ function createSameDifferent(length) {
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
 
     choice.category = "Analogy: " + subtype;
-    choise.createdAt = new Date().getTime();
+    choice.createdAt = new Date().getTime();
     choice.isValid = isValid;
     choice.conclusion = conclusion;
 
