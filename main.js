@@ -921,7 +921,6 @@ function createDirectionQuestion4D(length) {
             `<span class="subject">${words[0]}</span> ${conclusionDirName.temporal} opposite of ${nameInverseDir3D[conclusionDirName.spatial]} of <span class="subject">${words[words.length-1]}</span>`,
         ];
         conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
-        console.log(conclusionDirName);
     }
     else {            // wrong
         isValid = false;
@@ -933,7 +932,6 @@ function createDirectionQuestion4D(length) {
             `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal} ${oppositeDirection.spatial} of <span class="subject">${words[words.length-1]}</span>`,
             `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal}  opposite of ${nameInverseDir3D[oppositeDirection.spatial]} of <span class="subject">${words[words.length-1]}</span>`
         ];
-        console.log('Oppo', oppositeDirection);
         conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];;
     }
 
