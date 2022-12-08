@@ -1,3 +1,6 @@
+// Constants and variables
+const localKey = "sllgms-v3";
+
 let savedata = {
     "user": {
         "telemetry": false,

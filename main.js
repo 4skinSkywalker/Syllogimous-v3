@@ -1,14 +1,9 @@
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function() {
-      navigator.serviceWorker
-        .register("/serviceWorker.js")
-        .then(res => console.log("service worker registered", res))
-        .catch(err => console.log("service worker not registered", err))
-    })
-}
-
-// Constants and variables
-const localKey = "sllgms-v3";
+// Get rid of all the PWA stuff
+if ('serviceWorker' in navigator)
+    navigator.serviceWorker.getRegistrations()
+        .then(registrations => {
+            if (registrations.length) for (let r of registrations) r.unregister();
+        });
 
 const feedbackWrong = document.querySelector(".feedback--wrong");
 const feedbackMissed = document.querySelector(".feedback--missed");
