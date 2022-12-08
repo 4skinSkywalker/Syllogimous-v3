@@ -212,14 +212,14 @@ function createSameOpposite(length) {
             if (coinFlip()) {
                 const ps = [
                     `<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`,
-                    `Opposite of <span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`,
+                    `Opposite of (<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>)`,
                 ];
                 premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 buckets[prevBucket].push(curr);
             } else {
                 const ps = [
-                    `Opposite of <span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`,
                     `<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`,
+                    `Opposite of (<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>)`,
                 ];
                 premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 prevBucket = (prevBucket + 1) % 2;
@@ -232,14 +232,14 @@ function createSameOpposite(length) {
         if (coinFlip()) {
             const cs = [
                 `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
-                `Opposite of <span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
+                `Opposite of (<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>)`,
             ];
             conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
             isValid = buckets[0].includes(curr);
         } else {
             const cs = [
                 `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
-                `Opposite of <span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
+                `Opposite of (<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>)`,
             ];
             conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
             isValid = buckets[1].includes(curr);
@@ -290,13 +290,13 @@ function createMoreLess(length) {
                 if (sign === 1) {
                     const ps = [
                         `<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`,
-                        `Opposite of <span class="subject">${next}</span> is less than <span class="subject">${curr}</span>`,
+                        `Opposite of (<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>)`,
                     ];
                     premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 } else {
                     const ps = [
                         `<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>`,
-                        `Opposite of <span class="subject">${curr}</span> is less than <span class="subject">${next}</span>`,
+                        `Opposite of (<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>)`,
                     ];
                     premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 }
@@ -304,13 +304,13 @@ function createMoreLess(length) {
                 if (sign === 1) {
                     const ps = [
                         `<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>`,
-                        `Opposite of <span class="subject">${curr}</span> is more than <span class="subject">${next}</span>`,
+                        `Opposite of (<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>)`,
                     ];
                     premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 } else {
                     const ps = [
                         `<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>`,
-                        `Opposite of <span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`,
+                        `Opposite of (<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>)`,
                     ];
                     premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 }
@@ -325,14 +325,14 @@ function createMoreLess(length) {
         if (coinFlip()) {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`,
-                `Opposite of <span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`,
+                `Opposite of (<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>)`,
             ];
             conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
             isValid = sign === 1 && a < b || sign === -1 && a > b;
         } else {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`,
-                `Opposite of <span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`,
+                `Opposite of (<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>)`,
             ];
             conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
             isValid = sign === 1 && a > b || sign === -1 && a < b;
@@ -382,13 +382,13 @@ function createBeforeAfter(length) {
                 if (sign === 1) {
                     const ps = [
                         `<span class="subject">${next}</span> is after <span class="subject">${curr}</span>`,
-                        `Opposite of <span class="subject">${next}</span> is before <span class="subject">${curr}</span>`,
+                        `Opposite of (<span class="subject">${next}</span> is before <span class="subject">${curr}</span>)`,
                     ];
                     premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 } else {
                     const ps = [
                         `<span class="subject">${curr}</span> is after <span class="subject">${next}</span>`,
-                        `Opposite of <span class="subject">${curr}</span> is before <span class="subject">${next}</span>`,
+                        `Opposite of (<span class="subject">${curr}</span> is before <span class="subject">${next}</span>)`,
                     ];
                     premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 }
@@ -396,13 +396,13 @@ function createBeforeAfter(length) {
                 if (sign === 1) {
                     const ps = [
                         `<span class="subject">${curr}</span> is before <span class="subject">${next}</span>`,
-                        `Opposite of <span class="subject">${curr}</span> is after <span class="subject">${next}</span>`,
+                        `Opposite of (<span class="subject">${curr}</span> is after <span class="subject">${next}</span>)`,
                     ];
                     premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 } else {
                     const ps = [
                         `<span class="subject">${next}</span> is before <span class="subject">${curr}</span>`,
-                        `Opposite of <span class="subject">${next}</span> is after <span class="subject">${curr}</span>`,
+                        `Opposite of (<span class="subject">${next}</span> is after <span class="subject">${curr}</span>)`,
                     ];
                     premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
                 }
@@ -417,14 +417,14 @@ function createBeforeAfter(length) {
         if (coinFlip()) {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>`,
-                `Opposite of <span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`,
+                `Opposite of (<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>)`,
             ];
             conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
             isValid = sign === 1 && a < b || sign === -1 && a > b;
         } else {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`,
-                `Opposite of <span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>`,
+                `Opposite of (<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>)`,
             ];
             conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
             isValid = sign === 1 && a > b || sign === -1 && a < b;
