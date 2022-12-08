@@ -104,7 +104,7 @@ button:not(:disabled):hover {
 /* end of Utils */
 
 .feedback {
-    background-image: url(noize_bg_black.png);
+    background-image: url(img/noize_bg_black.png);
     border: 8px solid;
     border-left: none;
     border-right: none;
@@ -178,7 +178,7 @@ button:not(:disabled):hover {
     background-color: #0f0a;
 }
 
-.codec {
+.main-view {
     align-content: center;
     align-items: center;
     border: 4px solid #3c6c64;
@@ -187,9 +187,10 @@ button:not(:disabled):hover {
     height: 100%;
     letter-spacing: 0.1em;
     justify-content: space-evenly;
+    max-width: 1200px;
+    margin: 0 auto;
     overflow: hidden;
     position: relative;
-    width: 100%;
 }
 
 .background-image {
@@ -200,7 +201,7 @@ button:not(:disabled):hover {
     width: 100%;
     height: 100%;
     background-color: #000c;
-    background-image: url(snake-background.jpg);
+    background-image: url(img/snake-background.jpg);
     background-size: cover;
     background-position: center;
     filter: brightness(0.15);
@@ -695,7 +696,7 @@ input[type="checkbox"]:checked + .switch::after {
         padding: 0;
     }
 
-    .codec {
+    .main-view {
         border: 0;
         box-shadow: none;
     }

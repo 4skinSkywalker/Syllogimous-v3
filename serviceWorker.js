@@ -1,8 +1,9 @@
-const version = "syllogimous-v66";
+const version = "syllogimous-v68";
 const assets = [
     "/",
-    "/index.html",
+    "/codec.css",
     "/styles.css",
+    "/index.html",
     "/constants.js",
     "/main.js"
 ];
