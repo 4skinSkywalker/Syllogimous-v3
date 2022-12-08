@@ -250,9 +250,10 @@ button:not(:disabled):hover {
 .inline-input__outer {
     align-items: center;
     background-color: #000a;
-    display: inline-flex;
+    display: flex;
     font-family: "Espionage", sans-serif;
     gap: 1.25rem;
+    justify-content: space-between;
     padding: .25rem .75rem;
 }
 .inline-input__inner {
@@ -260,10 +261,15 @@ button:not(:disabled):hover {
     font-family: "MGS2", sans-serif;
     padding: .25rem;
 }
-.inline-input__inner > input {
+.inline-input__inner > input,
+.inline-input__inner > select {
     background-color: #0000;
     border: none;
     color: #fff;
+}
+
+.inline-input__inner > select option {
+    color: #000;
 }
 
 .carousel, .display-outer {
@@ -441,7 +447,8 @@ button:not(:disabled):hover {
 }
 
 label.open[for="offcanvas-settings"],
-label.open[for="offcanvas-history"] {
+label.open[for="offcanvas-history"],
+label.open[for="offcanvas-user"] {
     background-color: #0009;
     color: #abf4ff;
     cursor: pointer;
@@ -466,11 +473,22 @@ label.open[for="offcanvas-history"] {
     transform: rotateZ(-90deg) translateY(-3rem);
 }
 
+label.open[for="offcanvas-user"] {
+    left: 0;
+    bottom: 0;
+    transform-origin: bottom left;
+    transform: rotateZ(-90deg) translateY(3rem);
+}
+
 label.open[for="offcanvas-settings"]:hover {
     text-shadow: 0px 0px 5px #affa;
 }
 
 label.open[for="offcanvas-history"]:hover {
+    text-shadow: 0px 0px 5px #affa;
+}
+
+label.open[for="offcanvas-user"]:hover {
     text-shadow: 0px 0px 5px #affa;
 }
 
@@ -480,6 +498,11 @@ label.open[for="offcanvas-history"]:hover {
 }
 
 #offcanvas-history:checked + .offcanvas {
+    box-shadow: 0 0 0 9999px #000c;
+    transform: translateX(0);
+}
+
+#offcanvas-user:checked + .offcanvas {
     box-shadow: 0 0 0 9999px #000c;
     transform: translateX(0);
 }
@@ -612,6 +635,10 @@ input[type="checkbox"]:checked + .switch::after {
     background-color: #fff1;
 }
 
+.hqli-premises, .hqli-conclusion {
+    margin-bottom: 4px;
+}
+
 .hqli--right .inner {
     background-color: #3e31;
     border-bottom-style: solid;
@@ -624,12 +651,19 @@ input[type="checkbox"]:checked + .switch::after {
     border-bottom-color: #e33a!important;
 }
 
+.hqli-premises:before,
 .hqli-conclusion::before,
 .hqli-answer-user::before,
-.hqli-answer::before {
+.hqli-answer::before,
+.hqli-response-time::before {
     color: #fffa;
     font-weight: bold;
     margin-right: 0.25rem;
+}
+
+.hqli-premises:before {
+    content: "Premises";
+    display: block;
 }
 
 .hqli-conclusion::before {
@@ -638,11 +672,15 @@ input[type="checkbox"]:checked + .switch::after {
 }
 
 .hqli-answer-user::before {
-    content: "Your answer:"
+    content: "User Answer:"
 }
 
 .hqli-answer::before {
-    content: "Right answer:"
+    content: "Right Answer:"
+}
+
+.hqli-response-time::before {
+    content: "Response Time:"
 }
 
 .hqli-footer {

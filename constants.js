@@ -1,4 +1,9 @@
 let savedata = {
+    "user": {
+        "telemetry": false,
+        "sex": null,
+        "age": null
+    },
     "premises": 2,
     "timer": 30,
     "score": 0,

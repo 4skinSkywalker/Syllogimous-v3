@@ -250,6 +250,7 @@ function createSameOpposite(length) {
 
     return {
         category,
+        createdAt: new Date().getTime(),
         buckets,
         isValid,
         premises,
@@ -343,6 +344,7 @@ function createMoreLess(length) {
 
     return {
         category,
+        createdAt: new Date().getTime(),
         bucket,
         isValid,
         premises,
@@ -435,6 +437,7 @@ function createBeforeAfter(length) {
 
     return {
         category,
+        createdAt: new Date().getTime(),
         bucket,
         isValid,
         premises,
@@ -519,6 +522,7 @@ function createBinaryQuestion(length) {
 
     return {
         category: `Binary: ${choice.category} ${operandNames[operandIndex]} ${choice2.category}`,
+        createdAt: new Date().getTime(),
         isValid,
         premises,
         conclusion
@@ -646,6 +650,7 @@ function createSameDifferent(length) {
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
 
     choice.category = "Analogy: " + subtype;
+    choise.createdAt = new Date().getTime();
     choice.isValid = isValid;
     choice.conclusion = conclusion;
 
@@ -728,6 +733,7 @@ function createDirectionQuestion(length) {
     
     return {
         category: "Direction",
+        createdAt: new Date().getTime(),
         wordCoordMap,
         isValid,
         premises,
@@ -842,6 +848,7 @@ function createDirectionQuestion3D(length) {
     
     return {
         category: "Direction Three D",
+        createdAt: new Date().getTime(),
         wordCoordMap,
         isValid,
         premises,
@@ -939,6 +946,7 @@ function createDirectionQuestion4D(length) {
     
     return {
         category: "Space Time",
+        createdAt: new Date().getTime(),
         wordCoordMap,
         isValid,
         premises,
@@ -1021,6 +1029,7 @@ function createSyllogism(length) {
     const category = "Syllogism";
     let bucket;
     let isValid;
+    let rule;
     let premises;
     let conclusion;
     do {
@@ -1040,17 +1049,21 @@ function createSyllogism(length) {
         conclusion;
         isValid = coinFlip();
         if (isValid) {
-            [premises[0], premises[1], conclusion] = getSyllogism(bucket[0], bucket[1], bucket[2], validRules[Math.floor(Math.random() * validRules.length)]);
+            rule = validRules[Math.floor(Math.random() * validRules.length)];
+            [premises[0], premises[1], conclusion] = getSyllogism(
+                bucket[0],
+                bucket[1],
+                bucket[2],
+                rule
+            );
         } else {
-            [premises[0], premises[1], conclusion] = getSyllogism(bucket[0], bucket[1], bucket[2], getRandomInvalidRule());
-        }
-
-        for (let i = 3; i < length; i++) {
-            let rnd = Math.floor(Math.random() * (i - 1));
-            let flip = coinFlip();
-            let p = flip ? bucket[i] : bucket[rnd];
-            let m = flip ? bucket[rnd] : bucket[i];
-            premises.push(getSyllogism("#####", p, m, getRandomInvalidRule())[0]);
+            rule = getRandomInvalidRule();
+            [premises[0], premises[1], conclusion] = getSyllogism(
+                bucket[0],
+                bucket[1],
+                bucket[2],
+                getRandomInvalidRule()
+            );
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
 
@@ -1058,6 +1071,8 @@ function createSyllogism(length) {
 
     return {
         category,
+        rule,
+        createdAt: new Date().getTime(),
         bucket,
         isValid,
         premises,
@@ -1161,17 +1176,13 @@ function init() {
     if (savedata.premises > 3 && savedata.enableBinary)
         choices.push(createBinaryQuestion(savedata.premises));
 
-    if (choices.length < 1) {
-        if (savedata.premises < 3 && savedata.enableAnalogy) {
+    if (choices.length < 1)
+        if (savedata.premises < 3 && savedata.enableAnalogy)
             return alert("To play Analogy you need to input at least 3 premises.");
-        }
-        else if (savedata.premises < 4 && savedata.enableBinary) {
+        else if (savedata.premises < 4 && savedata.enableBinary)
             return alert("To play Binary you need to input at least 4 premises.");
-        }
-        else {
+        else
             return alert("Please select at least one category of question.");
-        }
-    }
 
     question = choices[Math.floor(Math.random() * choices.length)];
 
@@ -1211,12 +1222,18 @@ function wowFeedbackRight(cb) {
     }, 1200);
 }
 
-function checkIfTrue() {
+function removeAppStateAndSave() {
     delete question.bucket;
     delete question.buckets;
-    question.answerUser = true;
+    delete question.wordCoordMap;
+    question.answeredAt = new Date().getTime();
     savedata.questions.push(question);
     save();
+}
+
+function checkIfTrue() {
+    question.answerUser = true;
+    removeAppStateAndSave();
     renderHQL();
 
     if (question.isValid) {
@@ -1229,11 +1246,8 @@ function checkIfTrue() {
 }
 
 function checkIfFalse() {
-    delete question.bucket;
-    delete question.buckets;
     question.answerUser = false;
-    savedata.questions.push(question);
-    save();
+    removeAppStateAndSave();
     renderHQL();
 
     if (!question.isValid) {
@@ -1286,14 +1300,24 @@ function createHQLI(question, answerUser) {
         answerUser = "TRUE";
     else
         answerUser = "FALSE";
+
+    let responseTimeHtml = '';
+    if (question.createdAt && question.answeredAt)
+        responseTimeHtml =
+`
+        <div class="hqli-response-time">${Math.round((question.answeredAt - question.createdAt) / 1000)} sec</div>
+`;
     
     const html =
 `<div class="hqli ${classModifier}">
     <div class="inner">
-        ${htmlPremises}
+        <div class="hqli-premises">
+            ${htmlPremises}
+        </div>
         <div class="hqli-conclusion">${question.conclusion}</div>
         <div class="hqli-answer-user">${answerUser}</div>
         <div class="hqli-answer">${("" + question.isValid).toUpperCase()}</div>
+        ${responseTimeHtml}
         <div class="hqli-footer">
             <div class="index"></div>
             <div>${question.category}</div>
