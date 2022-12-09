@@ -793,7 +793,7 @@ function createDirectionQuestion(length) {
     shuffle(premises);
     
     return {
-        category: "Direction",
+        category: "Space Two D",
         createdAt: new Date().getTime(),
         wordCoordMap,
         isValid,
@@ -908,7 +908,7 @@ function createDirectionQuestion3D(length) {
     shuffle(premises);
     
     return {
-        category: "Direction Three D",
+        category: "Space Three D",
         createdAt: new Date().getTime(),
         wordCoordMap,
         isValid,
@@ -918,9 +918,6 @@ function createDirectionQuestion3D(length) {
 }
 
 function findDirection4D(aCoord, bCoord) {
-
-    const a = aCoord[3];
-    const a2 = bCoord[3];
 
     const x = aCoord[0];
     const x2 = bCoord[0];
@@ -936,6 +933,9 @@ function findDirection4D(aCoord, bCoord) {
     const dirIndex = dirCoords3D.findIndex(c => c[0] === dx && c[1] === dy && c[2] === dz);
     const dirName = dirNames3D[dirIndex];
 
+    const a = aCoord[3];
+    const a2 = bCoord[3];
+
     return { spatial: dirName, temporal: timeNames[Math.sign(a-a2) + 1] };
 }
 
@@ -947,8 +947,8 @@ function createDirectionQuestion4D(length) {
     let wordCoordMap = {};
     let premises = [];
     let conclusion;
-    let conclusionDirName;
-    while (!conclusionDirName) {
+    let conclusionDirName = { spatial: null };
+    while (!conclusionDirName.spatial) {
 
         wordCoordMap = {};
         premises = [];
