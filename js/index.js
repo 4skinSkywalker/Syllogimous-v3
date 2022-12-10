@@ -134,9 +134,9 @@ function displayInit() {
     displayLabelType.textContent = question.category.split(":")[0];
     displayLabelLevel.textContent = question.premises.length + " ps";
     displayText.innerHTML = [
-        ...question.premises,
+        ...question.premises.map(p => `<div class="formatted-premise">${p}</div>`),
         '<div class="formatted-conclusion">'+question.conclusion+'</div>'
-    ].join("<br>");
+    ].join('');
 }
 
 function carouselBack() {
