@@ -977,6 +977,14 @@ function createSyllogism(length) {
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
 
+    for (let i = 3; i < length; i++) {
+        let rnd = Math.floor(Math.random() * (i - 1));
+        let flip = coinFlip();
+        let p = flip ? bucket[i] : bucket[rnd];
+        let m = flip ? bucket[rnd] : bucket[i];
+        premises.push(getSyllogism("#####", p, m, getRandomInvalidRule())[0]);
+    }
+
     premises = shuffle(premises);
 
     return {
