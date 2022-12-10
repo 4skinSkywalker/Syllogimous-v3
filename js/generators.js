@@ -10,7 +10,7 @@ function pickUniqueItems(array, n) {
         picked.push(copy.splice(rnd, 1)[0]);
         n--;
     }
-    return picked;
+    return { picked, remaining: copy };
 }
 
 function shuffle(array) {
@@ -56,14 +56,18 @@ function createSameOpposite(length) {
                     `<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`,
                     `Opposite of (<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>)`,
                 ];
-                premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                premises.push((!savedata.enableNegation)
+                    ? ps[0]
+                    : pickUniqueItems(ps, 1).picked[0]);
                 buckets[prevBucket].push(curr);
             } else {
                 const ps = [
                     `<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`,
                     `Opposite of (<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>)`,
                 ];
-                premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                premises.push((!savedata.enableNegation)
+                    ? ps[0]
+                    : pickUniqueItems(ps, 1).picked[0]);
                 prevBucket = (prevBucket + 1) % 2;
                 buckets[prevBucket].push(curr);
             }
@@ -71,19 +75,57 @@ function createSameOpposite(length) {
             prev = curr;
         }
 
+        if (savedata.enableMeta) {
+            const _premises = pickUniqueItems(premises, 2);
+
+            // Extract negation
+            const negations = _premises.picked.map(p => /^Opposite/.test(p));
+            
+            // Extract relation
+            const relations = _premises.picked.map(p => p.match(/is (.*) (?:as|of)/)[1]);
+    
+            // Replace relation with meta-relation
+            let substitution;
+            if (!negations[0] && !negations[1] || !negations[0] && negations[1]) {
+                const [a, b] = [..._premises.picked[0].matchAll(/<span .*?>(.*?)<\/span>/g)].map(m => m[1]);
+                if (relations[0] === relations[1])
+                    substitution = `$1 (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                else
+                    substitution = `$1 opposite of (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+            }
+            if (negations[0] && negations[1] || negations[0] && !negations[1]) {
+                const [a, b] = [..._premises.picked[0].matchAll(/<span .*?>(.*?)<\/span>/g)].map(m => m[1]);
+                if (relations[0] !== relations[1])
+                    substitution = `$1 (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                else
+                    substitution = `$1 opposite of (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+            }
+            const metaPremise = _premises.picked[1].replace(/(is) (.*) (as|of)/, substitution);
+
+            premises = [
+                _premises.picked[0],
+                metaPremise,
+                ..._premises.remaining
+            ];
+        }
+
         if (coinFlip()) {
             const cs = [
                 `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
                 `Opposite of (<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>)`,
             ];
-            conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion = (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
             isValid = buckets[0].includes(curr);
         } else {
             const cs = [
                 `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
                 `Opposite of (<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>)`,
             ];
-            conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion = (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
             isValid = buckets[1].includes(curr);
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
@@ -135,13 +177,17 @@ function createMoreLess(length) {
                         `<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`,
                         `Opposite of (<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>)`,
                     ];
-                    premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                    premises.push((!savedata.enableNegation)
+                        ? ps[0]
+                        : pickUniqueItems(ps, 1).picked[0]);
                 } else {
                     const ps = [
                         `<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>`,
                         `Opposite of (<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>)`,
                     ];
-                    premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                    premises.push((!savedata.enableNegation)
+                        ? ps[0]
+                        : pickUniqueItems(ps, 1).picked[0]);
                 }
             } else {
                 if (sign === 1) {
@@ -149,13 +195,17 @@ function createMoreLess(length) {
                         `<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>`,
                         `Opposite of (<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>)`,
                     ];
-                    premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                    premises.push((!savedata.enableNegation)
+                        ? ps[0]
+                        : pickUniqueItems(ps, 1).picked[0]);
                 } else {
                     const ps = [
                         `<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>`,
                         `Opposite of (<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>)`,
                     ];
-                    premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                    premises.push((!savedata.enableNegation)
+                        ? ps[0]
+                        : pickUniqueItems(ps, 1).picked[0]);
                 }
             }
         }
@@ -170,14 +220,18 @@ function createMoreLess(length) {
                 `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`,
                 `Opposite of (<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>)`,
             ];
-            conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion = (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
             isValid = sign === 1 && a < b || sign === -1 && a > b;
         } else {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`,
                 `Opposite of (<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>)`,
             ];
-            conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion = (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
             isValid = sign === 1 && a > b || sign === -1 && a < b;
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
@@ -228,13 +282,17 @@ function createBeforeAfter(length) {
                         `<span class="subject">${next}</span> is after <span class="subject">${curr}</span>`,
                         `Opposite of (<span class="subject">${next}</span> is before <span class="subject">${curr}</span>)`,
                     ];
-                    premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                    premises.push((!savedata.enableNegation)
+                        ? ps[0]
+                        : pickUniqueItems(ps, 1).picked[0]);
                 } else {
                     const ps = [
                         `<span class="subject">${curr}</span> is after <span class="subject">${next}</span>`,
                         `Opposite of (<span class="subject">${curr}</span> is before <span class="subject">${next}</span>)`,
                     ];
-                    premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                    premises.push((!savedata.enableNegation)
+                        ? ps[0]
+                        : pickUniqueItems(ps, 1).picked[0]);
                 }
             } else {
                 if (sign === 1) {
@@ -242,13 +300,17 @@ function createBeforeAfter(length) {
                         `<span class="subject">${curr}</span> is before <span class="subject">${next}</span>`,
                         `Opposite of (<span class="subject">${curr}</span> is after <span class="subject">${next}</span>)`,
                     ];
-                    premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                    premises.push((!savedata.enableNegation)
+                        ? ps[0]
+                        : pickUniqueItems(ps, 1).picked[0]);
                 } else {
                     const ps = [
                         `<span class="subject">${next}</span> is before <span class="subject">${curr}</span>`,
                         `Opposite of (<span class="subject">${next}</span> is after <span class="subject">${curr}</span>)`,
                     ];
-                    premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+                    premises.push((!savedata.enableNegation)
+                        ? ps[0]
+                        : pickUniqueItems(ps, 1).picked[0]);
                 }
             }
         }
@@ -263,14 +325,18 @@ function createBeforeAfter(length) {
                 `<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>`,
                 `Opposite of (<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>)`,
             ];
-            conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion = (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
             isValid = sign === 1 && a < b || sign === -1 && a > b;
         } else {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`,
                 `Opposite of (<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>)`,
             ];
-            conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion = (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
             isValid = sign === 1 && a > b || sign === -1 && a < b;
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
@@ -309,7 +375,7 @@ function createBinaryQuestion(length) {
 
     const operandTemplates = [
         '$a <div class="logic-conn">and</div> $b',
-        '<div class="logic-conn">Except both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">hold true</div>',
+        '<div class="logic-conn">True except if both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">are true</div>',
         '$a <div class="logic-conn">or</div> $b',
         '<div class="logic-conn">Neither</div> $a <div class="logic-conn">nor</div> $b',
         '<div class="logic-conn">Either</div> $a <div class="logic-conn">or</div> $b',
@@ -319,19 +385,19 @@ function createBinaryQuestion(length) {
     const pool = [];
 
     if (savedata.enableDistinction)
-        pool.push(createSameOpposite, createSameOpposite);
+        pool.push(createSameOpposite);
     if (savedata.enableComparison)
-        pool.push(createMoreLess, createMoreLess);
+        pool.push(createMoreLess);
     if (savedata.enableTemporal)
-        pool.push(createBeforeAfter, createBeforeAfter);
+        pool.push(createBeforeAfter);
     if (savedata.enableDirection)
-        pool.push(createDirectionQuestion, createDirectionQuestion);
+        pool.push(createDirectionQuestion);
     if (savedata.enableDirection3D)
-        pool.push(createDirectionQuestion3D, createDirectionQuestion3D);
+        pool.push(createDirectionQuestion3D);
     if (savedata.enableDirection4D)
-        pool.push(createDirectionQuestion4D, createDirectionQuestion4D);
+        pool.push(createDirectionQuestion4D);
     if (savedata.enableSyllogism)
-        pool.push(createSyllogism, createSyllogism);
+        pool.push(createSyllogism);
 
     let choice;
     let choice2;
@@ -342,7 +408,7 @@ function createBinaryQuestion(length) {
     const operandIndex = Math.floor(Math.random()*operands.length);
     const operand = operands[operandIndex];
     while (flip !== isValid) {
-        let [generator, generator2] = pickUniqueItems(pool, 2);
+        let [generator, generator2] = pickUniqueItems(pool, 2).picked;
 
         [choice, choice2] = [
             generator(Math.floor(length/2)),
@@ -390,7 +456,7 @@ function createSameDifferent(length) {
     if (savedata.enableDirection4D)
         choiceIndices.push(5);
 
-    const choiceIndex = pickUniqueItems(choiceIndices, 1)[0];
+    const choiceIndex = pickUniqueItems(choiceIndices, 1).picked[0];
     let choice;
     let conclusion = "";
     let subtype;
@@ -404,7 +470,7 @@ function createSameDifferent(length) {
         subtype = "Same/Opposite";
 
         // Pick 4 different items
-        [a, b, c, d] = pickUniqueItems([...choice.buckets[0], ...choice.buckets[1]], 4);
+        [a, b, c, d] = pickUniqueItems([...choice.buckets[0], ...choice.buckets[1]], 4).picked;
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
 
         // Find in which side a, b, c and d are
@@ -428,7 +494,7 @@ function createSameDifferent(length) {
         subtype = "More/Less";
 
         // Pick 4 different items
-        [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
+        [a, b, c, d] = pickUniqueItems(choice.bucket, 4).picked;
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
 
         // Find indices of elements
@@ -443,7 +509,7 @@ function createSameDifferent(length) {
         subtype = "Before/After";
 
         // Pick 4 different items
-        [a, b, c, d] = pickUniqueItems(choice.bucket, 4);
+        [a, b, c, d] = pickUniqueItems(choice.bucket, 4).picked;
         conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
 
         // Find indices of elements
@@ -462,7 +528,7 @@ function createSameDifferent(length) {
             choice = createDirectionQuestion(length);
 
             // Pick 4 different items
-            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
+            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4).picked;
             conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
 
             // Find if A to B has same relation of C to D
@@ -478,7 +544,7 @@ function createSameDifferent(length) {
             choice = createDirectionQuestion3D(length);
 
             // Pick 4 different items
-            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
+            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4).picked;
             conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
 
             // Find if A to B has same relation of C to D
@@ -494,7 +560,7 @@ function createSameDifferent(length) {
             choice = createDirectionQuestion4D(length);
 
             // Pick 4 different items
-            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4);
+            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4).picked;
             conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
 
             // Find if A to B has same relation of C to D
@@ -517,14 +583,18 @@ function createSameDifferent(length) {
                 '<div style="margin: 2px 0;">is the same as</div>',
                 '<div style="margin: 2px 0;">is not different from</div>',
             ];
-            conclusion += (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion += (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
         }
         else {
             const cs = [
                 '<div style="font-size: 14px; margin: 2px 0;">has the same relation as</div>',
                 '<div style="font-size: 14px; margin: 2px 0;">has not a different relation from</div>',
             ];
-            conclusion += (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion += (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
         }
     }
     else {
@@ -534,7 +604,9 @@ function createSameDifferent(length) {
                 '<div style="margin: 2px 0;">is different from</div>',
                 '<div style="margin: 2px 0;">is not the same as</div>',
             ];
-            conclusion += (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion += (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
 
         }
         else {
@@ -542,7 +614,9 @@ function createSameDifferent(length) {
                 '<div style="font-size: 12px; margin: 4px 0;">has a different relation from</div>',
                 '<div style="font-size: 12px; margin: 4px 0;">has not the same relation as</div>',
             ];
-            conclusion += (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+            conclusion += (!savedata.enableNegation)
+                ? cs[0]
+                : pickUniqueItems(cs, 1).picked[0];
         }
     }
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
@@ -570,7 +644,7 @@ function findDirection(aCoord, bCoord) {
 function createDirectionQuestion(length) {
     length++;
 
-    const words = pickUniqueItems(symbols, length);
+    const words = pickUniqueItems(symbols, length).picked;
 
     let wordCoordMap = {};
     let premises = [];
@@ -596,7 +670,9 @@ function createDirectionQuestion(length) {
                 `<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`,
                 `<span class="subject">${words[i+1]}</span> is at opposite of ${nameInverseDir[dirName]} of <span class="subject">${words[i]}</span>`,
             ];
-            premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+            premises.push((!savedata.enableNegation)
+                ? ps[0]
+                : pickUniqueItems(ps, 1).picked[0]);
         }
 
         conclusionDirName = findDirection(
@@ -612,7 +688,9 @@ function createDirectionQuestion(length) {
             `<span class="subject">${words[0]}</span> is at ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`,
             `<span class="subject">${words[0]}</span> is at opposite of ${nameInverseDir[conclusionDirName]} of <span class="subject">${words[words.length-1]}</span>`,
         ];
-        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+        conclusion = (!savedata.enableNegation)
+            ? cs[0]
+            : pickUniqueItems(cs, 1).picked[0];
     }
     else {            // wrong
         isValid = false;
@@ -624,7 +702,9 @@ function createDirectionQuestion(length) {
             `<span class="subject">${words[0]}</span> is at ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`,
             `<span class="subject">${words[0]}</span> is at opposite of ${nameInverseDir[oppositeDirection]} of <span class="subject">${words[words.length-1]}</span>`
         ];
-        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];;
+        conclusion = (!savedata.enableNegation)
+            ? cs[0]
+            : pickUniqueItems(cs, 1).picked[0];;
     }
 
     shuffle(premises);
@@ -657,7 +737,7 @@ function findDirection3D(aCoord, bCoord) {
 function createDirectionQuestion3D(length) {
     length++;
 
-    const words = pickUniqueItems(symbols, length);
+    const words = pickUniqueItems(symbols, length).picked;
 
     let wordCoordMap = {};
     let premises = [];
@@ -684,7 +764,9 @@ function createDirectionQuestion3D(length) {
                 `<span class="subject">${words[i+1]}</span> is ${dirName} of <span class="subject">${words[i]}</span>`,
                 `<span class="subject">${words[i+1]}</span> is opposite of ${nameInverseDir3D[dirName]} of <span class="subject">${words[i]}</span>`,
             ];
-            premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+            premises.push((!savedata.enableNegation)
+                ? ps[0]
+                : pickUniqueItems(ps, 1).picked[0]);
         }
 
         conclusionDirName = findDirection3D(
@@ -700,7 +782,9 @@ function createDirectionQuestion3D(length) {
             `<span class="subject">${words[0]}</span> is ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`,
             `<span class="subject">${words[0]}</span> is opposite of ${nameInverseDir3D[conclusionDirName]} of <span class="subject">${words[words.length-1]}</span>`,
         ];
-        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+        conclusion = (!savedata.enableNegation)
+            ? cs[0]
+            : pickUniqueItems(cs, 1).picked[0];
     }
     else {            // wrong
         isValid = false;
@@ -712,7 +796,9 @@ function createDirectionQuestion3D(length) {
             `<span class="subject">${words[0]}</span> is ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`,
             `<span class="subject">${words[0]}</span> is opposite of ${nameInverseDir3D[oppositeDirection]} of <span class="subject">${words[words.length-1]}</span>`
         ];
-        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];;
+        conclusion = (!savedata.enableNegation)
+            ? cs[0]
+            : pickUniqueItems(cs, 1).picked[0];;
     }
 
     shuffle(premises);
@@ -752,7 +838,7 @@ function findDirection4D(aCoord, bCoord) {
 function createDirectionQuestion4D(length) {
     length++;
 
-    const words = pickUniqueItems(symbols, length);
+    const words = pickUniqueItems(symbols, length).picked;
 
     let wordCoordMap = {};
     let premises = [];
@@ -764,7 +850,7 @@ function createDirectionQuestion4D(length) {
         premises = [];
 
         for (let i = 0; i < words.length - 1; i++) {
-            const timeIndex =  pickUniqueItems([-1,0,1], 1)[0];
+            const timeIndex =  pickUniqueItems([-1,0,1], 1).picked[0];
             const timeName = timeNames[timeIndex + 1];
             const dirIndex = 1 + Math.floor(Math.random()*(dirNames3D.length - 1));
             const dirName = dirNames3D[dirIndex];
@@ -782,7 +868,9 @@ function createDirectionQuestion4D(length) {
                 `<span class="subject">${words[i+1]}</span> ${timeName} ${dirName} of <span class="subject">${words[i]}</span>`,
                 `<span class="subject">${words[i+1]}</span> ${timeName} opposite of ${nameInverseDir3D[dirName]} of <span class="subject">${words[i]}</span>`,
             ];
-            premises.push((!savedata.enableNegation) ? ps[0] : pickUniqueItems(ps, 1)[0]);
+            premises.push((!savedata.enableNegation)
+                ? ps[0]
+                : pickUniqueItems(ps, 1).picked[0]);
         }
 
         conclusionDirName = findDirection4D(
@@ -798,7 +886,9 @@ function createDirectionQuestion4D(length) {
             `<span class="subject">${words[0]}</span> ${conclusionDirName.temporal} ${conclusionDirName.spatial} of <span class="subject">${words[words.length-1]}</span>`,
             `<span class="subject">${words[0]}</span> ${conclusionDirName.temporal} opposite of ${nameInverseDir3D[conclusionDirName.spatial]} of <span class="subject">${words[words.length-1]}</span>`,
         ];
-        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];
+        conclusion = (!savedata.enableNegation)
+            ? cs[0]
+            : pickUniqueItems(cs, 1).picked[0];
     }
     else {            // wrong
         isValid = false;
@@ -810,7 +900,9 @@ function createDirectionQuestion4D(length) {
             `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal} ${oppositeDirection.spatial} of <span class="subject">${words[words.length-1]}</span>`,
             `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal}  opposite of ${nameInverseDir3D[oppositeDirection.spatial]} of <span class="subject">${words[words.length-1]}</span>`
         ];
-        conclusion = (!savedata.enableNegation) ? cs[0] : pickUniqueItems(cs, 1)[0];;
+        conclusion = (!savedata.enableNegation)
+            ? cs[0]
+            : pickUniqueItems(cs, 1).picked[0];;
     }
 
     shuffle(premises);
@@ -884,7 +976,9 @@ function createSyllogism(length) {
 
 function getSyllogism(s, p, m, rule) {
 
-    const _forms = (!savedata.enableNegation) ? forms[0] : pickUniqueItems(forms, 1)[0];
+    const _forms = (!savedata.enableNegation)
+        ? forms[0]
+        : pickUniqueItems(forms, 1).picked[0];
 
     let major = _forms[rule[0]];
     let minor = _forms[rule[1]];

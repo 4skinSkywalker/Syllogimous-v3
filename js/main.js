@@ -224,6 +224,25 @@ function init() {
     correctlyAnsweredEl.innerText = savedata.score;
     nextLevelEl.innerText = savedata.questions.length;
 
+    const analogyEnable = [
+        savedata.enableDistinction,
+        savedata.enableComparison,
+        savedata.enableTemporal,
+        savedata.enableDirection,
+        savedata.enableDirection3D,
+        savedata.enableDirection4D
+    ].reduce((a, c) => a + +c, 0) > 0;
+
+    const binaryEnable = [
+        savedata.enableDistinction,
+        savedata.enableComparison,
+        savedata.enableTemporal,
+        savedata.enableDirection,
+        savedata.enableDirection3D,
+        savedata.enableDirection4D,
+        savedata.enableSyllogism
+    ].reduce((a, c) => a + +c, 0) > 1;
+
     const choices = [];
     if (savedata.enableCarouselMode) {
         carousel.classList.add("visible");
@@ -254,43 +273,44 @@ function init() {
         savedata.premises > 2
      && savedata.enableAnalogy
      && !savedata.onlyBinary
-     && (
-            savedata.enableDistinction
-         || savedata.enableComparison
-         || savedata.enableTemporal
-         || savedata.enableDirection
-         || savedata.enableDirection3D
-         || savedata.enableDirection4D
-        )
-    )
+     && analogyEnable
+    ) {
         choices.push(createSameDifferent(savedata.premises));
+    }
     if (
         savedata.premises > 3
      && savedata.enableBinary
      && !savedata.onlyAnalogy
-     && (
-            savedata.enableDistinction
-         || savedata.enableComparison
-         || savedata.enableTemporal
-         || savedata.enableDirection
-         || savedata.enableDirection3D
-         || savedata.enableDirection4D
-         || savedata.enableSyllogism
-        )
-    )
+     && binaryEnable
+    ) {
         choices.push(createBinaryQuestion(savedata.premises));
+    }
 
-    if (choices.length < 1)
-        if (savedata.enableAnalogy && savedata.enableBinary)
-            return alert("To play Analogy or Binary you need at least one other category.");
-        else if (savedata.enableAnalogy && savedata.premises < 3)
-            return alert("To play Analogy you need to input at least 3 premises.");
-        else if (savedata.enableBinary && savedata.premises < 4)
-            return alert("To play Binary you need to input at least 4 premises.");
-        else if (savedata.enableAnalogy)
-            return alert("To play Analogy you need at least one other category.");
-        else if (savedata.enableBinary)
-            return alert("To play Binary you need at least one other category.");
+    if (savedata.enableAnalogy && !analogyEnable) {
+        alert('Analogy needs at least 1 other question class (Syllogism and Binary do not count).');
+        if (savedata.onlyAnalogy)
+            return;
+    }
+    if (savedata.enableAnalogy && analogyEnable && savedata.premises < 3) {
+        alert('Analogy needs at least 3 premises.');
+        if (savedata.onlyAnalogy)
+            return;
+    }
+
+
+    if (savedata.enableBinary && !binaryEnable) {
+        alert('Binary needs at least 2 other question class (Analogy do not count).');
+        if (savedata.onlyBinary)
+            return;
+    }
+    if (savedata.enableBinary && binaryEnable && savedata.premises < 4) {
+        alert('Binary needs at least 4 premises.');
+        if (savedata.onlyBinary)
+            return;
+    }
+
+    if (choices.length === 0)
+        return;
 
     question = choices[Math.floor(Math.random() * choices.length)];
 

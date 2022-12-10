@@ -14,17 +14,18 @@ let savedata = {
     "enableDistinction": true,
     "enableComparison": true,
     "enableSyllogism": true,
-    "enableAnalogy": true,
+    "enableAnalogy": false,
     "enableDirection": true,
     "enableDirection3D": true,
     "enableDirection4D": true,
-    "enableBinary": true,
+    "enableBinary": false,
     "enableMeaningfulWords": true,
     "enableCarouselMode": true,
     "enableTemporal": true,
     "enableNegation": true,
     "onlyAnalogy": false,
     "onlyBinary": false,
+    "enableMeta": true,
     "questions": []
 };
 
@@ -43,7 +44,8 @@ const keySettingMap = {
     "p-12": "enableDirection3D",
     "p-13": "enableDirection4D",
     "p-14": "onlyAnalogy",
-    "p-15": "onlyBinary"
+    "p-15": "onlyBinary",
+    "p-16": "enableMeta"
 };
 
 const strings = [
