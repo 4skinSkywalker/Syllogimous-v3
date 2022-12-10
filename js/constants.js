@@ -20,7 +20,7 @@ let savedata = {
     "enableDirection4D": true,
     "enableBinary": false,
     "enableMeaningfulWords": true,
-    "enableCarouselMode": true,
+    "enableCarouselMode": false,
     "enableTemporal": true,
     "enableNegation": true,
     "onlyAnalogy": false,
