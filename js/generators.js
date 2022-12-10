@@ -76,37 +76,53 @@ function createSameOpposite(length) {
         }
 
         if (savedata.enableMeta) {
-            const _premises = pickUniqueItems(premises, 2);
 
-            // Extract negation
-            const negations = _premises.picked.map(p => /^Opposite/.test(p));
-            
-            // Extract relation
-            const relations = _premises.picked.map(p => p.match(/is (.*) (?:as|of)/)[1]);
-    
-            // Replace relation with meta-relation
-            let substitution;
-            if (!negations[0] && !negations[1] || !negations[0] && negations[1]) {
-                const [a, b] = [..._premises.picked[0].matchAll(/<span .*?>(.*?)<\/span>/g)].map(m => m[1]);
-                if (relations[0] === relations[1])
-                    substitution = `$1 (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
-                else
-                    substitution = `$1 opposite of (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
-            }
-            if (negations[0] && negations[1] || negations[0] && !negations[1]) {
-                const [a, b] = [..._premises.picked[0].matchAll(/<span .*?>(.*?)<\/span>/g)].map(m => m[1]);
-                if (relations[0] !== relations[1])
-                    substitution = `$1 (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
-                else
-                    substitution = `$1 opposite of (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
-            }
-            const metaPremise = _premises.picked[1].replace(/(is) (.*) (as|of)/, substitution);
+            // Randomly choose a number of meta-relations
+            const numOfMetaRelations = 1 + Math.floor(Math.random() * Math.floor((length - 1) / 2));
+            let _premises = pickUniqueItems(premises, numOfMetaRelations * 2);
+            premises = [ ..._premises.remaining ];
 
-            premises = [
-                _premises.picked[0],
-                metaPremise,
-                ..._premises.remaining
-            ];
+            while (_premises.picked.length) {
+
+                const choosenPair = pickUniqueItems(_premises.picked, 2);
+                const negations = choosenPair.picked.map(p => /^Opposite/.test(p));
+                const relations = choosenPair.picked.map(p => p.match(/is (.*) (?:as|of)/)[1]);
+        
+                // Generate substitution string
+                let substitution;
+                if (!negations[0] && !negations[1] || !negations[0] && negations[1]) {
+
+                    // Extract subjects
+                    const [a, b] = [...choosenPair.picked[0]
+                        .matchAll(/<span .*?>(.*?)<\/span>/g)]
+                        .map(m => m[1]);
+                    if (relations[0] === relations[1])
+                        substitution = `$1 (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                    else
+                        substitution = `$1 opposite of (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                }
+                if (negations[0] && negations[1] || negations[0] && !negations[1]) {
+
+                    // Extract subjects
+                    const [a, b] = [...choosenPair.picked[0]
+                        .matchAll(/<span .*?>(.*?)<\/span>/g)]
+                        .map(m => m[1]);
+                    if (relations[0] !== relations[1])
+                        substitution = `$1 (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                    else
+                        substitution = `$1 opposite of (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                }
+
+                // Replace relation with meta-relation via substitution string
+                const metaPremise = choosenPair.picked[1]
+                    .replace(/(is) (.*) (as|of)/, substitution);
+
+                // Push premise and its corresponding meta-premise
+                premises.push(choosenPair.picked[0], metaPremise);
+
+                // Update _premises so that it doesn't end up in an infinite loop
+                _premises = { picked: choosenPair.remaining };
+            }
         }
 
         if (coinFlip()) {
