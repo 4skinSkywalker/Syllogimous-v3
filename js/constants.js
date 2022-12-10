@@ -2116,4 +2116,33 @@ const dirCoords = [
     [-1, -1]
 ];
 
+const dirString = (x, y, z) => {
+    let str = '';
+    if (z === 1) str = 'Above';
+    if (z === -1) str = 'Below';
+    if (z && (x || y)) str += ' and ';
+    if (y === 1) str += 'North';
+    if (y === -1) str += 'South';
+    if (y && x) str += '-';
+    if (x === 1) str += 'East';
+    if (x === -1) str += 'West';
+    return str;
+}
+
+const dirCoords3D = [];
+const dirNames3D = [];
+const nameInverseDir3D = {};
+
+const xs = Array(3).fill(0).map((_, i) => i-1)
+xs.map(x =>
+    xs.map(y =>
+        xs.map(z => {
+            if (x === 0 && y === 0 && z === 0) return;
+            dirCoords3D.push([ x, y, z ]);
+            dirNames3D.push(dirString(x, y, z));
+            nameInverseDir3D[dirString(x, y, z)] = dirString(-x, -y, -z);
+        })
+    )
+);
+
 const timeNames = ['was', 'is', 'will be'];
