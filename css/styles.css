@@ -357,7 +357,7 @@ button:not(:disabled):hover {
 }
 
 .display_text {
-    max-height: 300px;
+    max-height: 40vh;
     line-height: 1.5;
     padding: 0.5rem 3.5rem 0.75rem 0;
     overflow-y: auto;
