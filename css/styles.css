@@ -277,7 +277,6 @@ button:not(:disabled):hover {
 
 .carousel, .display-outer {
     margin: 0 auto;
-    text-align: center;
     max-width: 460px;
     opacity: 0;
     height: 0;
@@ -319,6 +318,10 @@ button:not(:disabled):hover {
     box-shadow: 0 3px 5px 0 #a008!important;
 }
 
+.carousel {
+    text-align: center;
+}
+
 .carousel_display_label-wrapper, .display-inner {
     position: relative;
     display: grid;
@@ -329,8 +332,12 @@ button:not(:disabled):hover {
     padding: 1.5em 1em;
 }
 
+.display-outer {
+    width: fit-content;
+}
+
 .display-inner {
-    padding: 1.5em 0 0 1em;
+    padding: 1rem 0 1rem 1rem;
 }
 
 .carousel_display_label-wrapper h2, .display-inner h2 {
@@ -352,15 +359,22 @@ button:not(:disabled):hover {
 .display_text {
     max-height: 300px;
     line-height: 1.5;
+    padding: 0.5rem 3.5rem 0.75rem 0;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
 .display_text .formatted-conclusion {
-    background-color: #0008;
     margin-top: 1em;
     margin-right: 1em;
-    padding: 0.5em;
+}
+
+.display_text .formatted-conclusion::before {
+    color: #bbb;
+    content: 'Conclusion';
+    display: block;
+    font-size: 0.75rem;
+    font-weight: bolder;
 }
 
 .carousel_controls {
