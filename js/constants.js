@@ -3,6 +3,7 @@ const localKey = "sllgms-v3";
 
 let savedata = {
     "user": {
+        "alreadyPrompted": false,
         "telemetry": false,
         "sex": null,
         "age": null
@@ -22,6 +23,8 @@ let savedata = {
     "enableCarouselMode": true,
     "enableTemporal": true,
     "enableNegation": true,
+    "onlyAnalogy": false,
+    "onlyBinary": false,
     "questions": []
 };
 
@@ -38,7 +41,9 @@ const keySettingMap = {
     "p-10": "enableTemporal",
     "p-11": "enableNegation",
     "p-12": "enableDirection3D",
-    "p-13": "enableDirection4D"
+    "p-13": "enableDirection4D",
+    "p-14": "onlyAnalogy",
+    "p-15": "onlyBinary"
 };
 
 const strings = [

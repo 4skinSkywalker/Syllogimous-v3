@@ -236,23 +236,24 @@ function init() {
         symbols = nouns;
     else
         symbols = strings;
-    if (savedata.enableDistinction)
+    if (savedata.enableDistinction && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createSameOpposite(savedata.premises));
-    if (savedata.enableComparison)
+    if (savedata.enableComparison && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createMoreLess(savedata.premises));
-    if (savedata.enableTemporal)
+    if (savedata.enableTemporal && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createBeforeAfter(savedata.premises));
-    if (savedata.enableSyllogism)
+    if (savedata.enableSyllogism && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createSyllogism(savedata.premises));
-    if (savedata.enableDirection)
+    if (savedata.enableDirection && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createDirectionQuestion(savedata.premises));
-    if (savedata.enableDirection3D)
+    if (savedata.enableDirection3D && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createDirectionQuestion3D(savedata.premises));
-    if (savedata.enableDirection4D)
+    if (savedata.enableDirection4D && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createDirectionQuestion4D(savedata.premises));
     if (
         savedata.premises > 2
      && savedata.enableAnalogy
+     && !savedata.onlyBinary
      && (
             savedata.enableDistinction
          || savedata.enableComparison
@@ -266,6 +267,7 @@ function init() {
     if (
         savedata.premises > 3
      && savedata.enableBinary
+     && !savedata.onlyAnalogy
      && (
             savedata.enableDistinction
          || savedata.enableComparison

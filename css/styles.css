@@ -433,7 +433,6 @@ button:not(:disabled):hover {
 
 .logic-conn {
     color: #f00;
-    margin: 5px 0;
     text-transform: uppercase;
 }
 
