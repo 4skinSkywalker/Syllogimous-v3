@@ -365,7 +365,9 @@ button:not(:disabled):hover {
 }
 
 .formatted-premise::before,
-.formatted-conclusion::before {
+.formatted-conclusion::before,
+.hqli-premise::before,
+.hqli-conclusion::before {
     color: #bbb;
     display: block;
     font-size: 0.75rem;
@@ -374,51 +376,68 @@ button:not(:disabled):hover {
     opacity: 0.2;
 }
 
-.formatted-premise {
+.hqli-premise::before,
+.hqli-conclusion::before {
+    opacity: 0.4;
+}
+
+.formatted-premise,
+.hqli-premise {
     margin-bottom: 0.25rem;
 }
 
-.formatted-premise::before {
+.formatted-premise::before,
+.hqli-premise::before {
     content: 'Premise #';
 }
 
-.formatted-premise:nth-child(1)::before {
+.formatted-premise:nth-child(1)::before,
+.hqli-premise:nth-child(1)::before {
     content: 'Premise 1';
 }
 
-.formatted-premise:nth-child(2)::before {
+.formatted-premise:nth-child(2)::before,
+.hqli-premise:nth-child(2)::before {
     content: 'Premise 2';
 }
 
-.formatted-premise:nth-child(3)::before {
+.formatted-premise:nth-child(3)::before,
+.hqli-premise:nth-child(3)::before {
     content: 'Premise 3';
 }
 
-.formatted-premise:nth-child(4)::before {
+.formatted-premise:nth-child(4)::before,
+.hqli-premise:nth-child(4)::before {
     content: 'Premise 4';
 }
 
-.formatted-premise:nth-child(5)::before {
+.formatted-premise:nth-child(5)::before,
+.hqli-premise:nth-child(5)::before {
     content: 'Premise 5';
 }
 
-.formatted-premise:nth-child(6)::before {
+.formatted-premise:nth-child(6)::before,
+.hqli-premise:nth-child(6)::before {
     content: 'Premise 6';
 }
 
-.formatted-premise:nth-child(7)::before {
+.formatted-premise:nth-child(7)::before,
+.hqli-premise:nth-child(7)::before {
     content: 'Premise 7';
 }
 
-.formatted-premise:nth-child(8)::before {
+.formatted-premise:nth-child(8)::before,
+.hqli-premise:nth-child(8)::before {
     content: 'Premise 8';
 }
 
-.formatted-premise:nth-child(9)::before {
+.formatted-premise:nth-child(9)::before,
+.hqli-premise:nth-child(9)::before {
     content: 'Premise 9';
 }
 
-.formatted-premise:nth-child(10)::before {
+.formatted-premise:nth-child(10)::before,
+.hqli-premise:nth-child(10)::before {
     content: 'Premise 10';
 }
 
@@ -721,19 +740,12 @@ input[type="checkbox"]:checked + .switch::after {
     border-bottom-color: #e33a!important;
 }
 
-.hqli-premises:before,
-.hqli-conclusion::before,
 .hqli-answer-user::before,
 .hqli-answer::before,
 .hqli-response-time::before {
     color: #fffa;
     font-weight: bold;
     margin-right: 0.25rem;
-}
-
-.hqli-premises:before {
-    content: "Premises";
-    display: block;
 }
 
 .hqli-conclusion::before {
