@@ -316,7 +316,11 @@ function init() {
 
     // Choose with 1/1000 chance a paradox
     if (Math.random() > 0.999)
-        question = paradoxes[Math.floor(Math.random() * paradoxes.length)]
+        question = paradoxes[Math.floor(Math.random() * paradoxes.length)];
+
+    // Choose with 1/1000 chance a logic puzzle
+    if (Math.random() > 0.999)
+        question = logicPuzzles[Math.floor(Math.random() * logicPuzzles.length)];
 
     // Switch confirmation buttons a random amount of times
     for (let i = Math.floor(Math.random()*10); i > 0; i--) {

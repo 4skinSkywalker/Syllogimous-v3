@@ -2157,7 +2157,7 @@ const timeNames = ['was', 'is', 'will be'];
 const paradoxes = [
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "The sentence that follows is true",
             "The sentence before is false"
@@ -2166,16 +2166,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
-        premises: [
-            "The sentence that follows is true",
-            "The sentence before is false"
-        ],
-        conclusion: "Is the latter sentence true?"
-    },
-    {
-        category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "Nothing is better than eternal bliss",
             "And a slice of bread is better than nothing"
@@ -2184,7 +2175,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "Nobody goes to that restaurant",
             "It is too crowded"
@@ -2193,7 +2184,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "Don't go near the water",
             "Until you learned how to swim"
@@ -2202,7 +2193,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "The man who wrote such a stupid question can not write at all"
         ],
@@ -2210,7 +2201,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "There's a bullet which can shoot through any barrier",
             "There's also an absolutely bullet-proof armor which no object can penetrate"
@@ -2219,7 +2210,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "A man drown in the fountain of eternal life"
         ],
@@ -2227,7 +2218,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "Your mission is not to accept the mission"
         ],
@@ -2235,7 +2226,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "A girl goes into the past and kills her Grandma",
             "Since her Grandma is dead, the girl was never born"
@@ -2244,7 +2235,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "The temperature this morning is 0 degrees",
             "And the weather channel says that it will be twice as cold tomorrow"
@@ -2253,7 +2244,7 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "Answer truthfully to the following question:"
         ],
@@ -2261,10 +2252,137 @@ const paradoxes = [
     },
     {
         category: "Paradox",
-        isValid: "-",
+        isValid: "undeterminate",
         premises: [
             "If the God Almighty creates a stone, which he is not capable of lifting"
         ],
         conclusion: "Will he be able to lift it?"
     }
 ];
+
+const logicQuestions = [
+    {
+        category: "Logic",
+        isValid: false,
+        premises: [
+            "There are three fellows",
+            "You ask the to first: Are you a Swindlecant?",
+            "The answer is not comprehensible",
+            "So you ask to the second: What did the first fellow say?",
+            "The second fellow says: my other fellow said that he is a Swindlecant",
+            "And to that the last fellow says: Do not believe him, he is lying!",
+            "Honestants always speak the truth",
+            "Swindlecants always lie"
+        ],
+        conclusion: "Is the second fellow a Honestant?"
+    },
+    {
+        category: "Logic",
+        isValid: true,
+        premises: [
+            "Honestants always speak the truth",
+            "Swindlecants always lie",
+            "There are two fellows",
+            "A fellow says: I'm a Swindlecant or the other one is an Honestant",
+        ],
+        conclusion: "Is he an Honestant?"
+    },
+    {
+        category: "Logic",
+        isValid: true,
+        premises: [
+            "You are condemned to death",
+            "But there's a chance to save yourself",
+            "There are 2 doors, one is death and the other is freedom",
+            "These doors are guarded by 2 guards",
+            "And only them know which door leads to freedom",
+            "You can ask one question to one guard",
+            "And you know that one guard always lie"
+        ],
+        conclusion: "Is there a question that can save you? (if so which one?)"
+    },
+    {
+        category: "Logic",
+        isValid: false,
+        premises: [
+            "There are two fellows",
+            "A fellow says: We are all Swindlecants",
+            "Another fellow concludes: Just one of us is an Honestant",
+            "Honestants always speak the truth",
+            "Swindlecants always lie"
+        ],
+        conclusion: "Is the one who has not spoken an Honestant?"
+    },
+    {
+        category: "Logic",
+        isValid: true,
+        premises: [
+            "Honestants always speak the truth",
+            "Swindlecants always lie",
+            "A guys says: If my wife is an Honestant, then I am a Swindlecant"
+        ],
+        conclusion: "Is the guy an Honestant? (what about the wife?)"
+    },
+    {
+        category: "Logic",
+        isValid: "undeterminate",
+        premises: [
+            "You are about to pay the check at the restaurant",
+            "The cashier tell you how much you owe, and you find it quite expensive",
+            "So you ask if he spoke the truth",
+            "But you couldn't hear the answer so you ask a man next to you about it",
+            "The man says: The cashier said yes, but he is a big liar"
+        ],
+        conclusion: "Is the cashier lying?"
+    },
+    {
+        category: "Logic",
+        isValid: true,
+        premises: [
+            "You heard about a buried treasure",
+            "So you ask another man and he says:",
+            "On this island there is a treasure only if I'm an Honestant",
+            "Honestants always speak the truth",
+            "Swindlecants always lie"
+        ],
+        conclusion: "Should you go and find the treasure?"
+    },
+    {
+        category: "Logic",
+        isValid: true,
+        premises: [
+            "Honestants always speak the truth",
+            "Swindlecants always lie",
+            "You forgot what day is",
+            "So you ask 4 aborigines:",
+            "A: Yesterday was Wednesday",
+            "B: Tomorrow will be Sunday",
+            "C: Today is Friday",
+            "D: The day before yesterday was Thursday"
+        ],
+        conclusion: "Is D telling the truth? (what day is?)"
+    },
+    {
+        category: "Logic",
+        isValid: false,
+        premises: [
+            "Two people want to talk with you",
+            "And you ask: Is at least one of you an Honestant?",
+            "After the answers there was no doubt",
+            "Honestants always speak the truth",
+            "Swindlecants always lie"
+        ],
+        conclusion: "Are they both liers? (who are they?)"
+    },
+    {
+        category: "Logic",
+        isValid: true,
+        premises: [
+            "Honestants always speak the truth",
+            "Swindlecants always lie",
+            "There was a girl that everybody wanted to marry",
+            "But she only want to marry a rich Swindlecant"
+        ],
+        conclusion: "Is there a sentence that would convince her? (if so which one?)"
+    }
+]; // TODO add more (#11)
