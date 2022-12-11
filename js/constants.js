@@ -2153,3 +2153,118 @@ xs.map(x =>
 );
 
 const timeNames = ['was', 'is', 'will be'];
+
+const paradoxes = [
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "The sentence that follows is true",
+            "The sentence before is false"
+        ],
+        conclusion: "Is the former sentence true?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "The sentence that follows is true",
+            "The sentence before is false"
+        ],
+        conclusion: "Is the latter sentence true?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "Nothing is better than eternal bliss",
+            "And a slice of bread is better than nothing"
+        ],
+        conclusion: "So is a slice of bread better than eternal bliss?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "Nobody goes to that restaurant",
+            "It is too crowded"
+        ],
+        conclusion: "So did anyone go to that restaurant?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "Don't go near the water",
+            "Until you learned how to swim"
+        ],
+        conclusion: "Can you?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "The man who wrote such a stupid question can not write at all"
+        ],
+        conclusion: "Could he?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "There's a bullet which can shoot through any barrier",
+            "There's also an absolutely bullet-proof armor which no object can penetrate"
+        ],
+        conclusion: "Can such a bullet penetrate such an armor?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "A man drown in the fountain of eternal life"
+        ],
+        conclusion: "Could he?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "Your mission is not to accept the mission"
+        ],
+        conclusion: "Do you accept?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "A girl goes into the past and kills her Grandma",
+            "Since her Grandma is dead, the girl was never born"
+        ],
+        conclusion: "If she was never born, then could she kill her grandma?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "The temperature this morning is 0 degrees",
+            "And the weather channel says that it will be twice as cold tomorrow"
+        ],
+        conclusion: "Will it be colder?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "Answer truthfully to the following question:"
+        ],
+        conclusion: "Will the next button you press be 'false'?"
+    },
+    {
+        category: "Paradox",
+        isValid: "-",
+        premises: [
+            "If the God Almighty creates a stone, which he is not capable of lifting"
+        ],
+        conclusion: "Will he be able to lift it?"
+    }
+];

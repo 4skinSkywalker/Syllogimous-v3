@@ -314,6 +314,10 @@ function init() {
 
     question = choices[Math.floor(Math.random() * choices.length)];
 
+    // Choose with 1/1000 chance a paradox
+    if (Math.random() > 0.999)
+        question = paradoxes[Math.floor(Math.random() * paradoxes.length)]
+
     // Switch confirmation buttons a random amount of times
     for (let i = Math.floor(Math.random()*10); i > 0; i--) {
         switchButtons();
