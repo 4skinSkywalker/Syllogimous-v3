@@ -2260,7 +2260,7 @@ const paradoxes = [
     }
 ];
 
-const logicQuestions = [
+const logicPuzzles = [
     {
         category: "Logic",
         isValid: false,
