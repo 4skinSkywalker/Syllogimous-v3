@@ -288,24 +288,24 @@ function init() {
     }
 
     if (savedata.enableAnalogy && !analogyEnable) {
-        alert('Analogy needs at least 1 other question class (Syllogism and Binary do not count).');
+        alert('ANALOGY needs at least 1 other question class (SYLLOGISM and BINARY do not count).');
         if (savedata.onlyAnalogy)
             return;
     }
     if (savedata.enableAnalogy && analogyEnable && savedata.premises < 3) {
-        alert('Analogy needs at least 3 premises.');
+        alert('ANALOGY needs at least 3 premises.');
         if (savedata.onlyAnalogy)
             return;
     }
 
 
     if (savedata.enableBinary && !binaryEnable) {
-        alert('Binary needs at least 2 other question class (Analogy do not count).');
+        alert('BINARY needs at least 2 other question class (ANALOGY do not count).');
         if (savedata.onlyBinary)
             return;
     }
     if (savedata.enableBinary && binaryEnable && savedata.premises < 4) {
-        alert('Binary needs at least 4 premises.');
+        alert('BINARY needs at least 4 premises.');
         if (savedata.onlyBinary)
             return;
     }
