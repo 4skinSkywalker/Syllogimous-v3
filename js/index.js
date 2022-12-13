@@ -252,9 +252,9 @@ function init() {
         carousel.classList.remove("visible");
     }
     if (savedata.enableMeaningfulWords)
-        symbols = nouns;
+        symbols = [...nouns];
     else
-        symbols = strings;
+        symbols = [...strings];
     if (savedata.enableDistinction && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createSameOpposite(savedata.premises));
     if (savedata.enableComparison && !(savedata.onlyAnalogy || savedata.onlyBinary))
@@ -284,6 +284,7 @@ function init() {
      && binaryEnable
     ) {
         choices.push(createBinaryQuestion(savedata.premises));
+        choices.push(createNestedBinaryQuestion(savedata.premises));
     }
 
     if (savedata.enableAnalogy && !analogyEnable) {

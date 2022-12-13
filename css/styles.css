@@ -520,7 +520,7 @@ button:not(:disabled):hover {
     padding: 0 0.5rem 0 calc(4px + 0.5rem);
 }
 
-.logic-conn {
+.lc {
     color: #f00;
     text-transform: uppercase;
 }

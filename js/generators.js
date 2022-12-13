@@ -33,10 +33,9 @@ function createSameOpposite(length) {
     let conclusion;
     do {
         let rnd = Math.floor(Math.random() * symbols.length);
-        let first = symbols[rnd]
+        let first = symbols.splice(rnd, 1)
         let prev = first;
         let curr;
-        let seen = [rnd];
 
         buckets = [[prev], []];
         let prevBucket = 0;
@@ -45,11 +44,7 @@ function createSameOpposite(length) {
 
         for (let i = 0; i < length - 1; i++) {
             let rnd = Math.floor(Math.random() * symbols.length);
-            while (seen.includes(rnd)) {
-                rnd = Math.floor(Math.random() * symbols.length);
-            }
-            curr = symbols[rnd];
-            seen.push(rnd);
+            curr = symbols.splice(rnd, 1);
 
             if (coinFlip()) {
                 const ps = [
@@ -169,14 +164,9 @@ function createMoreLess(length) {
     do {
         let seen = [];
         bucket = Array(length).fill(0)
-            .map(() => {
-                let rnd = Math.floor(Math.random() * symbols.length);
-                while (seen.includes(rnd)) {
-                    rnd = Math.floor(Math.random() * symbols.length);
-                }
-                seen.push(rnd);
-                return symbols[rnd];
-            });
+            .map(() =>
+                symbols.splice(Math.floor(Math.random() * symbols.length), 1)
+            );
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
 
@@ -275,14 +265,9 @@ function createBeforeAfter(length) {
     do {
         let seen = [];
         bucket = Array(length).fill(0)
-            .map(() => {
-                let rnd = Math.floor(Math.random() * symbols.length);
-                while (seen.includes(rnd)) {
-                    rnd = Math.floor(Math.random() * symbols.length);
-                }
-                seen.push(rnd);
-                return symbols[rnd];
-            });
+            .map(() =>
+                symbols.splice(Math.floor(Math.random() * symbols.length), 1)
+            );
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
 
@@ -390,12 +375,12 @@ function createBinaryQuestion(length) {
     ];
 
     const operandTemplates = [
-        '$a <div class="logic-conn">and</div> $b',
-        '<div class="logic-conn">True except if both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">are true</div>',
-        '$a <div class="logic-conn">or</div> $b',
-        '<div class="logic-conn">Neither</div> $a <div class="logic-conn">nor</div> $b',
-        '<div class="logic-conn">Either</div> $a <div class="logic-conn">or</div> $b',
-        '<div class="logic-conn">Both</div> $a <div class="logic-conn">and</div> $b <div class="logic-conn">are the same</div>'
+        '$a <div class="lc">and</div> $b',
+        '<div class="lc"></div> $a <div class="lc">and</div> $b <div class="lc">are true</div>',
+        '$a <div class="lc">or</div> $b',
+        '<div class="lc">Neither</div> $a <div class="lc">nor</div> $b',
+        '<div class="lc">Either</div> $a <div class="lc">or</div> $b',
+        '<div class="lc">Both</div> $a <div class="lc">and</div> $b <div class="lc">are the same</div>'
     ];
 
     const pool = [];
@@ -447,6 +432,93 @@ function createBinaryQuestion(length) {
 
     return {
         category: `Binary: ${choice.category} ${operandNames[operandIndex]} ${choice2.category}`,
+        createdAt: new Date().getTime(),
+        isValid,
+        premises,
+        conclusion
+    };
+}
+
+function createNestedBinaryQuestion(length) {
+
+    const humanOperands = [
+        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">AND</span> <span class="lc">(</span>ò<span class="lc">)</span>',
+        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">NAND</span> <span class="lc">(</span>ò<span class="lc">)</span>',
+        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">OR</span> <span class="lc">(</span>ò<span class="lc">)</span>',
+        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">NOR</span> <span class="lc">(</span>ò<span class="lc">)</span>',
+        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">XOR</span> <span class="lc">(</span>ò<span class="lc">)</span>',
+        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">XNOR</span> <span class="lc">(</span>ò<span class="lc">)</span>'
+    ];
+
+    const evalOperands =[
+        "(a)&&(b)",
+        "!((a)&&(b))",
+        "(a)||(b)",
+        "!((a)||(b))",
+        "!((a)&&(b))&&((a)||(b))",
+        "!(!((a)&&(b))&&((a)||(b)))"
+    ];
+
+    const pool = [];
+
+    if (savedata.enableDistinction)
+        pool.push(createSameOpposite);
+    if (savedata.enableComparison)
+        pool.push(createMoreLess);
+    if (savedata.enableTemporal)
+        pool.push(createBeforeAfter);
+    if (savedata.enableDirection)
+        pool.push(createDirectionQuestion);
+    if (savedata.enableDirection3D)
+        pool.push(createDirectionQuestion3D);
+    if (savedata.enableDirection4D)
+        pool.push(createDirectionQuestion4D);
+    if (savedata.enableSyllogism)
+        pool.push(createSyllogism);
+
+    const halfLength = Math.floor(length / 2);
+    const questions = Array(halfLength).fill(0)
+        .map(() => pool[Math.floor(Math.random() * pool.length)](2));
+
+    const getRnd = () => Math.floor(Math.random() * halfLength);
+
+    let maxDepth = +savedata.maxNestedBinaryDepth;
+    function generator(depth) {
+        const flip = Math.random() < 0.5;
+        const flip2 = Math.random() < 0.5;
+        const rndIndex = Math.floor(Math.random() * humanOperands.length);
+        const humanOperand = humanOperands[rndIndex];
+        const evalOperand = evalOperands[rndIndex];
+        const val = (flip && maxDepth--> 0)
+            ? generator(++depth)
+            : getRnd()
+        const val2 = (flip2 && maxDepth--> 0)
+            ? generator(++depth)
+            : getRnd()
+        return {
+            human: humanOperand
+                .replace('à', val > - 1 ? val : val.human)
+                .replace('ò', val2 > - 1 ? val2 : val2.human),
+            eval: evalOperand
+                .replaceAll('a', val > - 1 ? val : val.eval)
+                .replaceAll('b', val2 > - 1 ? val2 : val2.eval),
+        };
+    }
+
+    const generated = generator();
+
+    const category = Object.keys(
+        questions
+            .map(q => q.category)
+            .reduce((a, c) => (a[c] = 1, a), {})
+    )
+    .join('/');
+    const isValid = eval(generated.eval.replaceAll(/(\d+)/g, m => questions[m].isValid));
+    const premises = questions.reduce((a, q) => [ ...a, ...q.premises ], [])
+    const conclusion = generated.human.replaceAll(/(\d+)/g, m => questions[m].conclusion);
+
+    return {
+        category: `Nested Binary: ${category}`,
         createdAt: new Date().getTime(),
         isValid,
         premises,
