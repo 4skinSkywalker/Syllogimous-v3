@@ -49,7 +49,7 @@ function createSameOpposite(length) {
             if (coinFlip()) {
                 const ps = [
                     `<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`,
-                    `Opposite of (<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>)`,
+                    `<span class="subject">${prev}</span> is <span class="is-negated">opposite</span> of <span class="subject">${curr}</span>`,
                 ];
                 premises.push((!savedata.enableNegation)
                     ? ps[0]
@@ -58,7 +58,7 @@ function createSameOpposite(length) {
             } else {
                 const ps = [
                     `<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`,
-                    `Opposite of (<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>)`,
+                    `<span class="subject">${prev}</span> is <span class="is-negated">same</span> as <span class="subject">${curr}</span>`,
                 ];
                 premises.push((!savedata.enableNegation)
                     ? ps[0]
@@ -80,32 +80,27 @@ function createSameOpposite(length) {
             while (_premises.picked.length) {
 
                 const choosenPair = pickUniqueItems(_premises.picked, 2);
-                const negations = choosenPair.picked.map(p => /^Opposite/.test(p));
+                const negations = choosenPair.picked.map(p => /is-negated/.test(p));
                 const relations = choosenPair.picked.map(p => p.match(/is (.*) (?:as|of)/)[1]);
         
                 // Generate substitution string
                 let substitution;
+                const [a, b] = [...choosenPair.picked[0]
+                    .matchAll(/<span class="subject">(.*?)<\/span>/g)]
+                    .map(m => m[1]);
                 if (!negations[0] && !negations[1] || !negations[0] && negations[1]) {
 
-                    // Extract subjects
-                    const [a, b] = [...choosenPair.picked[0]
-                        .matchAll(/<span .*?>(.*?)<\/span>/g)]
-                        .map(m => m[1]);
                     if (relations[0] === relations[1])
-                        substitution = `$1 (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                        substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
                     else
-                        substitution = `$1 opposite of (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                        substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
                 }
                 if (negations[0] && negations[1] || negations[0] && !negations[1]) {
 
-                    // Extract subjects
-                    const [a, b] = [...choosenPair.picked[0]
-                        .matchAll(/<span .*?>(.*?)<\/span>/g)]
-                        .map(m => m[1]);
                     if (relations[0] !== relations[1])
-                        substitution = `$1 (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                        substitution = `$1 <span class="is-negated">opposite</span> as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
                     else
-                        substitution = `$1 opposite of (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to`;
+                        substitution = `$1 <span class="is-negated">same</span> of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
                 }
 
                 // Replace relation with meta-relation via substitution string
@@ -123,7 +118,7 @@ function createSameOpposite(length) {
         if (coinFlip()) {
             const cs = [
                 `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
-                `Opposite of (<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>)`,
+                `<span class="subject">${first}</span> is <span class="is-negated">opposite</span> of <span class="subject">${curr}</span>`,
             ];
             conclusion = (!savedata.enableNegation)
                 ? cs[0]
@@ -132,7 +127,7 @@ function createSameOpposite(length) {
         } else {
             const cs = [
                 `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
-                `Opposite of (<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>)`,
+                `<span class="subject">${first}</span> is <span class="is-negated">same</span> as <span class="subject">${curr}</span>`,
             ];
             conclusion = (!savedata.enableNegation)
                 ? cs[0]
@@ -150,7 +145,7 @@ function createSameOpposite(length) {
         isValid,
         premises,
         conclusion
-    }
+    };
 }
 
 function createMoreLess(length) {
@@ -181,7 +176,7 @@ function createMoreLess(length) {
                 if (sign === 1) {
                     const ps = [
                         `<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>`,
-                        `Opposite of (<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>)`,
+                        `<span class="subject">${next}</span> is <span class="is-negated">less</span> than <span class="subject">${curr}</span>`,
                     ];
                     premises.push((!savedata.enableNegation)
                         ? ps[0]
@@ -189,7 +184,7 @@ function createMoreLess(length) {
                 } else {
                     const ps = [
                         `<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>`,
-                        `Opposite of (<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>)`,
+                        `<span class="subject">${curr}</span> is <span class="is-negated">less</span> than <span class="subject">${next}</span>`,
                     ];
                     premises.push((!savedata.enableNegation)
                         ? ps[0]
@@ -199,7 +194,7 @@ function createMoreLess(length) {
                 if (sign === 1) {
                     const ps = [
                         `<span class="subject">${curr}</span> is less than <span class="subject">${next}</span>`,
-                        `Opposite of (<span class="subject">${curr}</span> is more than <span class="subject">${next}</span>)`,
+                        `<span class="subject">${curr}</span> is <span class="is-negated">more</span> than <span class="subject">${next}</span>`,
                     ];
                     premises.push((!savedata.enableNegation)
                         ? ps[0]
@@ -207,7 +202,7 @@ function createMoreLess(length) {
                 } else {
                     const ps = [
                         `<span class="subject">${next}</span> is less than <span class="subject">${curr}</span>`,
-                        `Opposite of (<span class="subject">${next}</span> is more than <span class="subject">${curr}</span>)`,
+                        `<span class="subject">${next}</span> is <span class="is-negated">more</span> than <span class="subject">${curr}</span>`,
                     ];
                     premises.push((!savedata.enableNegation)
                         ? ps[0]
@@ -224,7 +219,7 @@ function createMoreLess(length) {
         if (coinFlip()) {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>`,
-                `Opposite of (<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>)`,
+                `<span class="subject">${bucket[a]}</span> is <span class="is-negated">more</span> than <span class="subject">${bucket[b]}</span>`,
             ];
             conclusion = (!savedata.enableNegation)
                 ? cs[0]
@@ -233,7 +228,7 @@ function createMoreLess(length) {
         } else {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is more than <span class="subject">${bucket[b]}</span>`,
-                `Opposite of (<span class="subject">${bucket[a]}</span> is less than <span class="subject">${bucket[b]}</span>)`,
+                `<span class="subject">${bucket[a]}</span> is <span class="is-negated">less</span> than <span class="subject">${bucket[b]}</span>`,
             ];
             conclusion = (!savedata.enableNegation)
                 ? cs[0]
@@ -281,7 +276,7 @@ function createBeforeAfter(length) {
                 if (sign === 1) {
                     const ps = [
                         `<span class="subject">${next}</span> is after <span class="subject">${curr}</span>`,
-                        `Opposite of (<span class="subject">${next}</span> is before <span class="subject">${curr}</span>)`,
+                        `<span class="subject">${next}</span> is <span class="is-negated">before</span> <span class="subject">${curr}</span>`,
                     ];
                     premises.push((!savedata.enableNegation)
                         ? ps[0]
@@ -289,7 +284,7 @@ function createBeforeAfter(length) {
                 } else {
                     const ps = [
                         `<span class="subject">${curr}</span> is after <span class="subject">${next}</span>`,
-                        `Opposite of (<span class="subject">${curr}</span> is before <span class="subject">${next}</span>)`,
+                        `<span class="subject">${curr}</span> is <span class="is-negated">before</span> <span class="subject">${next}</span>`,
                     ];
                     premises.push((!savedata.enableNegation)
                         ? ps[0]
@@ -299,7 +294,7 @@ function createBeforeAfter(length) {
                 if (sign === 1) {
                     const ps = [
                         `<span class="subject">${curr}</span> is before <span class="subject">${next}</span>`,
-                        `Opposite of (<span class="subject">${curr}</span> is after <span class="subject">${next}</span>)`,
+                        `<span class="subject">${curr}</span> is <span class="is-negated">after</span> <span class="subject">${next}</span>`,
                     ];
                     premises.push((!savedata.enableNegation)
                         ? ps[0]
@@ -307,7 +302,7 @@ function createBeforeAfter(length) {
                 } else {
                     const ps = [
                         `<span class="subject">${next}</span> is before <span class="subject">${curr}</span>`,
-                        `Opposite of (<span class="subject">${next}</span> is after <span class="subject">${curr}</span>)`,
+                        `<span class="subject">${next}</span> is <span class="is-negated">after</span> <span class="subject">${curr}</span>`,
                     ];
                     premises.push((!savedata.enableNegation)
                         ? ps[0]
@@ -324,7 +319,7 @@ function createBeforeAfter(length) {
         if (coinFlip()) {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>`,
-                `Opposite of (<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>)`,
+                `<span class="subject">${bucket[a]}</span> is <span class="is-negated">after</span> <span class="subject">${bucket[b]}</span>`,
             ];
             conclusion = (!savedata.enableNegation)
                 ? cs[0]
@@ -333,7 +328,7 @@ function createBeforeAfter(length) {
         } else {
             const cs = [
                 `<span class="subject">${bucket[a]}</span> is after <span class="subject">${bucket[b]}</span>`,
-                `Opposite of (<span class="subject">${bucket[a]}</span> is before <span class="subject">${bucket[b]}</span>)`,
+                `<span class="subject">${bucket[a]}</span> is <span class="is-negated">before</span> <span class="subject">${bucket[b]}</span>`,
             ];
             conclusion = (!savedata.enableNegation)
                 ? cs[0]
@@ -375,12 +370,12 @@ function createBinaryQuestion(length) {
     ];
 
     const operandTemplates = [
-        '$a <div class="lc">and</div> $b',
-        '<div class="lc"></div> $a <div class="lc">and</div> $b <div class="lc">are true</div>',
-        '$a <div class="lc">or</div> $b',
-        '<div class="lc">Neither</div> $a <div class="lc">nor</div> $b',
-        '<div class="lc">Either</div> $a <div class="lc">or</div> $b',
-        '<div class="lc">Both</div> $a <div class="lc">and</div> $b <div class="lc">are the same</div>'
+        '$a <div class="is-connector">and</div> $b',
+        '<div class="is-connector"></div> $a <div class="is-connector">and</div> $b <div class="is-connector">are true</div>',
+        '$a <div class="is-connector">or</div> $b',
+        '<div class="is-connector">Neither</div> $a <div class="is-connector">nor</div> $b',
+        '<div class="is-connector">Either</div> $a <div class="is-connector">or</div> $b',
+        '<div class="is-connector">Both</div> $a <div class="is-connector">and</div> $b <div class="is-connector">are the same</div>'
     ];
 
     const pool = [];
@@ -442,12 +437,12 @@ function createBinaryQuestion(length) {
 function createNestedBinaryQuestion(length) {
 
     const humanOperands = [
-        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">AND</span> <span class="lc">(</span>ò<span class="lc">)</span>',
-        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">NAND</span> <span class="lc">(</span>ò<span class="lc">)</span>',
-        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">OR</span> <span class="lc">(</span>ò<span class="lc">)</span>',
-        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">NOR</span> <span class="lc">(</span>ò<span class="lc">)</span>',
-        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">XOR</span> <span class="lc">(</span>ò<span class="lc">)</span>',
-        '<span class="lc">(</span>à<span class="lc">)</span> <span class="lc">XNOR</span> <span class="lc">(</span>ò<span class="lc">)</span>'
+        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">AND</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
+        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">NAND</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
+        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">OR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
+        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">NOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
+        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">XOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
+        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">XNOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>'
     ];
 
     const evalOperands =[
@@ -669,7 +664,7 @@ function createSameDifferent(length) {
         if (choiceIndex < 1) {
             const cs = [
                 '<div style="margin: 2px 0;">is the same as</div>',
-                '<div style="margin: 2px 0;">is not different from</div>',
+                '<div style="color: red; margin: 2px 0;">is the same as</div>'
             ];
             conclusion += (!savedata.enableNegation)
                 ? cs[0]
@@ -678,7 +673,7 @@ function createSameDifferent(length) {
         else {
             const cs = [
                 '<div style="font-size: 14px; margin: 2px 0;">has the same relation as</div>',
-                '<div style="font-size: 14px; margin: 2px 0;">has not a different relation from</div>',
+                '<div style="color: red; font-size: 14px; margin: 2px 0;">has the same relation as</div>'
             ];
             conclusion += (!savedata.enableNegation)
                 ? cs[0]
@@ -690,7 +685,7 @@ function createSameDifferent(length) {
         if (choiceIndex < 1) {
             const cs = [
                 '<div style="margin: 2px 0;">is different from</div>',
-                '<div style="margin: 2px 0;">is not the same as</div>',
+                '<div style="color: red; margin: 2px 0;">is different from</div>'
             ];
             conclusion += (!savedata.enableNegation)
                 ? cs[0]
@@ -700,7 +695,7 @@ function createSameDifferent(length) {
         else {
             const cs = [
                 '<div style="font-size: 12px; margin: 4px 0;">has a different relation from</div>',
-                '<div style="font-size: 12px; margin: 4px 0;">has not the same relation as</div>',
+                '<div style="color: red; font-size: 12px; margin: 4px 0;">has a different relation from</div>',
             ];
             conclusion += (!savedata.enableNegation)
                 ? cs[0]
@@ -756,7 +751,7 @@ function createDirectionQuestion(length) {
             ];
             const ps = [
                 `<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`,
-                `<span class="subject">${words[i+1]}</span> is at opposite of ${nameInverseDir[dirName]} of <span class="subject">${words[i]}</span>`,
+                `<span class="subject">${words[i+1]}</span> is at <span class="is-negated">${nameInverseDir[dirName]}</span> of <span class="subject">${words[i]}</span>`,
             ];
             premises.push((!savedata.enableNegation)
                 ? ps[0]
@@ -774,7 +769,7 @@ function createDirectionQuestion(length) {
         isValid = true;
         const cs = [
             `<span class="subject">${words[0]}</span> is at ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> is at opposite of ${nameInverseDir[conclusionDirName]} of <span class="subject">${words[words.length-1]}</span>`,
+            `<span class="subject">${words[0]}</span> is at <span class="is-negated">${nameInverseDir[conclusionDirName]}</span> of <span class="subject">${words[words.length-1]}</span>`,
         ];
         conclusion = (!savedata.enableNegation)
             ? cs[0]
@@ -788,7 +783,7 @@ function createDirectionQuestion(length) {
         );
         const cs = [
             `<span class="subject">${words[0]}</span> is at ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> is at opposite of ${nameInverseDir[oppositeDirection]} of <span class="subject">${words[words.length-1]}</span>`
+            `<span class="subject">${words[0]}</span> is at <span class="is-negated">${nameInverseDir[oppositeDirection]}</span> of <span class="subject">${words[words.length-1]}</span>`
         ];
         conclusion = (!savedata.enableNegation)
             ? cs[0]
@@ -850,7 +845,7 @@ function createDirectionQuestion3D(length) {
             ];
             const ps = [
                 `<span class="subject">${words[i+1]}</span> is ${dirName} of <span class="subject">${words[i]}</span>`,
-                `<span class="subject">${words[i+1]}</span> is opposite of ${nameInverseDir3D[dirName]} of <span class="subject">${words[i]}</span>`,
+                `<span class="subject">${words[i+1]}</span> is <span class="is-negated">${nameInverseDir3D[dirName]}</span> of <span class="subject">${words[i]}</span>`,
             ];
             premises.push((!savedata.enableNegation)
                 ? ps[0]
@@ -868,7 +863,7 @@ function createDirectionQuestion3D(length) {
         isValid = true;
         const cs = [
             `<span class="subject">${words[0]}</span> is ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> is opposite of ${nameInverseDir3D[conclusionDirName]} of <span class="subject">${words[words.length-1]}</span>`,
+            `<span class="subject">${words[0]}</span> is <span class="is-negated">${nameInverseDir3D[conclusionDirName]}</span> of <span class="subject">${words[words.length-1]}</span>`,
         ];
         conclusion = (!savedata.enableNegation)
             ? cs[0]
@@ -882,7 +877,7 @@ function createDirectionQuestion3D(length) {
         );
         const cs = [
             `<span class="subject">${words[0]}</span> is ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> is opposite of ${nameInverseDir3D[oppositeDirection]} of <span class="subject">${words[words.length-1]}</span>`
+            `<span class="subject">${words[0]}</span> is <span class="is-negated">${nameInverseDir3D[oppositeDirection]}</span> of <span class="subject">${words[words.length-1]}</span>`
         ];
         conclusion = (!savedata.enableNegation)
             ? cs[0]
@@ -954,7 +949,7 @@ function createDirectionQuestion4D(length) {
             ];
             const ps = [
                 `<span class="subject">${words[i+1]}</span> ${timeName} ${dirName} of <span class="subject">${words[i]}</span>`,
-                `<span class="subject">${words[i+1]}</span> ${timeName} opposite of ${nameInverseDir3D[dirName]} of <span class="subject">${words[i]}</span>`,
+                `<span class="subject">${words[i+1]}</span> ${timeName} of <span class="is-negated">${nameInverseDir3D[dirName]}</span> of <span class="subject">${words[i]}</span>`,
             ];
             premises.push((!savedata.enableNegation)
                 ? ps[0]
@@ -972,7 +967,7 @@ function createDirectionQuestion4D(length) {
         isValid = true;
         const cs = [
             `<span class="subject">${words[0]}</span> ${conclusionDirName.temporal} ${conclusionDirName.spatial} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> ${conclusionDirName.temporal} opposite of ${nameInverseDir3D[conclusionDirName.spatial]} of <span class="subject">${words[words.length-1]}</span>`,
+            `<span class="subject">${words[0]}</span> ${conclusionDirName.temporal} of <span class="is-negated">${nameInverseDir3D[conclusionDirName.spatial]}</span> of <span class="subject">${words[words.length-1]}</span>`,
         ];
         conclusion = (!savedata.enableNegation)
             ? cs[0]
@@ -986,7 +981,7 @@ function createDirectionQuestion4D(length) {
         );
         const cs = [
             `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal} ${oppositeDirection.spatial} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal}  opposite of ${nameInverseDir3D[oppositeDirection.spatial]} of <span class="subject">${words[words.length-1]}</span>`
+            `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal} of <span class="is-negated">${nameInverseDir3D[oppositeDirection.spatial]}</span> of <span class="subject">${words[words.length-1]}</span>`
         ];
         conclusion = (!savedata.enableNegation)
             ? cs[0]

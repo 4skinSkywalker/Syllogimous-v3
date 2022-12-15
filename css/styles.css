@@ -507,8 +507,8 @@ button:not(:disabled):hover {
 }
 
 .subject {
+    font-weight: bolder;
     text-transform: uppercase;
-    color: #eddb7e;
 }
 
 .level-wrapper {
@@ -520,9 +520,23 @@ button:not(:disabled):hover {
     padding: 0 0.5rem 0 calc(4px + 0.5rem);
 }
 
-.lc {
-    color: #f00;
+.is-connector {
+    color: #2bdef9;
     text-transform: uppercase;
+}
+
+.is-meta {
+    color: #fff;
+}
+
+.is-negated {
+    color: #f00;
+}
+
+.negation-explainer {
+    color: #eddb7e;
+    font-size: 0.825rem;
+    font-style: italic;
 }
 
 .sign {

@@ -2075,6 +2075,7 @@ const validRules = [
     "0024"
 ];
 
+// This seems such a stupid idea but it opens the possibility of variants
 const forms = [
     [
         'All <span class="subject">$</span> is <span class="subject">$</span>',
@@ -2083,10 +2084,10 @@ const forms = [
         'Some <span class="subject">$</span> is not <span class="subject">$</span>'
     ],
     [
-        'All <span class="subject">$</span> is <span class="subject">$</span>',
-        'All <span class="subject">$</span> is not <span class="subject">$</span>',
-        'Some <span class="subject">$</span> is <span class="subject">$</span>',
-        'Not all <span class="subject">$</span> is <span class="subject">$</span>'
+        '<span class="is-negated">No</span> <span class="subject">$</span> is <span class="subject">$</span>',
+        '<span class="is-negated">All</span> <span class="subject">$</span> is <span class="subject">$</span>',
+        'Some <span class="subject">$</span> <span class="is-negated">is not</span> <span class="subject">$</span>',
+        'Some <span class="subject">$</span> <span class="is-negated">is</span> <span class="subject">$</span>'
     ],
 ];
 
