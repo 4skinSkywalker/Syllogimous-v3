@@ -4,10 +4,16 @@ Definitive Relational Game
 
 [Try it](https://4skinskywalker.github.io/Syllogimous-v3/)
 
-# No License
-Syllogimous v3 is under my exclusive copyright.
-Unless I include a license that specifies otherwise, nobody else should copy, modify or distribute this code without being at risk of take-downs, shake-downs, or litigation.
+# Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0)
 
-Why is it so? In the past I've had another software of mine copied, modified and distributed in exchange of money, and that's disgusting.
+## You are free to:
+### Share — copy and redistribute the material in any medium or format
+### Adapt — remix, transform, and build upon the material
 
-If you’re going to contribute, we can explore adding a contributor agreement to this project.
+The licensor cannot revoke these freedoms as long as you follow the license terms.
+
+## Under the following terms:
+### Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+### NonCommercial — You may not use the material for commercial purposes.
+
+No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
