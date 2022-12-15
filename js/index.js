@@ -315,7 +315,7 @@ function init() {
 
     question = choices[Math.floor(Math.random() * choices.length)];
 
-    if (/is-negated/.test(JSON.stringify(question)))
+    if (!savedata.removeNegationExplainer && /is-negated/.test(JSON.stringify(question)))
         question.premises.unshift('<span class="negation-explainer">Invert the <span class="is-negated">Red</span> text</span>');
 
     // Choose with 1/1000 chance a paradox

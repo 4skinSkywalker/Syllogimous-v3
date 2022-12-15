@@ -27,6 +27,7 @@ let savedata = {
     "onlyBinary": false,
     "enableMeta": true,
     "maxNestedBinaryDepth": 1,
+    "removeNegationExplainer": false,
     "questions": []
 };
 
@@ -48,6 +49,7 @@ const keySettingMap = {
     "p-15": "onlyBinary",
     "p-16": "enableMeta",
     "p-17": "maxNestedBinaryDepth",
+    "p-18": "removeNegationExplainer"
 };
 
 const strings = [
