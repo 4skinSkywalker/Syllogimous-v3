@@ -88,7 +88,7 @@ function save() {
 }
 
 function load() {
-    /* const LSEntry = localStorage.getItem(localKey);
+    const LSEntry = localStorage.getItem(localKey);
 
     let savedData;
     if (LSEntry) {
@@ -96,8 +96,7 @@ function load() {
     }
     if (!savedData) {
         return save();
-    } */
-    savedData = savedata
+    }
 
     Object.assign(savedata, savedData);
 
