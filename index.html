@@ -120,15 +120,38 @@
 						<div class="mb-1">
 							<div class="ctrl">
 								<div>
-									<input hidden id="p-8" type="checkbox" checked>
+									<input hidden id="p-20" type="checkbox" checked>
+									<label class="switch" for="p-20"></label>
+								</div>
+								<span>Use Nonsense Words</span>
+							</div>
+						</div>		
+						<div class="mb-2" style="margin-left: 2rem;">
+							<div class="inline-input__outer">
+								Nonsense Word Length
+								<span class="inline-input__inner">
+									<input id="p-19" type="number" min="1" value="1" max="8" style="width: 5ch">
+								</span>
+							</div>
+						</div>										
+						<div class="mb-1">
+							<div class="ctrl">
+								<div>
+									<input hidden id="p-8" type="checkbox">
 									<label class="switch" for="p-8"></label>
 								</div>
-								<span>Enable Meaningful Workds</span>
+								<span>Use Meaningful Words</span>
 							</div>
-							<p class="explainer">
-								Use meaningul words ("Ability" instead of "QAW").
-							</p>
 						</div>
+						<div class="mb-1">
+							<div class="ctrl">
+								<div>
+									<input hidden id="p-21" type="checkbox">
+									<label class="switch" for="p-21"></label>
+								</div>
+								<span>Use Emoji</span>
+							</div>
+						</div>						
 						<div class="mb-1">
 							<div class="ctrl">
 								<div>
@@ -321,7 +344,7 @@
 								<li>Insert 3 or more premises to play Analogies</li>
 								<li>Insert 4 or more premises to play Binary questions</li>
 							</ul>
-						</div>
+						</div>												
 						<div>
 							<button onclick="resetApp()">Reset App</button>
 							<ul class="explainer">

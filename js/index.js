@@ -88,7 +88,7 @@ function save() {
 }
 
 function load() {
-    const LSEntry = localStorage.getItem(localKey);
+    /* const LSEntry = localStorage.getItem(localKey);
 
     let savedData;
     if (LSEntry) {
@@ -96,7 +96,8 @@ function load() {
     }
     if (!savedData) {
         return save();
-    }
+    } */
+    savedData = savedata
 
     Object.assign(savedata, savedData);
 
@@ -251,10 +252,6 @@ function init() {
         display.classList.add("visible");
         carousel.classList.remove("visible");
     }
-    if (savedata.enableMeaningfulWords)
-        symbols = [...nouns];
-    else
-        symbols = [...strings];
     if (savedata.enableDistinction && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createSameOpposite(savedata.premises));
     if (savedata.enableComparison && !(savedata.onlyAnalogy || savedata.onlyBinary))

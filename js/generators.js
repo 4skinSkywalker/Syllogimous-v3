@@ -1,3 +1,62 @@
+const uniqueWords = {
+    meaningful: new Set(),
+    nonsense: new Set(),
+}
+const uniqueEmoji = new Set()
+function createWordsOrEmoji(how_many) {
+    createdWordsOrEmoji = []
+
+    for (i = how_many; i > 0; i -= 1) {
+        const whichOnes = []
+        if (savedata.useNonsenseWords) whichOnes.push('nonsenseWords')
+        if (savedata.useMeaningfulWords) whichOnes.push('meaningfulWords')
+        if (savedata.useEmoji) whichOnes.push('emoji')
+        else whichOnes.push('nonsenseWords')
+        const whichOne = whichOnes[Math.floor(Math.random() * whichOnes.length)]
+        if (whichOne == 'nonsenseWords') {
+            if (savedata.nonsenseWordLength % 2) word_limit = ((21 ** (Math.floor(savedata.nonsenseWordLength / 2) + 1)) * (5 ** Math.floor(savedata.nonsenseWordLength / 2)));
+            else word_limit = (21 ** (savedata.nonsenseWordLength / 2)) * (5 ** (savedata.nonsenseWordLength / 2))
+            
+            const vowels = ['A', 'E', 'I', 'O', 'U'], consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z']
+            for (string = ''; string.length < savedata.nonsenseWordLength;) {
+                if (uniqueWords.nonsense.size >= word_limit) uniqueWords.nonsense = new Set()
+        
+                if ((string.length + 1) % 2) string += consonants[Math.floor(Math.random() * 21)];
+                else string += vowels[Math.floor(Math.random() * 5)]
+        
+                if (string.length == savedata.nonsenseWordLength) {
+                    if (uniqueWords.nonsense.has(string)) string = '';
+                    else createdWordsOrEmoji.push(string), uniqueWords.nonsense.add(string)
+                }
+            }
+        } else if (whichOne == 'meaningfulWords') {
+            let randomMeaningfulWord
+
+            do {
+                if (uniqueWords.meaningful.size >= meaningfulWords.nouns.length + meaningfulWords.adjectives.length) uniqueWords.meaningful = new Set()
+                
+                randomMeaningfulWord = meaningfulWords.nouns[Math.floor(Math.random() * meaningfulWords.nouns.length)];         
+            } while (uniqueWords.meaningful.has(randomMeaningfulWord))
+
+            createdWordsOrEmoji.push(randomMeaningfulWord)
+            uniqueWords.meaningful.add(randomMeaningfulWord)
+        } else if (whichOne == 'emoji') {
+            let randomEmoji
+
+            do {
+                if (uniqueEmoji.size >= emoji.length) uniqueEmoji = new Set()
+                
+                randomEmoji = emoji[Math.floor(Math.random() * emoji.length)]               
+            } while (uniqueEmoji.has(randomEmoji))
+            
+            createdWordsOrEmoji.push(randomEmoji)
+            uniqueEmoji.add(randomEmoji)           
+        }
+    }
+
+    return createdWordsOrEmoji
+}
+
 function coinFlip() {
     return Math.random() > 0.5;
 }
@@ -32,8 +91,7 @@ function createSameOpposite(length) {
     let premises;
     let conclusion;
     do {
-        let rnd = Math.floor(Math.random() * symbols.length);
-        let first = symbols.splice(rnd, 1)
+        let first = createWordsOrEmoji(1)[0];
         let prev = first;
         let curr;
 
@@ -43,8 +101,7 @@ function createSameOpposite(length) {
         premises = [];
 
         for (let i = 0; i < length - 1; i++) {
-            let rnd = Math.floor(Math.random() * symbols.length);
-            curr = symbols.splice(rnd, 1);
+            curr = createWordsOrEmoji(1)[0];
 
             if (coinFlip()) {
                 const ps = [
@@ -158,10 +215,7 @@ function createMoreLess(length) {
     let conclusion;
     do {
         let seen = [];
-        bucket = Array(length).fill(0)
-            .map(() =>
-                symbols.splice(Math.floor(Math.random() * symbols.length), 1)
-            );
+        bucket = createWordsOrEmoji(length)
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
 
@@ -259,10 +313,7 @@ function createBeforeAfter(length) {
     let conclusion;
     do {
         let seen = [];
-        bucket = Array(length).fill(0)
-            .map(() =>
-                symbols.splice(Math.floor(Math.random() * symbols.length), 1)
-            );
+        bucket = createWordsOrEmoji(length)
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
 
@@ -727,7 +778,7 @@ function findDirection(aCoord, bCoord) {
 function createDirectionQuestion(length) {
     length++;
 
-    const words = pickUniqueItems(symbols, length).picked;
+    const words = createWordsOrEmoji(length);
 
     let wordCoordMap = {};
     let premises = [];
@@ -820,7 +871,7 @@ function findDirection3D(aCoord, bCoord) {
 function createDirectionQuestion3D(length) {
     length++;
 
-    const words = pickUniqueItems(symbols, length).picked;
+    const words = createWordsOrEmoji(length);
 
     let wordCoordMap = {};
     let premises = [];
@@ -921,7 +972,7 @@ function findDirection4D(aCoord, bCoord) {
 function createDirectionQuestion4D(length) {
     length++;
 
-    const words = pickUniqueItems(symbols, length).picked;
+    const words = createWordsOrEmoji(length);
 
     let wordCoordMap = {};
     let premises = [];
@@ -1011,15 +1062,7 @@ function createSyllogism(length) {
     let conclusion;
     do {
         let seen = [];
-        bucket = Array(length).fill(0)
-            .map(() => {
-                let rnd = Math.floor(Math.random() * symbols.length);
-                while (seen.includes(rnd)) {
-                    rnd = Math.floor(Math.random() * symbols.length);
-                }
-                seen.push(rnd);
-                return symbols[rnd];
-            });
+        bucket = createWordsOrEmoji(length);
 
         premises = [];
 
