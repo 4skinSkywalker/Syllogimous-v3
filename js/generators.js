@@ -49,7 +49,7 @@ function createSameOpposite(length) {
             if (coinFlip()) {
                 const ps = [
                     `<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`,
-                    `<span class="subject">${prev}</span> is <span class="is-negated">opposite</span> of <span class="subject">${curr}</span>`,
+                    `<span class="subject">${prev}</span> is <span class="is-negated">opposite of</span> <span class="subject">${curr}</span>`,
                 ];
                 premises.push((!savedata.enableNegation)
                     ? ps[0]
@@ -58,7 +58,7 @@ function createSameOpposite(length) {
             } else {
                 const ps = [
                     `<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`,
-                    `<span class="subject">${prev}</span> is <span class="is-negated">same</span> as <span class="subject">${curr}</span>`,
+                    `<span class="subject">${prev}</span> is <span class="is-negated">same as</span> <span class="subject">${curr}</span>`,
                 ];
                 premises.push((!savedata.enableNegation)
                     ? ps[0]
@@ -81,27 +81,42 @@ function createSameOpposite(length) {
 
                 const choosenPair = pickUniqueItems(_premises.picked, 2);
                 const negations = choosenPair.picked.map(p => /is-negated/.test(p));
-                const relations = choosenPair.picked.map(p => p.match(/is (.*) (?:as|of)/)[1]);
+                const relations = choosenPair.picked.map(p =>
+                    p.match(/is (?:<span class="is-negated">)?(.*) (?:as|of)/)[1]
+                );
         
                 // Generate substitution string
                 let substitution;
-                const [a, b] = [...choosenPair.picked[0]
-                    .matchAll(/<span class="subject">(.*?)<\/span>/g)]
+                const [a, b] = [
+                        ...choosenPair.picked[0]
+                        .matchAll(/<span class="subject">(.*?)<\/span>/g)
+                    ]
                     .map(m => m[1]);
-                if (!negations[0] && !negations[1] || !negations[0] && negations[1]) {
+                if (!negations[0] && !negations[1] && relations[0] === relations[1]) {
+                    substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
+                } // Tested
+                if (!negations[0] && negations[1] && relations[0] === relations[1]) {
+                    substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
+                } // Tested
+                if (negations[0] && !negations[1] && relations[0] === relations[1]) {
+                    substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
+                } // Tested
+                if (negations[0] && negations[1] && relations[0] === relations[1]) {
+                    substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
+                } // Tested
 
-                    if (relations[0] === relations[1])
-                        substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                    else
-                        substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                }
-                if (negations[0] && negations[1] || negations[0] && !negations[1]) {
-
-                    if (relations[0] !== relations[1])
-                        substitution = `$1 <span class="is-negated">opposite</span> as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                    else
-                        substitution = `$1 <span class="is-negated">same</span> of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                }
+                if (!negations[0] && !negations[1] && relations[0] !== relations[1]) {
+                    substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
+                } // Tested
+                if (!negations[0] && negations[1] && relations[0] !== relations[1]) {
+                    substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
+                } // Tested
+                if (negations[0] && !negations[1] && relations[0] !== relations[1]) {
+                    substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
+                } // Tested
+                if (negations[0] && negations[1] && relations[0] !== relations[1]) {
+                    substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
+                } // Tested
 
                 // Replace relation with meta-relation via substitution string
                 const metaPremise = choosenPair.picked[1]
@@ -118,7 +133,7 @@ function createSameOpposite(length) {
         if (coinFlip()) {
             const cs = [
                 `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
-                `<span class="subject">${first}</span> is <span class="is-negated">opposite</span> of <span class="subject">${curr}</span>`,
+                `<span class="subject">${first}</span> is <span class="is-negated">opposite of</span> <span class="subject">${curr}</span>`,
             ];
             conclusion = (!savedata.enableNegation)
                 ? cs[0]
@@ -127,7 +142,7 @@ function createSameOpposite(length) {
         } else {
             const cs = [
                 `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
-                `<span class="subject">${first}</span> is <span class="is-negated">same</span> as <span class="subject">${curr}</span>`,
+                `<span class="subject">${first}</span> is <span class="is-negated">same as</span> <span class="subject">${curr}</span>`,
             ];
             conclusion = (!savedata.enableNegation)
                 ? cs[0]
