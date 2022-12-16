@@ -2,7 +2,7 @@ const uniqueWords = {
     meaningful: new Set(),
     nonsense: new Set(),
 }
-const uniqueEmoji = new Set()
+let uniqueEmoji = new Set()
 function createWordsOrEmoji(how_many) {
     createdWordsOrEmoji = []
 
