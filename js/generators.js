@@ -33,7 +33,7 @@ function createWordsOrEmoji(how_many) {
             let randomMeaningfulWord
 
             do {
-                if (uniqueWords.meaningful.size >= meaningfulWords.nouns.length + meaningfulWords.adjectives.length) uniqueWords.meaningful = new Set()
+                if (uniqueWords.meaningful.size >= meaningfulWords.nouns.length) uniqueWords.meaningful = new Set()
                 
                 randomMeaningfulWord = meaningfulWords.nouns[Math.floor(Math.random() * meaningfulWords.nouns.length)];         
             } while (uniqueWords.meaningful.has(randomMeaningfulWord))
