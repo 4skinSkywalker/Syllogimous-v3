@@ -1,60 +1,78 @@
 const uniqueWords = {
-    meaningful: new Set(),
-    nonsense: new Set(),
+    meaningful: {
+        nouns: new Set(),
+        adjectives: new Set()
+    },
+    nonsense: {},
 }
 let uniqueEmoji = new Set()
-function createWordsOrEmoji(how_many) {
-    createdWordsOrEmoji = []
 
-    for (i = how_many; i > 0; i -= 1) {
-        const whichOnes = []
-        if (savedata.useNonsenseWords) whichOnes.push('nonsenseWords')
-        if (savedata.useMeaningfulWords) whichOnes.push('meaningfulWords')
-        if (savedata.useEmoji) whichOnes.push('emoji')
-        else whichOnes.push('nonsenseWords')
-        const whichOne = whichOnes[Math.floor(Math.random() * whichOnes.length)]
-        if (whichOne == 'nonsenseWords') {
-            if (savedata.nonsenseWordLength % 2) word_limit = ((21 ** (Math.floor(savedata.nonsenseWordLength / 2) + 1)) * (5 ** Math.floor(savedata.nonsenseWordLength / 2)));
-            else word_limit = (21 ** (savedata.nonsenseWordLength / 2)) * (5 ** (savedata.nonsenseWordLength / 2))
+function createStimuli(howMany) {
+    const usingStimulusTypes = [];
+    
+    if (savedata.useNonsenseWords) usingStimulusTypes.push('nonsenseWords');
+    if (savedata.useMeaningfulWords) usingStimulusTypes.push('meaningfulWords');
+    if (savedata.useEmoji) usingStimulusTypes.push('emoji');
+    if (!usingStimulusTypes.length) usingStimulusTypes.push(savedata.defaultStimulusType);
+
+    const createdStimuli = [];
+
+    for (i = howMany; i > 0; i -= 1) {
+        const randomStimulusType = usingStimulusTypes[Math.floor(Math.random() * usingStimulusTypes.length)];
+
+        if (randomStimulusType == 'nonsenseWords') {
+            if (!uniqueWords.nonsense[savedata.nonsenseWordLength]) uniqueWords.nonsense[savedata.nonsenseWordLength] = new Set();
             
-            const vowels = ['A', 'E', 'I', 'O', 'U'], consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z']
+            if (savedata.nonsenseWordLength % 2) word_limit = ((21 ** (Math.floor(savedata.nonsenseWordLength / 2) + 1)) * (5 ** Math.floor(savedata.nonsenseWordLength / 2)));
+            else word_limit = (21 ** (savedata.nonsenseWordLength / 2)) * (5 ** (savedata.nonsenseWordLength / 2));
+            
+            const vowels = ['A', 'E', 'I', 'O', 'U'], consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'];
+            
             for (string = ''; string.length < savedata.nonsenseWordLength;) {
-                if (uniqueWords.nonsense.size >= word_limit) uniqueWords.nonsense = new Set()
+                if (uniqueWords.nonsense[savedata.nonsenseWordLength].size >= word_limit) uniqueWords.nonsense[savedata.nonsenseWordLength] = new Set();
         
                 if ((string.length + 1) % 2) string += consonants[Math.floor(Math.random() * 21)];
-                else string += vowels[Math.floor(Math.random() * 5)]
+                else string += vowels[Math.floor(Math.random() * 5)];
         
                 if (string.length == savedata.nonsenseWordLength) {
-                    if (uniqueWords.nonsense.has(string)) string = '';
-                    else createdWordsOrEmoji.push(string), uniqueWords.nonsense.add(string)
+                    if (uniqueWords.nonsense[savedata.nonsenseWordLength].has(string)) string = '';
+                    else createdStimuli.push(string), uniqueWords.nonsense[savedata.nonsenseWordLength].add(string);
                 }
             }
-        } else if (whichOne == 'meaningfulWords') {
-            let randomMeaningfulWord
-
-            do {
-                if (uniqueWords.meaningful.size >= meaningfulWords.nouns.length) uniqueWords.meaningful = new Set()
-                
-                randomMeaningfulWord = meaningfulWords.nouns[Math.floor(Math.random() * meaningfulWords.nouns.length)];         
-            } while (uniqueWords.meaningful.has(randomMeaningfulWord))
-
-            createdWordsOrEmoji.push(randomMeaningfulWord)
-            uniqueWords.meaningful.add(randomMeaningfulWord)
-        } else if (whichOne == 'emoji') {
-            let randomEmoji
-
-            do {
-                if (uniqueEmoji.size >= emoji.length) uniqueEmoji = new Set()
-                
-                randomEmoji = emoji[Math.floor(Math.random() * emoji.length)]               
-            } while (uniqueEmoji.has(randomEmoji))
+        } else if (randomStimulusType == 'meaningfulWords') {
+            const partsOfSpeech = []
             
-            createdWordsOrEmoji.push(randomEmoji)
-            uniqueEmoji.add(randomEmoji)           
+            if (savedata.meaningfulWordNouns) partsOfSpeech.push('nouns');
+            if (savedata.meaningfulWordAdjectives) partsOfSpeech.push('adjectives');
+            if (!partsOfSpeech.length) partsOfSpeech.push(savedata.defaultPartOfSpeech)
+
+            const randomPartOfSpeech = partsOfSpeech[Math.floor(Math.random() * partsOfSpeech.length)]
+
+            let randomMeaningfulWord;
+
+            do {
+                if (uniqueWords.meaningful[randomPartOfSpeech].size >= meaningfulWords[randomPartOfSpeech].length) uniqueWords.meaningful[randomPartOfSpeech].nouns = new Set();
+
+                randomMeaningfulWord = meaningfulWords[randomPartOfSpeech][Math.floor(Math.random() * meaningfulWords[randomPartOfSpeech].length)];         
+            } while (uniqueWords.meaningful[randomPartOfSpeech].has(randomMeaningfulWord));
+
+            createdStimuli.push(randomMeaningfulWord);
+            uniqueWords.meaningful[randomPartOfSpeech].add(randomMeaningfulWord);
+        } else if (randomStimulusType == 'emoji') {
+            let randomEmoji;
+
+            do {
+                if (uniqueEmoji.size >= emoji.length) uniqueEmoji = new Set();
+                
+                randomEmoji = emoji[Math.floor(Math.random() * emoji.length)];           
+            } while (uniqueEmoji.has(randomEmoji));
+            
+            createdStimuli.push(randomEmoji);
+            uniqueEmoji.add(randomEmoji);     
         }
     }
 
-    return createdWordsOrEmoji
+    return createdStimuli
 }
 
 function coinFlip() {
@@ -91,7 +109,7 @@ function createSameOpposite(length) {
     let premises;
     let conclusion;
     do {
-        let first = createWordsOrEmoji(1)[0];
+        let first = createStimuli(1)[0];
         let prev = first;
         let curr;
 
@@ -101,7 +119,7 @@ function createSameOpposite(length) {
         premises = [];
 
         for (let i = 0; i < length - 1; i++) {
-            curr = createWordsOrEmoji(1)[0];
+            curr = createStimuli(1)[0];
 
             if (coinFlip()) {
                 const ps = [
@@ -230,7 +248,7 @@ function createMoreLess(length) {
     let conclusion;
     do {
         let seen = [];
-        bucket = createWordsOrEmoji(length)
+        bucket = createStimuli(length)
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
 
@@ -328,7 +346,7 @@ function createBeforeAfter(length) {
     let conclusion;
     do {
         let seen = [];
-        bucket = createWordsOrEmoji(length)
+        bucket = createStimuli(length)
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
 
@@ -793,7 +811,7 @@ function findDirection(aCoord, bCoord) {
 function createDirectionQuestion(length) {
     length++;
 
-    const words = createWordsOrEmoji(length);
+    const words = createStimuli(length);
 
     let wordCoordMap = {};
     let premises = [];
@@ -886,7 +904,7 @@ function findDirection3D(aCoord, bCoord) {
 function createDirectionQuestion3D(length) {
     length++;
 
-    const words = createWordsOrEmoji(length);
+    const words = createStimuli(length);
 
     let wordCoordMap = {};
     let premises = [];
@@ -987,7 +1005,7 @@ function findDirection4D(aCoord, bCoord) {
 function createDirectionQuestion4D(length) {
     length++;
 
-    const words = createWordsOrEmoji(length);
+    const words = createStimuli(length);
 
     let wordCoordMap = {};
     let premises = [];
@@ -1077,7 +1095,7 @@ function createSyllogism(length) {
     let conclusion;
     do {
         let seen = [];
-        bucket = createWordsOrEmoji(length);
+        bucket = createStimuli(length);
 
         premises = [];
 

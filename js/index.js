@@ -39,8 +39,6 @@ const displayText = display.querySelector(".display_text");;
 
 const confirmationButtons = carousel.querySelector(".confirmation-buttons");
 
-let symbols;
-
 const keySettingMapInverse = Object.entries(keySettingMap)
     .reduce((a, b) => (a[b[1]] = b[0], a), {});
 
@@ -251,6 +249,7 @@ function init() {
         display.classList.add("visible");
         carousel.classList.remove("visible");
     }
+
     if (savedata.enableDistinction && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createSameOpposite(savedata.premises));
     if (savedata.enableComparison && !(savedata.onlyAnalogy || savedata.onlyBinary))

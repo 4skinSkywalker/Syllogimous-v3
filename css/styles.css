@@ -674,7 +674,15 @@ label.open[for="offcanvas-user"]:hover {
     padding-left: 1rem;
 }
 
-.ctrl {
+.ctrl__outer {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    column-gap: 0.5rem;
+}
+
+.ctrl__inner {
     align-items: center;
     display: flex;
     gap: 0.5rem;
