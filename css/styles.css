@@ -679,7 +679,7 @@ label.open[for="offcanvas-user"]:hover {
     display: flex;
     flex-wrap: wrap;
     justify-content:space-between;
-    column-gap: 0.5rem;
+    gap: 1.25rem;
 }
 
 .ctrl__inner {
