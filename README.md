@@ -2,7 +2,7 @@
 
 Definitive Relational Game
 
-[Try it](https://ikokusovereignty.github.io/Syllogimous-v3/)
+[Try it](https://4skinskywalker.github.io/Syllogimous-v3/)
 
 # Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0)
 
