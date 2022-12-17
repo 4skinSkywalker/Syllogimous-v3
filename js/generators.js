@@ -489,10 +489,9 @@ function createNestedBinaryQuestion(length) {
     const halfLength = Math.floor(length / 2);
     const questions = Array(halfLength).fill(0)
         .map(() => pool[Math.floor(Math.random() * pool.length)](2));
-
-    const getRnd = () => Math.floor(Math.random() * halfLength);
-
+        
     let maxDepth = +savedata.maxNestedBinaryDepth;
+    let i = 0;
     function generator(depth) {
         const flip = Math.random() < 0.5;
         const flip2 = Math.random() < 0.5;
@@ -501,10 +500,10 @@ function createNestedBinaryQuestion(length) {
         const evalOperand = evalOperands[rndIndex];
         const val = (flip && maxDepth--> 0)
             ? generator(++depth)
-            : getRnd()
+            : (i++) % halfLength;
         const val2 = (flip2 && maxDepth--> 0)
             ? generator(++depth)
-            : getRnd()
+            : (i++) % halfLength;
         return {
             human: humanOperand
                 .replace('à', val > - 1 ? val : val.human)
