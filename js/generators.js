@@ -9,7 +9,8 @@ function createQuota() {
         if (savedata.meaningfulWordNouns) quota = Math.min(quota, meaningfulWords.nouns.length);
         if (savedata.meaningfulWordAdjectives) quota = Math.min(quota, meaningfulWords.adjectives.length);
     }   
-
+    if (savedata.useEmoji) quota = Math.min(quota, emoji.length);
+    
     return quota;
 }
 
