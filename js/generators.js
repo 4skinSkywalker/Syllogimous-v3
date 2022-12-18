@@ -1,63 +1,82 @@
-const uniqueWords = {
-    meaningful: {
-        nouns: new Set(),
-        adjectives: new Set()
-    },
-    nonsense: {},
+function createQuota() {
+    let quota = Infinity;
+
+    if (savedata.useNonsenseWords) {
+        if (savedata.nonsenseWordLength % 2) quota = Math.min(quota, ((21 ** (Math.floor(savedata.nonsenseWordLength / 2) + 1)) * (5 ** Math.floor(savedata.nonsenseWordLength / 2))));
+        else quota = Math.min(quota, (21 ** (savedata.nonsenseWordLength / 2)) * (5 ** (savedata.nonsenseWordLength / 2)));
+    }
+    if (savedata.useMeaningfulWords) {
+        if (savedata.meaningfulWordNouns) quota = Math.min(quota, meaningfulWords.nouns.length);
+        if (savedata.meaningfulWordAdjectives) quota = Math.min(quota, meaningfulWords.adjectives.length);
+    }   
+
+    return quota;
 }
-let uniqueEmoji = new Set()
 
-function createStimuli(howMany) {
-    const usingStimulusTypes = [];
+function createStimuli(numberOfStimuli) {
+    const quota = createQuota();
     
-    if (savedata.useNonsenseWords) usingStimulusTypes.push('nonsenseWords');
-    if (savedata.useMeaningfulWords) usingStimulusTypes.push('meaningfulWords');
-    if (savedata.useEmoji) usingStimulusTypes.push('emoji');
-    if (!usingStimulusTypes.length) usingStimulusTypes.push(savedata.defaultStimulusType);
+    const uniqueWords = {
+        meaningful: {
+            nouns: new Set(),
+            adjectives: new Set()
+        },
+        nonsense: new Set()
+    }
+    const uniqueEmoji = new Set();
 
-    const createdStimuli = [];
+    const stimulusTypes = new Set();
+    
+    if (savedata.useNonsenseWords) stimulusTypes.add('nonsenseWords');
+    if (savedata.useMeaningfulWords) stimulusTypes.add('meaningfulWords');
+    if (savedata.useEmoji) stimulusTypes.add('emoji');
+    if (!stimulusTypes.size) stimulusTypes.add(savedata.defaultStimulusType);
 
-    for (i = howMany; i > 0; i -= 1) {
-        const randomStimulusType = usingStimulusTypes[Math.floor(Math.random() * usingStimulusTypes.length)];
+    const stimuliCreated = [];
 
-        if (randomStimulusType == 'nonsenseWords') {
-            if (!uniqueWords.nonsense[savedata.nonsenseWordLength]) uniqueWords.nonsense[savedata.nonsenseWordLength] = new Set();
-            
-            if (savedata.nonsenseWordLength % 2) word_limit = ((21 ** (Math.floor(savedata.nonsenseWordLength / 2) + 1)) * (5 ** Math.floor(savedata.nonsenseWordLength / 2)));
-            else word_limit = (21 ** (savedata.nonsenseWordLength / 2)) * (5 ** (savedata.nonsenseWordLength / 2));
-            
+    const partsOfSpeech = new Set();
+    
+    if (savedata.meaningfulWordNouns) partsOfSpeech.add('nouns');
+    if (savedata.meaningfulWordAdjectives) partsOfSpeech.add('adjectives');
+    if (!partsOfSpeech.size) partsOfSpeech.add(savedata.defaultPartOfSpeech);
+
+    for (; numberOfStimuli > 0 && stimulusTypes.size; numberOfStimuli -= 1) {
+        const randomStimulusType = Array.from(stimulusTypes)[Math.floor(Math.random() * stimulusTypes.size)];
+
+        if (randomStimulusType == 'nonsenseWords') {      
             const vowels = ['A', 'E', 'I', 'O', 'U'], consonants = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'];
             
             for (string = ''; string.length < savedata.nonsenseWordLength;) {
-                if (uniqueWords.nonsense[savedata.nonsenseWordLength].size >= word_limit) uniqueWords.nonsense[savedata.nonsenseWordLength] = new Set();
-        
                 if ((string.length + 1) % 2) string += consonants[Math.floor(Math.random() * 21)];
                 else string += vowels[Math.floor(Math.random() * 5)];
         
                 if (string.length == savedata.nonsenseWordLength) {
-                    if (uniqueWords.nonsense[savedata.nonsenseWordLength].has(string)) string = '';
-                    else createdStimuli.push(string), uniqueWords.nonsense[savedata.nonsenseWordLength].add(string);
+                    if (uniqueWords.nonsense.has(string)) string = '';
+                    else {
+                        stimuliCreated.push(string);
+                        uniqueWords.nonsense.add(string);
+                    }
                 }
             }
+
+            if (uniqueWords.nonsense.size >= quota) stimulusTypes.delete(randomStimulusType);     
         } else if (randomStimulusType == 'meaningfulWords') {
-            const partsOfSpeech = []
-            
-            if (savedata.meaningfulWordNouns) partsOfSpeech.push('nouns');
-            if (savedata.meaningfulWordAdjectives) partsOfSpeech.push('adjectives');
-            if (!partsOfSpeech.length) partsOfSpeech.push(savedata.defaultPartOfSpeech)
+            const randomPartOfSpeech = Array.from(partsOfSpeech)[Math.floor(Math.random() * partsOfSpeech.size)]
 
-            const randomPartOfSpeech = partsOfSpeech[Math.floor(Math.random() * partsOfSpeech.length)]
+            if (randomPartOfSpeech) {
+                let randomMeaningfulWord;
 
-            let randomMeaningfulWord;
+                do {
+                    if (uniqueWords.meaningful[randomPartOfSpeech].size >= meaningfulWords[randomPartOfSpeech].length) uniqueWords.meaningful[randomPartOfSpeech].nouns = new Set();
+    
+                    randomMeaningfulWord = meaningfulWords[randomPartOfSpeech][Math.floor(Math.random() * meaningfulWords[randomPartOfSpeech].length)];         
+                } while (uniqueWords.meaningful[randomPartOfSpeech].has(randomMeaningfulWord));
+    
+                stimuliCreated.push(randomMeaningfulWord);
+                uniqueWords.meaningful[randomPartOfSpeech].add(randomMeaningfulWord);
+            } else stimulusTypes.delete(randomStimulusType);
 
-            do {
-                if (uniqueWords.meaningful[randomPartOfSpeech].size >= meaningfulWords[randomPartOfSpeech].length) uniqueWords.meaningful[randomPartOfSpeech].nouns = new Set();
-
-                randomMeaningfulWord = meaningfulWords[randomPartOfSpeech][Math.floor(Math.random() * meaningfulWords[randomPartOfSpeech].length)];         
-            } while (uniqueWords.meaningful[randomPartOfSpeech].has(randomMeaningfulWord));
-
-            createdStimuli.push(randomMeaningfulWord);
-            uniqueWords.meaningful[randomPartOfSpeech].add(randomMeaningfulWord);
+            if (uniqueWords.meaningful[randomPartOfSpeech].size >= quota) partsOfSpeech.delete(randomPartOfSpeech);
         } else if (randomStimulusType == 'emoji') {
             let randomEmoji;
 
@@ -67,12 +86,14 @@ function createStimuli(howMany) {
                 randomEmoji = emoji[Math.floor(Math.random() * emoji.length)];           
             } while (uniqueEmoji.has(randomEmoji));
             
-            createdStimuli.push(randomEmoji);
-            uniqueEmoji.add(randomEmoji);     
-        }
+            stimuliCreated.push(randomEmoji);
+            uniqueEmoji.add(randomEmoji);
+            
+            if (uniqueEmoji.size >= quota) stimulusTypes.delete(randomStimulusType);
+        } else break;
     }
 
-    return createdStimuli
+    return stimuliCreated
 }
 
 function coinFlip() {
@@ -102,6 +123,8 @@ function shuffle(array) {
 
 function createSameOpposite(length) {
     length++;
+    
+    const words = createStimuli(length);
 
     const category = "Distinction";
     let buckets;
@@ -109,7 +132,7 @@ function createSameOpposite(length) {
     let premises;
     let conclusion;
     do {
-        let first = createStimuli(1)[0];
+        let first = words[0];
         let prev = first;
         let curr;
 
@@ -118,8 +141,8 @@ function createSameOpposite(length) {
 
         premises = [];
 
-        for (let i = 0; i < length - 1; i++) {
-            curr = createStimuli(1)[0];
+        for (let i = 1; i < words.length; i++) {
+            curr = words[i];
 
             if (coinFlip()) {
                 const ps = [
@@ -247,7 +270,6 @@ function createMoreLess(length) {
     let premises;
     let conclusion;
     do {
-        let seen = [];
         bucket = createStimuli(length)
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
@@ -255,7 +277,7 @@ function createMoreLess(length) {
         premises = [];
         let next;
 
-        for (let i = 0; i < length - 1; i++) {
+        for (let i = 0; i < bucket.length - 1; i++) {
             let curr = bucket[i];
             next = bucket[i + 1];
 
@@ -345,15 +367,14 @@ function createBeforeAfter(length) {
     let premises;
     let conclusion;
     do {
-        let seen = [];
-        bucket = createStimuli(length)
+        bucket = createStimuli(length);
 
         let sign = [-1, 1][Math.floor(Math.random() * 2)];
 
         premises = [];
         let next;
 
-        for (let i = 0; i < length - 1; i++) {
+        for (let i = 0; i < bucket.length - 1; i++) {
             let curr = bucket[i];
             next = bucket[i + 1];
             if (coinFlip()) {
@@ -434,7 +455,6 @@ function createBeforeAfter(length) {
 }
 
 function createBinaryQuestion(length) {
-
     const operands = [
         "a&&b",                 // and
         "!(a&&b)",              // nand
@@ -519,7 +539,6 @@ function createBinaryQuestion(length) {
 }
 
 function createNestedBinaryQuestion(length) {
-
     const humanOperands = [
         '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">AND</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
         '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">NAND</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
@@ -558,9 +577,10 @@ function createNestedBinaryQuestion(length) {
     const halfLength = Math.floor(length / 2);
     const questions = Array(halfLength).fill(0)
         .map(() => pool[Math.floor(Math.random() * pool.length)](2));
-        
+
+    const getRnd = () => Math.floor(Math.random() * halfLength);
+
     let maxDepth = +savedata.maxNestedBinaryDepth;
-    let i = 0;
     function generator(depth) {
         const flip = Math.random() < 0.5;
         const flip2 = Math.random() < 0.5;
@@ -569,10 +589,10 @@ function createNestedBinaryQuestion(length) {
         const evalOperand = evalOperands[rndIndex];
         const val = (flip && maxDepth--> 0)
             ? generator(++depth)
-            : (i++) % halfLength;
+            : getRnd()
         const val2 = (flip2 && maxDepth--> 0)
             ? generator(++depth)
-            : (i++) % halfLength;
+            : getRnd()
         return {
             human: humanOperand
                 .replace('à', val > - 1 ? val : val.human)
@@ -843,7 +863,7 @@ function createDirectionQuestion(length) {
 
         conclusionDirName = findDirection(
             wordCoordMap[words[0]],
-            wordCoordMap[words[length-1]]
+            wordCoordMap[words[words.length-1]]
         );
     }
 
@@ -861,7 +881,7 @@ function createDirectionQuestion(length) {
     else {            // wrong
         isValid = false;
         let oppositeDirection = findDirection(
-            wordCoordMap[words[length-1]],
+            wordCoordMap[words[words.length-1]],
             wordCoordMap[words[0]]
         );
         const cs = [
@@ -904,7 +924,7 @@ function createDirectionQuestion3D(length) {
     length++;
 
     const words = createStimuli(length);
-
+    
     let wordCoordMap = {};
     let premises = [];
     let conclusion;
@@ -934,10 +954,10 @@ function createDirectionQuestion3D(length) {
                 ? ps[0]
                 : pickUniqueItems(ps, 1).picked[0]);
         }
-
+        
         conclusionDirName = findDirection3D(
             wordCoordMap[words[0]],
-            wordCoordMap[words[length-1]]
+            wordCoordMap[words[words.length-1]]
         );
     }
 
@@ -955,7 +975,7 @@ function createDirectionQuestion3D(length) {
     else {            // wrong
         isValid = false;
         let oppositeDirection = findDirection3D(
-            wordCoordMap[words[length-1]],
+            wordCoordMap[words[words.length-1]],
             wordCoordMap[words[0]]
         );
         const cs = [
@@ -1041,7 +1061,7 @@ function createDirectionQuestion4D(length) {
 
         conclusionDirName = findDirection4D(
             wordCoordMap[words[0]],
-            wordCoordMap[words[length-1]]
+            wordCoordMap[words[words.length-1]]
         );
     }
 
@@ -1059,7 +1079,7 @@ function createDirectionQuestion4D(length) {
     else {            // wrong
         isValid = false;
         let oppositeDirection = findDirection4D(
-            wordCoordMap[words[length-1]],
+            wordCoordMap[words[words.length-1]],
             wordCoordMap[words[0]]
         );
         const cs = [
@@ -1093,9 +1113,7 @@ function createSyllogism(length) {
     let premises;
     let conclusion;
     do {
-        let seen = [];
         bucket = createStimuli(length);
-
         premises = [];
 
         conclusion;
@@ -1119,7 +1137,7 @@ function createSyllogism(length) {
         }
     } while(isPremiseSimilarToConlusion(premises, conclusion));
 
-    for (let i = 3; i < length; i++) {
+    for (let i = 3; i < bucket.length; i++) {
         let rnd = Math.floor(Math.random() * (i - 1));
         let flip = coinFlip();
         let p = flip ? bucket[i] : bucket[rnd];

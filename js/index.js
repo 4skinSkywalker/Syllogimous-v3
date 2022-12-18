@@ -21,6 +21,8 @@ let timerCount = 10;
 let timerInstance;
 let timerRunning = false;
 
+let quota
+
 const historyList = document.getElementById("history-list");
 
 let carouselIndex = 0;
@@ -250,36 +252,39 @@ function init() {
         carousel.classList.remove("visible");
     }
 
+    quota = savedata.premises
+    quota = Math.min(quota, createQuota())
+
     if (savedata.enableDistinction && !(savedata.onlyAnalogy || savedata.onlyBinary))
-        choices.push(createSameOpposite(savedata.premises));
+        choices.push(createSameOpposite(quota));
     if (savedata.enableComparison && !(savedata.onlyAnalogy || savedata.onlyBinary))
-        choices.push(createMoreLess(savedata.premises));
+        choices.push(createMoreLess(quota));
     if (savedata.enableTemporal && !(savedata.onlyAnalogy || savedata.onlyBinary))
-        choices.push(createBeforeAfter(savedata.premises));
+        choices.push(createBeforeAfter(quota));
     if (savedata.enableSyllogism && !(savedata.onlyAnalogy || savedata.onlyBinary))
-        choices.push(createSyllogism(savedata.premises));
+        choices.push(createSyllogism(quota));
     if (savedata.enableDirection && !(savedata.onlyAnalogy || savedata.onlyBinary))
-        choices.push(createDirectionQuestion(savedata.premises));
+        choices.push(createDirectionQuestion(quota));
     if (savedata.enableDirection3D && !(savedata.onlyAnalogy || savedata.onlyBinary))
-        choices.push(createDirectionQuestion3D(savedata.premises));
+        choices.push(createDirectionQuestion3D(quota));
     if (savedata.enableDirection4D && !(savedata.onlyAnalogy || savedata.onlyBinary))
-        choices.push(createDirectionQuestion4D(savedata.premises));
+        choices.push(createDirectionQuestion4D(quota));
     if (
-        savedata.premises > 2
+        quota > 2
      && savedata.enableAnalogy
      && !savedata.onlyBinary
      && analogyEnable
     ) {
-        choices.push(createSameDifferent(savedata.premises));
+        choices.push(createSameDifferent(quota));
     }
     if (
-        savedata.premises > 3
+        quota > 3
      && savedata.enableBinary
      && !savedata.onlyAnalogy
      && binaryEnable
     ) {
-        choices.push(createBinaryQuestion(savedata.premises));
-        choices.push(createNestedBinaryQuestion(savedata.premises));
+        choices.push(createBinaryQuestion(quota));
+        choices.push(createNestedBinaryQuestion(quota));
     }
 
     if (savedata.enableAnalogy && !analogyEnable) {
@@ -287,7 +292,7 @@ function init() {
         if (savedata.onlyAnalogy)
             return;
     }
-    if (savedata.enableAnalogy && analogyEnable && savedata.premises < 3) {
+    if (savedata.enableAnalogy && analogyEnable && quota < 3) {
         alert('ANALOGY needs at least 3 premises.');
         if (savedata.onlyAnalogy)
             return;
@@ -299,7 +304,7 @@ function init() {
         if (savedata.onlyBinary)
             return;
     }
-    if (savedata.enableBinary && binaryEnable && savedata.premises < 4) {
+    if (savedata.enableBinary && binaryEnable && quota < 4) {
         alert('BINARY needs at least 4 premises.');
         if (savedata.onlyBinary)
             return;
@@ -317,8 +322,8 @@ function init() {
     if (Math.random() > 0.999)
         question = paradoxes[Math.floor(Math.random() * paradoxes.length)];
 
-    // Choose with 1/100 chance a logic puzzle
-    if (Math.random() > 0.99)
+    // Choose with 1/1000 chance a logic puzzle
+    if (Math.random() > 0.999)
         question = logicPuzzles[Math.floor(Math.random() * logicPuzzles.length)];
 
     // Switch confirmation buttons a random amount of times
