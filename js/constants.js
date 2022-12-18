@@ -16,16 +16,16 @@ let savedata = {
     "enableSyllogism": true,
     "enableAnalogy": false,
     "enableDirection": true,
-    "enableDirection3D": true,
-    "enableDirection4D": true,
+    "enableDirection3D": false,
+    "enableDirection4D": false,
     "enableBinary": false,
     "useMeaningfulWords": false,
     "enableCarouselMode": false,
     "enableTemporal": true,
-    "enableNegation": true,
+    "enableNegation": false,
     "onlyAnalogy": false,
     "onlyBinary": false,
-    "enableMeta": true,
+    "enableMeta": false,
     "maxNestedBinaryDepth": 1,
     "removeNegationExplainer": false,
     "questions": [],
@@ -4149,5 +4149,44 @@ const logicPuzzles = [
             "But she only want to marry a rich Swindlecant"
         ],
         conclusion: "Is there a sentence that would convince her? (if so which one?)"
+    },
+    {
+        category: "Logic",
+        isValid: false,
+        premises: [
+            "A man accused of a crime hired an attorney",
+            "Statements from that attorney are always true",
+            "The following exchange took place",
+            "Prosecutor: If the accused commited the crime, then he had an accomplice",
+            "Defender: That's not tru!"
+        ],
+        conclusion: "Did the attorney help his client?"
+    },
+    {
+        category: "Logic",
+        isValid: true,
+        premises: [
+            "You live on an island where there are only two kinds of people",
+            "The ones who always tell the truth",
+            "Adn those who always lie",
+            "You are accused of a crime and brought before the court",
+            "You are allowed to speak only one sentence in your defense",
+            "If you were a liar, and you were innocent",
+            "And it is a fact that a liar commited the crime",
+        ],
+        conclusion: "Is there anything you can say to save yourself?"
+    },
+    {
+        category: "Logic",
+        isValid: false,
+        premises: [
+            "You live on an island where there are only two kinds of people",
+            "The ones who always tell the truth",
+            "Adn those who always lie",
+            "You are accused of a crime and brought before the court",
+            "You are allowed to speak only one sentence in your defense",
+            "If you committed the crime"
+        ],
+        conclusion: "Is there anything you can say to save yourself?"
     }
-]; // TODO add more (#11)
+];

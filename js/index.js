@@ -317,8 +317,8 @@ function init() {
     if (Math.random() > 0.999)
         question = paradoxes[Math.floor(Math.random() * paradoxes.length)];
 
-    // Choose with 1/1000 chance a logic puzzle
-    if (Math.random() > 0.999)
+    // Choose with 1/100 chance a logic puzzle
+    if (Math.random() > 0.99)
         question = logicPuzzles[Math.floor(Math.random() * logicPuzzles.length)];
 
     // Switch confirmation buttons a random amount of times
