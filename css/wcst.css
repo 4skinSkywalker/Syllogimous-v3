@@ -1,0 +1,70 @@
+.wcst-outer {
+    margin: 0 auto;
+    max-width: 800px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.wcst-outer.visible {
+    opacity: 1;
+    height: unset;
+    overflow: unset;
+    padding: 5em 0;
+}
+
+.wcst-inner {
+    position: relative;
+    display: grid;
+    gap: 1em;
+    padding: 1rem 0 1rem 1rem;
+}
+
+.wcst-inner h2 {
+    display: flex;
+    font-family: "Espionage", sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    justify-content: space-between;
+    margin-top: -0.5rem;
+    padding: 0 0.5rem 0 calc(0.5rem + 4px);
+    position: absolute;
+    width: 100%;
+}
+
+.wcst-level {
+    font-family: monospace;
+}
+
+.wcst-list {
+    max-height: 50vh;
+    line-height: 1.5;
+    padding: 0.5rem 3.5rem 0.75rem 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    user-select: none;
+}
+
+.wcst-list-item {
+    display: inline-block;
+    margin-right: .75em;
+    margin-bottom: .75em;
+    padding: .25em .75em;
+    border: 3px solid #ed7b;
+    cursor: pointer;
+}
+
+.wcst-list-item--right {
+    background-color: #0f02;
+}
+
+.wcst-list-item--wrong {
+    background-color: #f002;
+}
+
+.dragging {
+    background-color: #222b;
+    border-color: #ed7;
+    transform: scale(1.1);
+}

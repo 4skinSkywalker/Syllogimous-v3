@@ -29,6 +29,7 @@
 
 		<link rel="icon" type="image/png" href="favicon.png">
 		<link rel="stylesheet" href="css/codec.css">
+		<link rel="stylesheet" href="css/wcst.css">
 		<link rel="stylesheet" href="css/styles.css">
 	</head>
 	<body>
@@ -308,6 +309,38 @@
 							</div>
 							<ul class="explainer">
 								<li>Maximum recursion depth for Nested Binary</li>
+							</ul>
+						</div>
+						<div class="mb-1">
+							<div class="ctrl">
+								<div>
+									<input hidden id="p-19" type="checkbox">
+									<label class="switch" for="p-19"></label>
+								</div>
+								<span>Enable Sorting Test</span>
+							</div>
+							<ul class="explainer">
+								<li>Only for desktop</li>
+							</ul>
+						</div>
+						<div class="mb-1" style="margin-left: 2rem;">
+							<div class="ctrl">
+								<div>
+									<input hidden id="p-20" type="checkbox">
+									<label class="switch" for="p-20"></label>
+								</div>
+								<span>Only Sorting Test</span>
+							</div>
+						</div>
+						<div class="mb-2" style="margin-left: 2rem;">
+							<div class="inline-input__outer">
+								Min Width
+								<span class="inline-input__inner">
+									<input id="p-21" type="number" min="2" value="2" max="4" style="width: 5ch">attr
+								</span>
+							</div>
+							<ul class="explainer">
+								<li>Minimum number of attributes</li>
 							</ul>
 						</div>
 						<div class="mb-2">
@@ -671,6 +704,22 @@
 						<button class="confirmation-false" onclick="checkIfFalse()">FALSE</button>
 					</div>
 				</div>
+
+				<div class="wcst-outer">
+					<div class="wcst-inner">
+						<div class="bracket-lip-top-left"></div>
+						<div class="border-left"></div>
+						<div class="bracket-lip-bottom-left"></div>
+						<div class="bracket-lip-top-right"></div>
+						<div class="border-right"></div>
+						<div class="bracket-lip-bottom-right"></div>
+						<h2>
+							<span class="wcst-type">Sorting Test</span>
+							<span class="wcst-level"></span>
+						</h2>
+						<div class="wcst-list"></div>
+					</div>
+				</div>
 			</div>
 
 			<div class="level-wrapper">
@@ -691,6 +740,7 @@
 		<script src="js/codec.js"></script>
 		<script src="js/constants.js"></script>
 		<script src="js/generators.js"></script>
+		<script src="js/wcst.js"></script>
 		<script src="js/index.js"></script>
 	</body>
 </html>

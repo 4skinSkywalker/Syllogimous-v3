@@ -28,6 +28,9 @@ let savedata = {
     "enableMeta": false,
     "maxNestedBinaryDepth": 1,
     "removeNegationExplainer": false,
+    "enableSortingTest": false,
+    "onlySortingTest": false,
+    "minCardWidth": 2,
     "questions": []
 };
 
@@ -49,7 +52,10 @@ const keySettingMap = {
     "p-15": "onlyBinary",
     "p-16": "enableMeta",
     "p-17": "maxNestedBinaryDepth",
-    "p-18": "removeNegationExplainer"
+    "p-18": "removeNegationExplainer",
+    "p-19": "enableSortingTest",
+    "p-20": "onlySortingTest",
+    "p-21": "minCardWidth"
 };
 
 const strings = [

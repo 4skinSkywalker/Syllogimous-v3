@@ -34,7 +34,7 @@ const carouselNextButton = carousel.querySelector("#carousel-next");
 
 const display = document.querySelector(".display-outer");
 const displayLabelType = display.querySelector(".display_label_type");
-const displayLabelLevel = display.querySelector(".display_label_level");;
+const displayLabelLevel = display.querySelector(".display_label_level");
 const displayText = display.querySelector(".display_text");;
 
 const confirmationButtons = carousel.querySelector(".confirmation-buttons");
@@ -218,6 +218,18 @@ function timeElapsed() {
 
 function init() {
 
+    if (savedata.enableCarouselMode) {
+        carousel.classList.add("visible");
+        display.classList.remove("visible");
+    } else {
+        display.classList.add("visible");
+        carousel.classList.remove("visible");
+    }
+    if (savedata.enableMeaningfulWords)
+        symbols = [...nouns];
+    else
+        symbols = [...strings];
+
     stopCountDown();
     if (timerToggled) startCountDown();
 
@@ -244,17 +256,6 @@ function init() {
     ].reduce((a, c) => a + +c, 0) > 1;
 
     const choices = [];
-    if (savedata.enableCarouselMode) {
-        carousel.classList.add("visible");
-        display.classList.remove("visible");
-    } else {
-        display.classList.add("visible");
-        carousel.classList.remove("visible");
-    }
-    if (savedata.enableMeaningfulWords)
-        symbols = [...nouns];
-    else
-        symbols = [...strings];
     if (savedata.enableDistinction && !(savedata.onlyAnalogy || savedata.onlyBinary))
         choices.push(createSameOpposite(savedata.premises));
     if (savedata.enableComparison && !(savedata.onlyAnalogy || savedata.onlyBinary))
@@ -309,6 +310,26 @@ function init() {
         if (savedata.onlyBinary)
             return;
     }
+
+    // Start of WCST
+    wcst.classList.remove('visible');
+    if (savedata.enableSortingTest && savedata.onlySortingTest) {
+        carousel.classList.remove('visible');
+        display.classList.remove('visible');
+    }
+
+    // Only for desktop, if enabled and with 1/10 chance
+    if (window.innerWidth > 992
+     && savedata.enableSortingTest
+     && (savedata.onlySortingTest || Math.random() > 0.9)
+    ) {
+        carousel.classList.remove('visible');
+        display.classList.remove('visible');
+        wcstLevel.innerText = (savedata.premises + 2) + ' items';
+        wcst.classList.add('visible');
+        generateCards(savedata.premises, savedata.minCardWidth, init);
+    }
+    // End of WCST
 
     if (choices.length === 0)
         return;
