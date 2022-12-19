@@ -318,10 +318,10 @@ function init() {
         display.classList.remove('visible');
     }
 
-    // Only for desktop, if enabled and with 1/10 chance
+    // Only for desktop, if enabled and with variable chance based on other choices
     if (window.innerWidth > 992
      && savedata.enableSortingTest
-     && (savedata.onlySortingTest || Math.random() > 0.9)
+     && (savedata.onlySortingTest || Math.random() > 1 - (1 / choices.length))
     ) {
         carousel.classList.remove('visible');
         display.classList.remove('visible');
@@ -348,9 +348,8 @@ function init() {
         question = logicPuzzles[Math.floor(Math.random() * logicPuzzles.length)];
 
     // Switch confirmation buttons a random amount of times
-    for (let i = Math.floor(Math.random()*10); i > 0; i--) {
+    for (let i = Math.floor(Math.random()*10); i > 0; i--)
         switchButtons();
-    }
 
     carouselInit();
     displayInit();
