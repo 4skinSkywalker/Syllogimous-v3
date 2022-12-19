@@ -176,12 +176,22 @@ function carouselNext() {
     carouselDisplayText.innerHTML = question.premises[carouselIndex];
 }
 
-function switchButtons() {
-    const parent = document.querySelectorAll(".confirmation-buttons");
-    for (let p of parent) {
+function switchButtonPositions() {
+    const parents = document.querySelectorAll(".confirmation-buttons");
+    for (let p of parents) {
         const firstChild = p.firstElementChild;
         p.removeChild(firstChild);
         p.appendChild(firstChild);
+    }
+}
+
+function switchButtonColors() {
+    const parents = document.querySelectorAll(".confirmation-buttons");
+    for (let p of parents) {
+        p.querySelector('.confirmation-true').classList.add('confirmation-false');
+        p.querySelector('.confirmation-true').classList.remove('confirmation-true');
+        p.querySelector('.confirmation-false').classList.add('confirmation-true');
+        p.querySelector('.confirmation-false').classList.remove('confirmation-false');
     }
 }
 
@@ -315,8 +325,13 @@ function init() {
     }
 
     html.classList.remove('stroop');
-    if (savedata.enableNegation && savedata.enableStroopEffect && coinFlip())
+    if (savedata.enableNegation && savedata.enableStroopEffect && coinFlip()) {
         html.classList.add('stroop');
+
+        // Switch confirmation button colors a random amount of times
+        for (let i = Math.floor(Math.random()*10); i > 0; i--)
+        switchButtonColors();
+    }
 
     // Start of WCST
     wcst.classList.remove('visible');
@@ -353,9 +368,9 @@ function init() {
     if (Math.random() > 0.99)
         question = logicPuzzles[Math.floor(Math.random() * logicPuzzles.length)];
 
-    // Switch confirmation buttons a random amount of times
+    // Switch confirmation button positions a random amount of times
     for (let i = Math.floor(Math.random()*10); i > 0; i--)
-        switchButtons();
+        switchButtonPositions();
 
     carouselInit();
     displayInit();
@@ -511,5 +526,5 @@ timerToggle.addEventListener("click", evt => {
 });
 
 load();
-switchButtons();
+switchButtonPositions();
 init();
