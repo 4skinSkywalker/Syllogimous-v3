@@ -644,11 +644,11 @@ label.open[for="offcanvas-user"]:hover {
 .offcanvas-body {
     overflow: auto;
     padding: 1rem;
-    width: calc(100% - 2rem)
+    width: calc(100% - 2.25rem)
 }
 
 .offcanvas-side {
-    width: 2rem;
+    width: 2.25rem;
 }
 
 .offcanvas--left {
@@ -667,7 +667,7 @@ label.open[for="offcanvas-user"]:hover {
 
 .offcanvas-close {
     cursor: pointer;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     line-height: 1;
     padding: 0.5rem;
     position: sticky;
