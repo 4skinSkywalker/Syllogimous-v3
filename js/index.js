@@ -321,7 +321,7 @@ function init() {
     // Only for desktop, if enabled and with variable chance based on other choices
     if (window.innerWidth > 992
      && savedata.enableSortingTest
-     && (savedata.onlySortingTest || Math.random() > 1 - (1 / choices.length))
+     && (savedata.onlySortingTest || Math.random() > 1 - (1 / (1 + choices.length)))
     ) {
         carousel.classList.remove('visible');
         display.classList.remove('visible');

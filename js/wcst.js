@@ -258,7 +258,9 @@ function generateCards(length, minWidth, cb) {
         });
 
     const expectedCards = cards.sort(fieldSorter(selPropertyKeysWithOrder));
-    const userCards = shuffle(expectedCards);
+    let userCards = shuffle(expectedCards);
+    while(JSON.stringify(expectedCards) === JSON.stringify(userCards))
+        userCards = shuffle(expectedCards);
 
     userCards.forEach(c =>
         makeDraggable(
