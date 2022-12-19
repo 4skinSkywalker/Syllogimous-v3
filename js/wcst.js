@@ -267,8 +267,18 @@ function generateCards(length, minWidth, cb) {
             addCard(c),
             {
                 onDragEnd: () => {
-                    if (checkOrder(expectedCards))
-                        cb();
+                    if (!checkOrder(expectedCards))
+                        return;
+                    wcstList.innerHTML = `
+<div class="wcst-resume">
+    <div class="wcst-resume__intro">The ruleset was</div>
+    <div class="wcst-resume__ruleset">${selPropertyKeysWithOrder.join(' > ')}</div>
+</div>
+                    `;
+                    const next = document.createElement('BUTTON');
+                    next.innerText = 'NEXT';
+                    next.onclick = cb;
+                    wcstList.firstElementChild.appendChild(next)
                 }
             }
         )

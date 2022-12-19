@@ -139,9 +139,9 @@
 								<span>Enable Negation</span>
 							</div>
 							<ul class="explainer">
-								<li>Invert the <span class="is-negated">Red</span> text</li>
-								<li><span class="is-negated">Is</span> = <span style="color: #fff;">Is not</span></li>
-								<li><span class="is-negated">All</span> = <span style="color: #fff;">No</span></li>
+								<li>Invert the <span style="color: #f00;">Red</span> text</li>
+								<li><span style="color: #f00;">Is</span> = <span style="color: #fff;">Is not</span></li>
+								<li><span style="color: #f00;">All</span> = <span style="color: #fff;">No</span></li>
 							</ul>
 						</div>
 						<div class="mb-2" style="margin-left: 2rem;">
@@ -152,6 +152,18 @@
 								</div>
 								<span>Remove Negation Explainer</span>
 							</div>
+						</div>
+						<div class="mb-1">
+							<div class="ctrl">
+								<div>
+									<input hidden id="p-22" type="checkbox">
+									<label class="switch" for="p-22"></label>
+								</div>
+								<span>Enable Stroop Mode</span>
+							</div>
+							<ul class="explainer">
+								Randomly switch colors between normal and negated texts
+							</ul>
 						</div>
 						<div class="mb-1">
 							<div class="ctrl">
@@ -273,8 +285,8 @@
 								<span>Enable Space-Time</span>
 							</div>
 							<ul class="explainer">
-								<li>A is at Before, Below and South of Town of B</li>
-								<li>B is at After, Above and North-West of C</li>
+								<li>A was Below and South of Town of B</li>
+								<li>B will be Above and North-West of C</li>
 							</ul>
 						</div>
 						<div class="mb-1">
@@ -302,13 +314,13 @@
 						</div>
 						<div class="mb-2" style="margin-left: 2rem;">
 							<div class="inline-input__outer">
-								Max Depth
+								Depth
 								<span class="inline-input__inner">
-									<input id="p-17" type="number" min="1" value="1" max="8" style="width: 5ch">lvl
+									<input id="p-17" type="number" min="0" value="1" max="8" style="width: 5ch">lvl
 								</span>
 							</div>
 							<ul class="explainer">
-								<li>Maximum recursion depth for Nested Binary</li>
+								<li>Recursion depth for Nested Binary</li>
 							</ul>
 						</div>
 						<div class="mb-1">

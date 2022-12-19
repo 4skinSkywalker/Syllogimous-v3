@@ -529,6 +529,23 @@ button:not(:disabled):hover {
     color: #fff;
 }
 
+html.stroop .carousel_display_text,
+html.stroop .display_text {
+    color: #f00;
+}
+
+html.stroop .negation-explainer__color-name::before {
+    content: 'White';
+}
+
+.negation-explainer__color-name::before {
+    content: 'Red';
+}
+
+html.stroop .is-negated {
+    color: #fff;
+}
+
 .is-negated {
     color: #f00;
 }

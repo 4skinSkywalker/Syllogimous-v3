@@ -5,6 +5,8 @@ if ('serviceWorker' in navigator)
             if (registrations.length) for (let r of registrations) r.unregister();
         });
 
+const html = document.querySelector('html');
+
 const feedbackWrong = document.querySelector(".feedback--wrong");
 const feedbackMissed = document.querySelector(".feedback--missed");
 const feedbackRight = document.querySelector(".feedback--right");
@@ -284,8 +286,9 @@ function init() {
      && !savedata.onlyAnalogy
      && binaryEnable
     ) {
+        if (savedata.nestedBinaryDepth > 0)
+            choices.push(createNestedBinaryQuestion(savedata.premises));
         choices.push(createBinaryQuestion(savedata.premises));
-        choices.push(createNestedBinaryQuestion(savedata.premises));
     }
 
     if (savedata.enableAnalogy && !analogyEnable) {
@@ -311,23 +314,26 @@ function init() {
             return;
     }
 
+    html.classList.remove('stroop');
+    if (savedata.enableNegation && savedata.enableStroopEffect && coinFlip())
+        html.classList.add('stroop');
+
     // Start of WCST
     wcst.classList.remove('visible');
-    if (savedata.enableSortingTest && savedata.onlySortingTest) {
-        carousel.classList.remove('visible');
-        display.classList.remove('visible');
-    }
-
-    // Only for desktop, if enabled and with variable chance based on other choices
-    if (window.innerWidth > 992
+    if (
+        window.innerWidth > 992
      && savedata.enableSortingTest
-     && (savedata.onlySortingTest || Math.random() > 1 - (1 / (1 + choices.length)))
+     && (
+            savedata.onlySortingTest
+         || Math.random() > 1 - (1 / (1 + choices.length))
+        )
     ) {
+        const length = savedata.premises + 2;
         carousel.classList.remove('visible');
         display.classList.remove('visible');
-        wcstLevel.innerText = (savedata.premises + 2) + ' items';
+        wcstLevel.innerText = length + ' items';
         wcst.classList.add('visible');
-        generateCards(savedata.premises, savedata.minCardWidth, init);
+        generateCards(length, savedata.minCardWidth, init);
     }
     // End of WCST
 
@@ -337,7 +343,7 @@ function init() {
     question = choices[Math.floor(Math.random() * choices.length)];
 
     if (!savedata.removeNegationExplainer && /is-negated/.test(JSON.stringify(question)))
-        question.premises.unshift('<span class="negation-explainer">Invert the <span class="is-negated">Red</span> text</span>');
+        question.premises.unshift('<span class="negation-explainer">Invert the <span class="negation-explainer__color-name is-negated"></span> text</span>');
 
     // Choose with 1/1000 chance a paradox
     if (Math.random() > 0.999)

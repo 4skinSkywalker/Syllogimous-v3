@@ -1,10 +1,9 @@
 .wcst-outer {
     margin: 0 auto;
-    max-width: 800px;
+    width: 800px;
     opacity: 0;
     height: 0;
     overflow: hidden;
-    width: fit-content;
 }
 
 .wcst-outer.visible {
@@ -67,4 +66,24 @@
     background-color: #222b;
     border-color: #ed7;
     transform: scale(1.1);
+}
+
+.wcst-resume {
+    display: grid;
+    font-size: 1.05rem;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem -1.5rem 1rem 1rem;
+    text-align: center;
+}
+
+.wcst-resume__intro {
+    font-family: "Espionage", sans-serif;
+    letter-spacing: 4px;
+}
+
+.wcst-resume__ruleset {
+    color: #eddb7e;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
 }

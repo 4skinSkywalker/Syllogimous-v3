@@ -26,11 +26,12 @@ let savedata = {
     "onlyAnalogy": false,
     "onlyBinary": false,
     "enableMeta": false,
-    "maxNestedBinaryDepth": 1,
+    "nestedBinaryDepth": 1,
     "removeNegationExplainer": false,
     "enableSortingTest": false,
     "onlySortingTest": false,
     "minCardWidth": 2,
+    "enableStroopEffect": false,
     "questions": []
 };
 
@@ -51,11 +52,12 @@ const keySettingMap = {
     "p-14": "onlyAnalogy",
     "p-15": "onlyBinary",
     "p-16": "enableMeta",
-    "p-17": "maxNestedBinaryDepth",
+    "p-17": "nestedBinaryDepth",
     "p-18": "removeNegationExplainer",
     "p-19": "enableSortingTest",
     "p-20": "onlySortingTest",
-    "p-21": "minCardWidth"
+    "p-21": "minCardWidth",
+    "p-22": "enableStroopEffect"
 };
 
 const strings = [
@@ -2336,18 +2338,6 @@ const logicPuzzles = [
     },
     {
         category: "Logic",
-        isValid: "undeterminate",
-        premises: [
-            "You are about to pay the check at the restaurant",
-            "The cashier tell you how much you owe, and you find it quite expensive",
-            "So you ask if he spoke the truth",
-            "But you couldn't hear the answer so you ask a man next to you about it",
-            "The man says: The cashier said yes, but he is a big liar"
-        ],
-        conclusion: "Is the cashier lying?"
-    },
-    {
-        category: "Logic",
         isValid: true,
         premises: [
             "You heard about a buried treasure",
@@ -2404,7 +2394,7 @@ const logicPuzzles = [
             "Statements from that attorney are always true",
             "The following exchange took place",
             "Prosecutor: If the accused commited the crime, then he had an accomplice",
-            "Defender: That's not tru!"
+            "Defender: That's not true!"
         ],
         conclusion: "Did the attorney help his client?"
     },
