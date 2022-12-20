@@ -23,6 +23,44 @@ function shuffle(array) {
     return array;
 }
 
+function metaSubstitution(choosenPair, relations, negations) {
+
+    // Generate substitution string
+    let substitution;
+    const [a, b] = [
+            ...choosenPair.picked[0]
+            .matchAll(/<span class="subject">(.*?)<\/span>/g)
+        ]
+        .map(m => m[1]);
+    if (!negations[0] && !negations[1] && relations[0] === relations[1]) {
+        substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    } // Tested
+    if (!negations[0] && negations[1] && relations[0] === relations[1]) {
+        substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    } // Tested
+    if (negations[0] && !negations[1] && relations[0] === relations[1]) {
+        substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    } // Tested
+    if (negations[0] && negations[1] && relations[0] === relations[1]) {
+        substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    } // Tested
+
+    if (!negations[0] && !negations[1] && relations[0] !== relations[1]) {
+        substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    } // Tested
+    if (!negations[0] && negations[1] && relations[0] !== relations[1]) {
+        substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    } // Tested
+    if (negations[0] && !negations[1] && relations[0] !== relations[1]) {
+        substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    } // Tested
+    if (negations[0] && negations[1] && relations[0] !== relations[1]) {
+        substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    } // Tested
+
+    return substitution;
+}
+
 function createSameOpposite(length) {
     length++;
 
@@ -85,42 +123,11 @@ function createSameOpposite(length) {
                     p.match(/is (?:<span class="is-negated">)?(.*) (?:as|of)/)[1]
                 );
         
-                // Generate substitution string
-                let substitution;
-                const [a, b] = [
-                        ...choosenPair.picked[0]
-                        .matchAll(/<span class="subject">(.*?)<\/span>/g)
-                    ]
-                    .map(m => m[1]);
-                if (!negations[0] && !negations[1] && relations[0] === relations[1]) {
-                    substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                } // Tested
-                if (!negations[0] && negations[1] && relations[0] === relations[1]) {
-                    substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                } // Tested
-                if (negations[0] && !negations[1] && relations[0] === relations[1]) {
-                    substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                } // Tested
-                if (negations[0] && negations[1] && relations[0] === relations[1]) {
-                    substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                } // Tested
-
-                if (!negations[0] && !negations[1] && relations[0] !== relations[1]) {
-                    substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                } // Tested
-                if (!negations[0] && negations[1] && relations[0] !== relations[1]) {
-                    substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                } // Tested
-                if (negations[0] && !negations[1] && relations[0] !== relations[1]) {
-                    substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                } // Tested
-                if (negations[0] && negations[1] && relations[0] !== relations[1]) {
-                    substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to`;
-                } // Tested
+                const substitution = metaSubstitution(choosenPair, relations, negations);
 
                 // Replace relation with meta-relation via substitution string
                 const metaPremise = choosenPair.picked[1]
-                    .replace(/(is) (.*) (as|of)/, substitution);
+                    .replace(/(is) (.*)(?=<span class="subject">)/, substitution);
 
                 // Push premise and its corresponding meta-premise
                 premises.push(choosenPair.picked[0], metaPremise);
@@ -226,6 +233,35 @@ function createMoreLess(length) {
             }
         }
 
+        if (savedata.enableMeta) {
+
+            // Randomly choose a number of meta-relations
+            const numOfMetaRelations = 1 + Math.floor(Math.random() * Math.floor((length - 1) / 2));
+            let _premises = pickUniqueItems(premises, numOfMetaRelations * 2);
+            premises = [ ..._premises.remaining ];
+
+            while (_premises.picked.length) {
+
+                const choosenPair = pickUniqueItems(_premises.picked, 2);
+                const negations = choosenPair.picked.map(p => /is-negated/.test(p));
+                const relations = choosenPair.picked.map(p =>
+                    p.match(/is (?:<span class="is-negated">)*(.*?)(?:<\/span>)* than/)[1]
+                );
+        
+                const substitution = metaSubstitution(choosenPair, relations, negations);
+
+                // Replace relation with meta-relation via substitution string
+                const metaPremise = choosenPair.picked[1]
+                    .replace(/(is) (.*)(?=<span class="subject">)/, substitution);
+
+                // Push premise and its corresponding meta-premise
+                premises.push(choosenPair.picked[0], metaPremise);
+
+                // Update _premises so that it doesn't end up in an infinite loop
+                _premises = { picked: choosenPair.remaining };
+            }
+        }
+
         let a = Math.floor(Math.random() * bucket.length);
         let b = Math.floor(Math.random() * bucket.length);
         while (a === b) {
@@ -323,6 +359,35 @@ function createBeforeAfter(length) {
                         ? ps[0]
                         : pickUniqueItems(ps, 1).picked[0]);
                 }
+            }
+        }
+
+        if (savedata.enableMeta) {
+
+            // Randomly choose a number of meta-relations
+            const numOfMetaRelations = 1 + Math.floor(Math.random() * Math.floor((length - 1) / 2));
+            let _premises = pickUniqueItems(premises, numOfMetaRelations * 2);
+            premises = [ ..._premises.remaining ];
+
+            while (_premises.picked.length) {
+
+                const choosenPair = pickUniqueItems(_premises.picked, 2);
+                const negations = choosenPair.picked.map(p => /is-negated/.test(p));
+                const relations = choosenPair.picked.map(p =>
+                    p.match(/is (?:<span class="is-negated">)*(.*?)(?:<\/span>)* /)[1]
+                );
+
+                const substitution = metaSubstitution(choosenPair, relations, negations);
+
+                // Replace relation with meta-relation via substitution string
+                const metaPremise = choosenPair.picked[1]
+                    .replace(/(is) (.*)(?=<span class="subject">)/, substitution);
+
+                // Push premise and its corresponding meta-premise
+                premises.push(choosenPair.picked[0], metaPremise);
+
+                // Update _premises so that it doesn't end up in an infinite loop
+                _premises = { picked: choosenPair.remaining };
             }
         }
 
