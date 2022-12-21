@@ -32,31 +32,35 @@ function metaSubstitution(choosenPair, relations, negations) {
             .matchAll(/<span class="subject">(.*?)<\/span>/g)
         ]
         .map(m => m[1]);
-    if (!negations[0] && !negations[1] && relations[0] === relations[1]) {
+    if (!negations[0] && !negations[1] && relations[0] === relations[1])
         substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    } // Tested
-    if (!negations[0] && negations[1] && relations[0] === relations[1]) {
+    if (!negations[0] && negations[1] && relations[0] === relations[1])
         substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    } // Tested
-    if (negations[0] && !negations[1] && relations[0] === relations[1]) {
-        substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    } // Tested
-    if (negations[0] && negations[1] && relations[0] === relations[1]) {
-        substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    } // Tested
+    if (negations[0] && !negations[1] && relations[0] === relations[1])
+        if (savedata.enableNegation)
+            substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+        else
+            substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    if (negations[0] && negations[1] && relations[0] === relations[1])
+        if (savedata.enableNegation)
+            substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+        else
+            substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
 
-    if (!negations[0] && !negations[1] && relations[0] !== relations[1]) {
-        substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    } // Tested
-    if (!negations[0] && negations[1] && relations[0] !== relations[1]) {
-        substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    } // Tested
-    if (negations[0] && !negations[1] && relations[0] !== relations[1]) {
+    if (!negations[0] && !negations[1] && relations[0] !== relations[1])
+        if (savedata.enableNegation)
+            substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+        else
+            substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    if (!negations[0] && negations[1] && relations[0] !== relations[1])
+        if (savedata.enableNegation)
+            substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+        else
+            substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    if (negations[0] && !negations[1] && relations[0] !== relations[1])
         substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    } // Tested
-    if (negations[0] && negations[1] && relations[0] !== relations[1]) {
+    if (negations[0] && negations[1] && relations[0] !== relations[1])
         substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    } // Tested
 
     return substitution;
 }
@@ -245,7 +249,7 @@ function createMoreLess(length) {
                 const choosenPair = pickUniqueItems(_premises.picked, 2);
                 const negations = choosenPair.picked.map(p => /is-negated/.test(p));
                 const relations = choosenPair.picked.map(p =>
-                    p.match(/is (?:<span class="is-negated">)*(.*?)(?:<\/span>)* than/)[1]
+                    p.match(/is (?:<span class="is-negated">)*(.*?)(?:<\/span>)* /)[1]
                 );
         
                 const substitution = metaSubstitution(choosenPair, relations, negations);
@@ -451,11 +455,11 @@ function createBinaryQuestion(length) {
 
     const operandTemplates = [
         '$a <div class="is-connector">and</div> $b',
-        '<div class="is-connector"></div> $a <div class="is-connector">and</div> $b <div class="is-connector">are true</div>',
+        '<div class="is-connector">Neither</div> $a <div class="is-connector">and</div> $b <div class="is-connector">are true</div>',
         '$a <div class="is-connector">or</div> $b',
         '<div class="is-connector">Neither</div> $a <div class="is-connector">nor</div> $b',
-        '<div class="is-connector">Either</div> $a <div class="is-connector">or</div> $b',
-        '<div class="is-connector">Both</div> $a <div class="is-connector">and</div> $b <div class="is-connector">are the same</div>'
+        '$a <div class="is-connector">differs from</div> $b',
+        '$a <div class="is-connector">is equal to</div> $b'
     ];
 
     const pool = [];
