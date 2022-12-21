@@ -455,9 +455,9 @@ function createBinaryQuestion(length) {
 
     const operandTemplates = [
         '$a <div class="is-connector">and</div> $b',
-        '<div class="is-connector">Neither</div> $a <div class="is-connector">and</div> $b <div class="is-connector">are true</div>',
+        '$a <div class="is-connector">and</div> $b <div class="is-connector">are not both true</div>',
         '$a <div class="is-connector">or</div> $b',
-        '<div class="is-connector">Both</div> $a <div class="is-connector">and</div> $b <div class="is-connector">are false</div>',
+        '$a <div class="is-connector">and</div> $b <div class="is-connector">are both false</div>',
         '$a <div class="is-connector">differs from</div> $b',
         '$a <div class="is-connector">is equal to</div> $b'
     ];
