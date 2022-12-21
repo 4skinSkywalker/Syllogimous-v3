@@ -457,7 +457,7 @@ function createBinaryQuestion(length) {
         '$a <div class="is-connector">and</div> $b',
         '<div class="is-connector">Neither</div> $a <div class="is-connector">and</div> $b <div class="is-connector">are true</div>',
         '$a <div class="is-connector">or</div> $b',
-        '<div class="is-connector">Neither</div> $a <div class="is-connector">nor</div> $b',
+        '<div class="is-connector">Both</div> $a <div class="is-connector">and</div> $b <div class="is-connector">are false</div>',
         '$a <div class="is-connector">differs from</div> $b',
         '$a <div class="is-connector">is equal to</div> $b'
     ];
