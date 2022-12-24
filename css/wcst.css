@@ -1,6 +1,6 @@
 .wcst-outer {
     margin: 0 auto;
-    width: 800px;
+    width: 0;
     opacity: 0;
     height: 0;
     overflow: hidden;
@@ -11,6 +11,7 @@
     height: unset;
     overflow: unset;
     padding: 5em 0;
+    width: 800px;
 }
 
 .wcst-inner {

@@ -277,15 +277,16 @@ button:not(:disabled):hover {
 
 .carousel, .display-outer {
     margin: 0 auto;
-    max-width: 460px;
-    opacity: 0;
     height: 0;
+    max-width: 0;
+    opacity: 0;
     overflow: hidden;
 }
 
 .carousel.visible, .display-outer.visible {
     opacity: 1;
     height: unset;
+    max-width: 460px;
     overflow: unset;
     padding: 5em 0;
 }
@@ -821,7 +822,7 @@ input[type="checkbox"]:checked + .switch::after {
         font-size: 20px;
     }
 
-    .carousel, .display-outer {
+    .carousel.visible, .display-outer.visible {
         max-width: 320px;
     }
 }
