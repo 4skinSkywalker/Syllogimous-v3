@@ -530,12 +530,12 @@ button:not(:disabled):hover {
     color: #fff;
 }
 
-html.stroop .carousel_display_text,
-html.stroop .display_text {
+.stroop .carousel_display_text,
+.stroop .display_text {
     color: #f00;
 }
 
-html.stroop .negation-explainer__color-name::before {
+.stroop .negation-explainer__color-name::before {
     content: 'White';
 }
 
@@ -543,7 +543,7 @@ html.stroop .negation-explainer__color-name::before {
     content: 'Red';
 }
 
-html.stroop .is-negated {
+.stroop .is-negated {
     color: #fff;
 }
 

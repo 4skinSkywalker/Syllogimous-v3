@@ -5,7 +5,7 @@ if ('serviceWorker' in navigator)
             if (registrations.length) for (let r of registrations) r.unregister();
         });
 
-const html = document.querySelector('html');
+const questionSpace = document.querySelector('.question-space');
 
 const feedbackWrong = document.querySelector(".feedback--wrong");
 const feedbackMissed = document.querySelector(".feedback--missed");
@@ -324,14 +324,16 @@ function init() {
             return;
     }
 
-    html.classList.remove('stroop');
+    let isStrooped = false;
+    questionSpace.classList.remove('stroop');
     if (savedata.enableNegation && savedata.enableStroopEffect && coinFlip()) {
-        html.classList.add('stroop');
-
-        // Switch confirmation button colors a random amount of times
-        for (let i = Math.floor(Math.random()*10); i > 0; i--)
-        switchButtonColors();
+        isStrooped = true;
+        questionSpace.classList.add('stroop');
     }
+
+    // Switch confirmation button colors a random amount of times
+    for (let i = Math.floor(Math.random()*10); i > 0; i--)
+        switchButtonColors();
 
     // Start of WCST
     wcst.classList.remove('visible');
@@ -356,6 +358,8 @@ function init() {
         return;
 
     question = choices[Math.floor(Math.random() * choices.length)];
+
+    question.isStroop = isStrooped;
 
     if (!savedata.removeNegationExplainer && /is-negated/.test(JSON.stringify(question)))
         question.premises.unshift('<span class="negation-explainer">Invert the <span class="negation-explainer__color-name is-negated"></span> text</span>');
