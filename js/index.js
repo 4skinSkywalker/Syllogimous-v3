@@ -320,12 +320,12 @@ function init() {
     if (
         savedata.enableBinary
      && savedata.onlyBinary
-     && !enableAnd
-     && !enableNand
-     && !enableOr
-     && !enableNor
-     && !enableXor
-     && !enableXnor
+     && !savedata.enableAnd
+     && !savedata.enableNand
+     && !savedata.enableOr
+     && !savedata.enableNor
+     && !savedata.enableXor
+     && !savedata.enableXnor
     )
         return alert("BINARY needs at least 1 operand.");
 
