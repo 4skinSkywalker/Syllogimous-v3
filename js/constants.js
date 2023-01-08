@@ -32,7 +32,13 @@ let savedata = {
     "onlySortingTest": false,
     "minCardWidth": 2,
     "enableStroopEffect": false,
-    "questions": []
+    "questions": [],
+    "enableAnd": true,
+    "enableNand": true,
+    "enableOr": true,
+    "enableNor": true,
+    "enableXor": true,
+    "enableXnor": true,
 };
 
 const keySettingMap = {
@@ -57,7 +63,13 @@ const keySettingMap = {
     "p-19": "enableSortingTest",
     "p-20": "onlySortingTest",
     "p-21": "minCardWidth",
-    "p-22": "enableStroopEffect"
+    "p-22": "enableStroopEffect",
+    "p-23": "enableAnd",
+    "p-24": "enableNand",
+    "p-25": "enableOr",
+    "p-26": "enableNor",
+    "p-27": "enableXor",
+    "p-28": "enableXnor"
 };
 
 const strings = [

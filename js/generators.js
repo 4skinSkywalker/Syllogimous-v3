@@ -435,32 +435,42 @@ function createBeforeAfter(length) {
 
 function createBinaryQuestion(length) {
 
-    const operands = [
-        "a&&b",                 // and
-        "!(a&&b)",              // nand
-        "a||b",                 // or
-        "!(a||b)",              // nor
-        "!(a&&b)&&(a||b)",      // xor
-        "!(!(a&&b)&&(a||b))"    // xnor
-    ];
+    const operands = [];
+    const operandNames = [];
+    const operandTemplates = [];
 
-    const operandNames = [
-        "AND",
-        "NAND",
-        "OR",
-        "NOR",
-        "XOR",
-        "XNOR"
-    ];
+    if (savedata.enableAnd) {
+        operands.push("a&&b");
+        operandNames.push("AND");
+        operandTemplates.push('$a <div class="is-connector">and</div> $b');
+    }
+    if (savedata.enableNand) {
+        operands.push("!(a&&b)");
+        operandNames.push("NAND");
+        operandTemplates.push('$a <div class="is-connector">and</div> $b <div class="is-connector">are not both true</div>');
+    }
+    if (savedata.enableOr) {
+        operands.push("a||b");
+        operandNames.push("OR");
+        operandTemplates.push('$a <div class="is-connector">or</div> $b');
+    }
+    if (savedata.enableNor) {
+        operands.push("!(a||b)");
+        operandNames.push("NOR");
+        operandTemplates.push('$a <div class="is-connector">and</div> $b <div class="is-connector">are both false</div>');
+    }
+    if (savedata.enableXor) {
+        operands.push("!(a&&b)&&(a||b)");
+        operandNames.push("XOR");
+        operandTemplates.push('$a <div class="is-connector">differs from</div> $b');
+    }
+    if (savedata.enableXnor) {
+        operands.push("!(!(a&&b)&&(a||b))");
+        operandNames.push("XNOR");
+        operandTemplates.push('$a <div class="is-connector">is equal to</div> $b');
+    }
 
-    const operandTemplates = [
-        '$a <div class="is-connector">and</div> $b',
-        '$a <div class="is-connector">and</div> $b <div class="is-connector">are not both true</div>',
-        '$a <div class="is-connector">or</div> $b',
-        '$a <div class="is-connector">and</div> $b <div class="is-connector">are both false</div>',
-        '$a <div class="is-connector">differs from</div> $b',
-        '$a <div class="is-connector">is equal to</div> $b'
-    ];
+    if (!operands.length) return alert("You must choose at least one operand to play binary");
 
     const pool = [];
 
@@ -520,23 +530,37 @@ function createBinaryQuestion(length) {
 
 function createNestedBinaryQuestion(length) {
 
-    const humanOperands = [
-        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">AND</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
-        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">NAND</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
-        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">OR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
-        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">NOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
-        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">XOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>',
-        '<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">XNOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>'
-    ];
+    let depth = +savedata.nestedBinaryDepth;
 
-    const evalOperands =[
-        "(a)&&(b)",
-        "!((a)&&(b))",
-        "(a)||(b)",
-        "!((a)||(b))",
-        "!((a)&&(b))&&((a)||(b))",
-        "!(!((a)&&(b))&&((a)||(b)))"
-    ];
+    const humanOperands = [];
+    const evalOperands = [];
+
+    if (savedata.enableAnd) {
+        humanOperands.push('<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">AND</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>');
+        evalOperands.push("(a)&&(b)");
+    }
+    if (savedata.enableNand) {
+        humanOperands.push('<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">NAND</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>');
+        evalOperands.push("!((a)&&(b))");
+    }
+    if (savedata.enableOr) {
+        humanOperands.push('<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">OR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>');
+        evalOperands.push("(a)||(b)");
+    }
+    if (savedata.enableNor) {
+        humanOperands.push('<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">NOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>');
+        evalOperands.push("!((a)||(b))");
+    }
+    if (savedata.enableXor) {
+        humanOperands.push('<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">XOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>');
+        evalOperands.push("!((a)&&(b))&&((a)||(b))");
+    }
+    if (savedata.enableXnor) {
+        humanOperands.push('<span class="is-connector">(</span>à<span class="is-connector">)</span> <span class="is-connector">XNOR</span> <span class="is-connector">(</span>ò<span class="is-connector">)</span>');
+        evalOperands.push("!(!((a)&&(b))&&((a)||(b)))");
+    }
+
+    if (!humanOperands.length) return alert("You must choose at least one operand to play binary");
 
     const pool = [];
 
@@ -555,11 +579,30 @@ function createNestedBinaryQuestion(length) {
     if (savedata.enableSyllogism)
         pool.push(createSyllogism);
 
-    const halfLength = Math.floor(length / 2);
-    const questions = Array(halfLength).fill(0)
-        .map(() => pool[Math.floor(Math.random() * pool.length)](2));
-        
-    let depth = savedata.nestedBinaryDepth * 2;
+    let numberOfQuestions;
+    let questions;
+    if (depth < 2) {
+        numberOfQuestions = 2;
+        const a = Math.floor(length / 2);
+        const b = length % 2 > 0
+            ? a + 1
+            : a;
+        questions = [a, b]
+            .map(ab =>
+                pool[Math.floor(Math.random() * pool.length)](ab)
+            );
+        console.log("Two questions - Many premises", questions);
+    }
+    else {
+        numberOfQuestions = Math.floor(length / 2)
+        questions = Array(numberOfQuestions).fill(0)
+            .map(() =>
+                pool[Math.floor(Math.random() * pool.length)](2)
+            );
+        console.log("Many questions - Two premises", questions);
+    }
+
+    depth *= 2; // Multiply by 2 because I decrement by 1 at every iteration
     let i = 0;
     function generator() {
         const rndIndex = Math.floor(Math.random() * humanOperands.length);
@@ -567,10 +610,10 @@ function createNestedBinaryQuestion(length) {
         const evalOperand = evalOperands[rndIndex];
         const val = (--depth> 0)
             ? generator()
-            : (i++) % halfLength;
+            : (i++) % numberOfQuestions;
         const val2 = (--depth> 0)
             ? generator()
-            : (i++) % halfLength;
+            : (i++) % numberOfQuestions;
         return {
             human: humanOperand
                 .replace('à', val > - 1 ? val : val.human)
