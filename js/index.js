@@ -296,9 +296,14 @@ function init() {
      && !savedata.onlyAnalogy
      && binaryEnable
     ) {
-        if (savedata.nestedBinaryDepth > 0)
-            choices.push(createNestedBinaryQuestion(savedata.premises));
-        choices.push(createBinaryQuestion(savedata.premises));
+
+        // binary and nestedBinary are falsy when the user disable all operands
+        const binary = createBinaryQuestion(savedata.premises);
+        const nestedBinary = createNestedBinaryQuestion(savedata.premises);
+        if (savedata.nestedBinaryDepth < 1 && binary)
+            choices.push(binary);
+        else if (nestedBinary)
+            choices.push(nestedBinary);
     }
 
     if (savedata.enableAnalogy && !analogyEnable) {
@@ -312,6 +317,17 @@ function init() {
             return;
     }
 
+    if (
+        savedata.enableBinary
+     && savedata.onlyBinary
+     && !enableAnd
+     && !enableNand
+     && !enableOr
+     && !enableNor
+     && !enableXor
+     && !enableXnor
+    )
+        return alert("BINARY needs at least 1 operand.");
 
     if (savedata.enableBinary && !binaryEnable) {
         alert('BINARY needs at least 2 other question class (ANALOGY do not count).');

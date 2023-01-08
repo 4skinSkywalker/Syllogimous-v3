@@ -470,7 +470,7 @@ function createBinaryQuestion(length) {
         operandTemplates.push('$a <div class="is-connector">is equal to</div> $b');
     }
 
-    if (!operands.length) return alert("You must choose at least one operand to play binary");
+    if (!operands.length) return;
 
     const pool = [];
 
@@ -560,7 +560,7 @@ function createNestedBinaryQuestion(length) {
         evalOperands.push("!(!((a)&&(b))&&((a)||(b)))");
     }
 
-    if (!humanOperands.length) return alert("You must choose at least one operand to play binary");
+    if (!humanOperands.length) return;
 
     const pool = [];
 
