@@ -2,45 +2,70 @@
 const localKey = "sllgms-v3";
 
 let savedata = {
+    // Telemetry
     "user": {
         "alreadyPrompted": false,
         "telemetry": false,
         "sex": null,
         "age": null
     },
+    // State
     "premises": 2,
-    "timer": 30,
     "score": 0,
-    "enableDistinction": true,
-    "enableComparison": true,
-    "enableSyllogism": true,
-    "enableAnalogy": false,
-    "enableDirection": true,
-    "enableDirection3D": false,
-    "enableDirection4D": false,
-    "enableBinary": false,
-    "enableMeaningfulWords": true,
-    "enableCarouselMode": false,
-    "enableTemporal": true,
-    "enableNegation": false,
-    "onlyAnalogy": false,
-    "onlyBinary": false,
-    "enableMeta": false,
-    "nestedBinaryDepth": 1,
-    "removeNegationExplainer": false,
-    "enableSortingTest": false,
-    "onlySortingTest": false,
-    "minCardWidth": 2,
-    "enableStroopEffect": false,
     "questions": [],
+    // Meta configurations
+    "enableCarouselMode": false,
+    "enableMeaningfulWords": true,
+    "enableNegation": false,
+    "removeNegationExplainer": false,
+    "enableStroopEffect": false,
+    "enableMeta": false,
+    // Classes of questions:
+    //     Distinction
+    "enableDistinction": true,
+    "distinctionTimer": 30,
+    //     Comparison
+    "enableComparison": true,
+    "comparisonTimer": 30,
+    //     Temporal
+    "enableTemporal": true,
+    "temporalTimer": 30,
+    //     Syllogism
+    "enableSyllogism": true,
+    "syllogismTimer": 30,
+    //     Direction
+    "enableDirection": true,
+    "directionTimer": 30,
+    //     Direction3D
+    "enableDirection3D": false,
+    "direction3DTimer": 30,
+    //     Direction4D
+    "enableDirection4D": false,
+    "direction4DTimer": 30,
+    //     Analogy
+    "enableAnalogy": false,
+    "analogyTimer": 30,
+    "onlyAnalogy": false,
+    //     Binary
+    "enableBinary": false,
+    "binaryTimer": 30,
+    "onlyBinary": false,
+    "nestedBinaryDepth": 1,
     "enableAnd": true,
     "enableNand": true,
     "enableOr": true,
     "enableNor": true,
     "enableXor": true,
     "enableXnor": true,
+    // Other game mechanics:
+    //     Sorting Test
+    "enableSortingTest": false,
+    "sortingTestTimer": 30,
+    "onlySortingTest": false,
+    "minCardWidth": 2
 };
 
+// The following should be restructured in a more maintainable form
 const keySettingMap = {
     "p-1": "enableDistinction",
     "p-2": "enableComparison",
@@ -69,7 +94,17 @@ const keySettingMap = {
     "p-25": "enableOr",
     "p-26": "enableNor",
     "p-27": "enableXor",
-    "p-28": "enableXnor"
+    "p-28": "enableXnor",
+    "p-29": "distinctionTimer",
+    "p-30": "comparisonTimer",
+    "p-31": "temporalTimer",
+    "p-32": "syllogismTimer",
+    "p-33": "analogyTimer",
+    "p-34": "directionTimer",
+    "p-35": "direction3DTimer",
+    "p-36": "direction4DTimer",
+    "p-37": "binaryTimer",
+    "p-38": "sortingTestTimer"
 };
 
 const strings = [

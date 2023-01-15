@@ -14,12 +14,11 @@ const feedbackRight = document.querySelector(".feedback--right");
 const correctlyAnsweredEl = document.querySelector(".correctly-answered");
 const nextLevelEl = document.querySelector(".next-level");
 
-const timerInput = document.querySelector("#timer-input");
 const timerToggle = document.querySelector("#timer-toggle");
 const timerBar = document.querySelector(".timer__bar");
 let timerToggled = false;
-let timerTime = 10;
-let timerCount = 10;
+let timerTime = 30;
+let timerCount = 30;
 let timerInstance;
 let timerRunning = false;
 
@@ -81,6 +80,14 @@ for (const key in keySettingMap) {
     }
 }
 
+// Events
+timerToggle.addEventListener("click", evt => {
+    timerTime = savedata[question.label + "Timer"];
+    timerToggled = evt.target.checked;
+    if (timerToggled) startCountDown();
+    else stopCountDown();
+});
+
 // Functions
 function save() {
     localStorage.setItem(
@@ -113,9 +120,6 @@ function load() {
         else if (input.type === "number")
             input.value = value;
     }
-
-    timerInput.value = savedData.timer;
-    timerTime = timerInput.value;
 
     renderHQL();
 }
@@ -242,9 +246,6 @@ function init() {
     else
         symbols = [...strings];
 
-    stopCountDown();
-    if (timerToggled) startCountDown();
-
     correctlyAnsweredEl.innerText = savedata.score;
     nextLevelEl.innerText = savedata.questions.length;
 
@@ -348,8 +349,33 @@ function init() {
     }
 
     // Switch confirmation button colors a random amount of times
-    for (let i = Math.floor(Math.random()*10); i > 0; i--)
+    for (let i = Math.floor(Math.random() * 10); i > 0; i--)
         switchButtonColors();
+
+    if (choices.length === 0)
+        return;
+
+    question = choices[Math.floor(Math.random() * choices.length)];
+    timerTime = savedata[question.label + 'Timer'];
+
+    stopCountDown();
+    if (timerToggled) 
+        startCountDown();
+
+    question.isStroop = isStrooped;
+
+    if (!savedata.removeNegationExplainer && /is-negated/.test(JSON.stringify(question)))
+        question.premises.unshift('<span class="negation-explainer">Invert the <span class="negation-explainer__color-name is-negated"></span> text</span>');
+
+    // Choose with 1/1000 chance an easter egg
+    if (Math.random() > 0.999)
+        question = paradoxes[Math.floor(Math.random() * paradoxes.length)];
+    if (Math.random() > 0.999)
+        question = logicPuzzles[Math.floor(Math.random() * logicPuzzles.length)];
+
+    // Switch confirmation button positions a random amount of times
+    for (let i = Math.floor(Math.random() * 10); i > 0; i--)
+        switchButtonPositions();
 
     // Start of WCST
     wcst.classList.remove('visible');
@@ -361,6 +387,7 @@ function init() {
          || Math.random() > 1 - (1 / (1 + choices.length))
         )
     ) {
+        timerTime = savedata.sortingTestTimer;
         const length = savedata.premises + 2;
         carousel.classList.remove('visible');
         display.classList.remove('visible');
@@ -369,28 +396,6 @@ function init() {
         generateCards(length, savedata.minCardWidth, init);
     }
     // End of WCST
-
-    if (choices.length === 0)
-        return;
-
-    question = choices[Math.floor(Math.random() * choices.length)];
-
-    question.isStroop = isStrooped;
-
-    if (!savedata.removeNegationExplainer && /is-negated/.test(JSON.stringify(question)))
-        question.premises.unshift('<span class="negation-explainer">Invert the <span class="negation-explainer__color-name is-negated"></span> text</span>');
-
-    // Choose with 1/1000 chance a paradox
-    if (Math.random() > 0.999)
-        question = paradoxes[Math.floor(Math.random() * paradoxes.length)];
-
-    // Choose with 1/100 chance a logic puzzle
-    if (Math.random() > 0.99)
-        question = logicPuzzles[Math.floor(Math.random() * logicPuzzles.length)];
-
-    // Switch confirmation button positions a random amount of times
-    for (let i = Math.floor(Math.random()*10); i > 0; i--)
-        switchButtonPositions();
 
     carouselInit();
     displayInit();
@@ -528,22 +533,6 @@ function createHQLI(question, answerUser) {
     parent.innerHTML = html;
     return parent.firstElementChild;
 }
-
-// Events
-timerInput.addEventListener("input", evt => {
-    const el = evt.target;
-    timerTime = el.value;
-    timerCount = el.value;
-    el.style.width = (el.value.length + 3) + 'ch';
-    savedata.timer = el.value;
-    save();
-});
-
-timerToggle.addEventListener("click", evt => {
-    timerToggled = evt.target.checked;
-    if (timerToggled) startCountDown();
-    else stopCountDown();
-});
 
 load();
 switchButtonPositions();

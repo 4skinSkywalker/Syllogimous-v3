@@ -68,7 +68,6 @@ function metaSubstitution(choosenPair, relations, negations) {
 function createSameOpposite(length) {
     length++;
 
-    const category = "Distinction";
     let buckets;
     let isValid;
     let premises;
@@ -165,7 +164,8 @@ function createSameOpposite(length) {
     shuffle(premises);
 
     return {
-        category,
+        label: "distinction",
+        category: "Distinction",
         createdAt: new Date().getTime(),
         buckets,
         isValid,
@@ -177,7 +177,6 @@ function createSameOpposite(length) {
 function createMoreLess(length) {
     length++;
 
-    const category = "Comparison";
     let bucket;
     let isValid;
     let premises;
@@ -295,7 +294,8 @@ function createMoreLess(length) {
     shuffle(premises);
 
     return {
-        category,
+        label: "comparison",
+        category: "Comparison",
         createdAt: new Date().getTime(),
         bucket,
         isValid,
@@ -307,7 +307,6 @@ function createMoreLess(length) {
 function createBeforeAfter(length) {
     length++;
 
-    const category = "Temporal";
     let bucket;
     let isValid;
     let premises;
@@ -424,7 +423,8 @@ function createBeforeAfter(length) {
     shuffle(premises);
 
     return {
-        category,
+        label: "temporal",
+        category: "Temporal",
         createdAt: new Date().getTime(),
         bucket,
         isValid,
@@ -520,6 +520,7 @@ function createBinaryQuestion(length) {
     }
 
     return {
+        label: "binary",
         category: `Binary: ${choice.category} ${operandNames[operandIndex]} ${choice2.category}`,
         createdAt: new Date().getTime(),
         isValid,
@@ -637,6 +638,7 @@ function createNestedBinaryQuestion(length) {
     const conclusion = generated.human.replaceAll(/(\d+)/g, m => questions[m].conclusion);
 
     return {
+        label: "binary",
         category: `Nested Binary: ${category}`,
         createdAt: new Date().getTime(),
         isValid,
@@ -828,6 +830,7 @@ function createSameDifferent(length) {
     }
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
 
+    choice.label = "analogy";
     choice.category = "Analogy: " + subtype;
     choice.createdAt = new Date().getTime();
     choice.isValid = isValid;
@@ -917,6 +920,7 @@ function createDirectionQuestion(length) {
     shuffle(premises);
     
     return {
+        label: "direction",
         category: "Space Two D",
         createdAt: new Date().getTime(),
         wordCoordMap,
@@ -1011,6 +1015,7 @@ function createDirectionQuestion3D(length) {
     shuffle(premises);
     
     return {
+        label: "direction3D",
         category: "Space Three D",
         createdAt: new Date().getTime(),
         wordCoordMap,
@@ -1115,6 +1120,7 @@ function createDirectionQuestion4D(length) {
     shuffle(premises);
     
     return {
+        label: "direction4D",
         category: "Space Time",
         createdAt: new Date().getTime(),
         wordCoordMap,
@@ -1127,7 +1133,6 @@ function createDirectionQuestion4D(length) {
 function createSyllogism(length) {
     length++;
 
-    const category = "Syllogism";
     let bucket;
     let isValid;
     let rule;
@@ -1179,7 +1184,8 @@ function createSyllogism(length) {
     premises = shuffle(premises);
 
     return {
-        category,
+        label: 'syllogism',
+        category: "Syllogism",
         rule,
         createdAt: new Date().getTime(),
         bucket,
