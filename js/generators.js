@@ -787,19 +787,19 @@ function createSameDifferent(length) {
         isValid = isValidSame;
         if (choiceIndex < 1) {
             const cs = [
-                '<div style="margin: 2px 0;">is the same as</div>',
-                '<div style="color: red; margin: 2px 0;">is the same as</div>'
+                '<div class="analogy-conclusion-relation">is the same as</div>',
+                '<div class="analogy-conclusion-relation is-negated">is different from</div>'
             ];
-            conclusion += (!savedata.enableNegation)
+            conclusion += (!savedata.enableNegation && coinFlip())
                 ? cs[0]
                 : pickUniqueItems(cs, 1).picked[0];
         }
         else {
             const cs = [
-                '<div style="font-size: 14px; margin: 2px 0;">has the same relation as</div>',
-                '<div style="color: red; font-size: 14px; margin: 2px 0;">has the same relation as</div>'
+                '<div class="analogy-conclusion-relation">has the same relation as</div>',
+                '<div class="analogy-conclusion-relation is-negated">has a different relation from</div>'
             ];
-            conclusion += (!savedata.enableNegation)
+            conclusion += (!savedata.enableNegation && coinFlip())
                 ? cs[0]
                 : pickUniqueItems(cs, 1).picked[0];
         }
@@ -808,20 +808,20 @@ function createSameDifferent(length) {
         isValid = !isValidSame;
         if (choiceIndex < 1) {
             const cs = [
-                '<div style="margin: 2px 0;">is different from</div>',
-                '<div style="color: red; margin: 2px 0;">is different from</div>'
+                '<div class="analogy-conclusion-relation">is different from</div>',
+                '<div class="analogy-conclusion-relation is-negated">is the same as</div>'
             ];
-            conclusion += (!savedata.enableNegation)
+            conclusion += (!savedata.enableNegation && coinFlip())
                 ? cs[0]
                 : pickUniqueItems(cs, 1).picked[0];
 
         }
         else {
             const cs = [
-                '<div style="font-size: 12px; margin: 4px 0;">has a different relation from</div>',
-                '<div style="color: red; font-size: 12px; margin: 4px 0;">has a different relation from</div>',
+                '<div class="analogy-conclusion-relation">has a different relation from</div>',
+                '<div class="analogy-conclusion-relation is-negated">has the same relation as</div>',
             ];
-            conclusion += (!savedata.enableNegation)
+            conclusion += (!savedata.enableNegation && coinFlip())
                 ? cs[0]
                 : pickUniqueItems(cs, 1).picked[0];
         }

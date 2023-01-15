@@ -557,6 +557,11 @@ button:not(:disabled):hover {
     font-style: italic;
 }
 
+.analogy-conclusion-relation {
+    font-size: 14px;
+    margin: 4px 0;
+}
+
 .sign {
     position: absolute;
     bottom: 0.5em;
