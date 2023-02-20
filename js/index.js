@@ -344,13 +344,14 @@ function init() {
     let isStrooped = false;
     questionSpace.classList.remove('stroop');
     if (savedata.enableNegation && savedata.enableStroopEffect && coinFlip()) {
+
         isStrooped = true;
         questionSpace.classList.add('stroop');
     }
 
-    // Switch confirmation button colors a random amount of times
-    for (let i = Math.floor(Math.random() * 10); i > 0; i--)
-        switchButtonColors();
+    if (savedata.enableStroopEffect)
+        for (let i = Math.floor(Math.random() * 10); i > 0; i--)
+            switchButtonColors();
 
     if (choices.length === 0)
         return;
