@@ -299,23 +299,23 @@ button:not(:disabled):hover {
     transition: all 0.3s ease-out;
 }
 
-.confirmation-true,
-.confirmation-false {
+.confirmation-button-true,
+.confirmation-button-false {
     padding: 0.5rem 1rem;
     width: 5rem;
 }
 
-.confirmation-true {
+.confirmation-style-true {
     background-color: #0a0!important;
 }
-.confirmation-true:hover {
+.confirmation-style-true:hover {
     box-shadow: 0 3px 5px 0 #0a08!important;
 }
 
-.confirmation-false {
+.confirmation-style-false {
     background-color: #a00!important;
 }
-.confirmation-false:hover {
+.confirmation-style-false:hover {
     box-shadow: 0 3px 5px 0 #a008!important;
 }
 

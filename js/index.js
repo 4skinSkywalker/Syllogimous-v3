@@ -190,12 +190,50 @@ function switchButtonPositions() {
 }
 
 function switchButtonColors() {
+
     const parents = document.querySelectorAll(".confirmation-buttons");
+
     for (let p of parents) {
-        p.querySelector('.confirmation-true').classList.add('confirmation-false');
-        p.querySelector('.confirmation-true').classList.remove('confirmation-true');
-        p.querySelector('.confirmation-false').classList.add('confirmation-true');
-        p.querySelector('.confirmation-false').classList.remove('confirmation-false');
+
+        p.querySelector('.confirmation-button-true')
+         .classList
+         .toggle('confirmation-style-false');
+
+        p.querySelector('.confirmation-button-true')
+         .classList
+         .toggle('confirmation-style-true');
+
+        p.querySelector('.confirmation-button-false')
+         .classList
+         .toggle('confirmation-style-true');
+
+        p.querySelector('.confirmation-button-false')
+         .classList
+         .toggle('confirmation-style-false');
+    }
+}
+
+function resetButtonColors() {
+
+    const parents = document.querySelectorAll(".confirmation-buttons");
+
+    for (let p of parents) {
+
+        p.querySelector('.confirmation-button-true')
+        .classList
+        .remove('confirmation-style-false');
+
+        p.querySelector('.confirmation-button-true')
+        .classList
+        .add('confirmation-style-true');
+
+        p.querySelector('.confirmation-button-false')
+        .classList
+        .remove('confirmation-style-true');
+
+        p.querySelector('.confirmation-button-false')
+        .classList
+        .add('confirmation-style-false');
     }
 }
 
@@ -352,6 +390,8 @@ function init() {
     if (savedata.enableStroopEffect)
         for (let i = Math.floor(Math.random() * 10); i > 0; i--)
             switchButtonColors();
+    else
+        resetButtonColors();
 
     if (choices.length === 0)
         return;

@@ -792,18 +792,18 @@ function createSameDifferent(length) {
                 '<div class="analogy-conclusion-relation">is the same as</div>',
                 '<div class="analogy-conclusion-relation is-negated">is different from</div>'
             ];
-            conclusion += (!savedata.enableNegation && coinFlip())
-                ? cs[0]
-                : pickUniqueItems(cs, 1).picked[0];
+            conclusion += (coinFlip() && savedata.enableNegation)
+                ? pickUniqueItems(cs, 1).picked[0]
+                : cs[0];
         }
         else {
             const cs = [
                 '<div class="analogy-conclusion-relation">has the same relation as</div>',
                 '<div class="analogy-conclusion-relation is-negated">has a different relation from</div>'
             ];
-            conclusion += (!savedata.enableNegation && coinFlip())
-                ? cs[0]
-                : pickUniqueItems(cs, 1).picked[0];
+            conclusion += (coinFlip() && savedata.enableNegation)
+                ? pickUniqueItems(cs, 1).picked[0]
+                : cs[0];
         }
     }
     else {
@@ -813,9 +813,9 @@ function createSameDifferent(length) {
                 '<div class="analogy-conclusion-relation">is different from</div>',
                 '<div class="analogy-conclusion-relation is-negated">is the same as</div>'
             ];
-            conclusion += (!savedata.enableNegation && coinFlip())
-                ? cs[0]
-                : pickUniqueItems(cs, 1).picked[0];
+            conclusion += (coinFlip() && savedata.enableNegation)
+                ? pickUniqueItems(cs, 1).picked[0]
+                : cs[0];
 
         }
         else {
@@ -823,9 +823,9 @@ function createSameDifferent(length) {
                 '<div class="analogy-conclusion-relation">has a different relation from</div>',
                 '<div class="analogy-conclusion-relation is-negated">has the same relation as</div>',
             ];
-            conclusion += (!savedata.enableNegation && coinFlip())
-                ? cs[0]
-                : pickUniqueItems(cs, 1).picked[0];
+            conclusion += (coinFlip() && savedata.enableNegation)
+                ? pickUniqueItems(cs, 1).picked[0]
+                : cs[0];
         }
     }
     conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
