@@ -1,0 +1,7 @@
+<nav class="p-3" aria-label="breadcrumb">
+    <ol class="breadcrumb m-0 mb-md-3">
+        <li class="breadcrumb-item" *ngFor="let segment of incrementalSegments; let last = last">
+            <a class="breadcrumb-item" [routerLink]="segment.path" [class.active]="last" [class.text-decoration-none]="last">{{ segment.label }}</a>
+        </li>
+    </ol>
+</nav>

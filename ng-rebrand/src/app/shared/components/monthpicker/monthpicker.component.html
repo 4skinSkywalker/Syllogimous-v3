@@ -1,0 +1,91 @@
+<ng-template #mpInputTemplate>
+    <input
+        #mp
+        class="app-month-picker__input form-control"
+        (focus)="openDropdown($event); blur()"
+        (keypress)="$event.preventDefault()"
+        [class.form-control-sm]="size === 'sm'"
+        [class.form-control-lg]="size === 'lg'"
+        [class.pseudo-disabled]="disabled"
+        [class.is-invalid]="touched && ngControl.errors"
+        [name]="name"
+        [placeholder]="placeholder"
+        [formControl]="ngControl"
+    >
+</ng-template>
+
+<div #dd="ngbDropdown" ngbDropdown>
+
+    <label
+        *ngIf="label && !floatingLabel"
+        class="form-label"
+        (click)="openDropdown($event)"
+    >
+        {{ label }}
+    </label>
+
+    <div class="app-monthpicker">
+
+        <div 
+            *ngIf="!disabled"
+            class="app-monthpicker__toggle"
+            ngbDropdownToggle
+        ></div>
+
+        <ng-container *ngIf="floatingLabel; else fixedLabel">
+            <div class="form-floating">
+                <ng-container *ngTemplateOutlet="mpInputTemplate"></ng-container>
+                <label>{{ label }}</label>
+            </div>
+        </ng-container>
+        <ng-template #fixedLabel>
+            <ng-container *ngTemplateOutlet="mpInputTemplate"></ng-container>
+        </ng-template>
+    
+        <i
+            *ngIf="ngControl.value"
+            class="app-monthpicker__reset-icon bi bi-x-lg"
+            (click)="reset($event)"
+        ></i>
+
+        <i
+            class="app-monthpicker__calendar-icon bi bi-calendar3"
+            (click)="openDropdown($event)"
+        ></i>
+    </div>
+
+    <div class="invalid-feedback" [class.d-block]="touched && ngControl.errors">
+        <div *ngIf="ngControl.errors?.required">
+            Required
+        </div>
+    </div>
+
+    <div class="dropdown-menu p-3" ngbDropdownMenu>
+
+        <div *ngIf="!removeYear" class="d-grid mb-3" style="justify-items: center;">
+            <select class="form-select" style="max-width: 7.5rem;" (change)="onYearSelected($event)">
+                <option
+                    *ngFor="let y of years"
+                    [selected]="y.selected"
+                    [value]="y.year"
+                >
+                    {{ y.year }}
+                </option>
+            </select>
+        </div>
+
+        <div class="d-grid gap-2" style="grid-template-columns: repeat(3, 1fr);">
+            <button
+                *ngFor="let m of months"
+                class="btn btn-outline-primary text-uppercase"
+                [class.highlight]="m.current"
+                [disabled]="m.disabled"
+                (click)="onMonthSelected(m.number)"
+            >
+                {{ m.name }}
+            </button>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="helper" class="form-text">{{ helper }}</div>

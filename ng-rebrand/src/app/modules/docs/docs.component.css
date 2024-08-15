@@ -1,0 +1,34 @@
+.sb-links {
+    display: grid;
+    gap: 1rem;
+    grid-template-rows: min-content;
+    overflow: auto;
+    padding: 1rem;
+}
+
+.sb-sublinks:is(.collapsing, .show) {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding-left: 0.75rem;
+}
+
+.sb-link {
+    border-radius: var(--border-radius_md);
+    display: flex;
+    padding: 0.65rem 0.75rem;
+    transition:
+        background-color 300ms ease,
+        border-color 300ms ease;
+}
+
+.sb-link:hover {
+    background-color: rgba(var(--app-primary_500), 0.2);
+}
+
+.sb-link.is-active {
+    background: rgba(var(--app-primary_500), 1);
+    box-shadow: 0 4px 20px 0 rgb(0 0 0 / 14%),
+                0 7px 10px -5px rgb(60 72 88 / 40%);
+    color: rgba(var(--app-gray_0), 1) !important;
+}

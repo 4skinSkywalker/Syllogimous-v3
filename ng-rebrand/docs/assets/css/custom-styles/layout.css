@@ -1,0 +1,107 @@
+/* Start of FLEXGRID */
+.flexgrid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 calc(-1 * var(--flexgrid-gap) / 2);
+}
+
+.flexgrid--no-grow > * {
+    flex-grow: 0 !important;
+}
+
+.flexgrid > * {
+    flex: 1 1 clamp(var(--flexgrid-col-min-width), 100%, 100%);
+    padding: calc(var(--flexgrid-gap) / 2);
+}
+
+.flexgrid--2 > * {
+    flex: 1 1 clamp(var(--flexgrid-col-min-width), 50%, 50%);
+    padding: calc(var(--flexgrid-gap) / 2);
+}
+
+.flexgrid--3 > * {
+    flex: 1 1 clamp(var(--flexgrid-col-min-width), 33.33%, 33.33%);
+    padding: calc(var(--flexgrid-gap) / 2);
+}
+
+.flexgrid--4 > * {
+    flex: 1 1 clamp(var(--flexgrid-col-min-width), 25%, 25%);
+    padding: calc(var(--flexgrid-gap) / 2);
+}
+
+.flexgrid--5 > * {
+    flex: 1 1 clamp(var(--flexgrid-col-min-width), 20%, 20%);
+    padding: calc(var(--flexgrid-gap) / 2);
+}
+/* End of FLEXGRID */
+
+
+/* Start of WIZARD */
+.wiz {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    isolation: isolate;
+    padding: 0.5rem 0;
+}
+
+.wiz__step {
+    background: rgba(var(--app-primary_500), 0.6);
+    color: rgba(var(--app-gray_0), 1) !important;
+    cursor: pointer;
+    flex: 1 1 250px;
+    padding: 1rem 2rem;
+    clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 50%, calc(100% - 1rem) 100%, 0 100%);
+    transition: all 400ms ease;
+}
+
+.wiz__step {
+    clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 50%, calc(100% - 1rem) 100%, 0 100%, 1rem 50%);
+}
+
+.wiz__step:not(.disabled):hover {
+    transform: scale(1.05);
+}
+
+.wiz__step:has(~ .active) {
+    background: rgba(var(--app-primary_500), 0.9);
+}
+
+.wiz__step:has(~ .active) .wiz__title::before {
+    content: "\2713";
+    margin-right: 0.25rem;
+}
+
+.wiz__step.active {
+    background: rgba(var(--app-primary_600), 1);
+}
+
+.wiz__step.disabled {
+    background: rgba(var(--app-gray_500), 0.5);
+}
+
+.wiz__title {
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+}
+
+@media (max-width: 768px) {
+
+    .wiz {
+        display: grid;
+    }
+
+    .wiz__step {
+        padding: 0.25rem;
+        clip-path: unset !important;
+        margin-left: unset !important;
+        text-align: center;
+    }
+
+    .wiz__descr {
+        display: none;
+    }
+}
+/* End of WIZARD */

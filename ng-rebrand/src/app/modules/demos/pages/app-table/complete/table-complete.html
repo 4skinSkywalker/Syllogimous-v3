@@ -1,0 +1,86 @@
+<p>An example that showcases various features, including sorting, filtering, pagination, and data highlighting.<br><code>AppdAreYouSure</code> and <code>AppdCountryForm</code> components are taken from the CRUD example.</p>
+
+<div class="d-flex gap-2 p-2">
+
+    <button
+        class="btn btn-primary"
+        (click)="create()"
+    >
+        <i class="bi bi-plus"></i>
+        Add
+    </button>
+
+    <button
+        class="btn btn-danger"
+        (click)="confirmDeleteMultiple()"
+        [disabled]="dt.selectedRows.length === 0"
+    >
+        <i class="bi bi-trash3"></i>
+    </button>
+</div>
+
+<app-table
+    #dt
+    [thead]="thead"
+    [tbody]="tbody"
+    [rowExpand]="rowExpand"
+    [tfoot]="tfoot"
+    [items]="countries"
+    [searchable]="['name']"
+    [paginated]="true"
+    [pageSize]="5"
+    [selectable]="true"
+    (rowSelected)="selectedToast($event)"
+    (rowDeselected)="deselectedToast($event)"
+>
+
+    <ng-template #thead>
+        <th sortable="name" (sort)="dt.sort($event)">Country</th>
+        <th sortable="area" (sort)="dt.sort($event)">Area</th>
+        <th sortable="population" (sort)="dt.sort($event)">Population</th>
+        <th style="width: 10rem"></th>
+    </ng-template>
+
+    <ng-template #tbody let-country let-term$="term$">
+
+        <td data-label="Flag">
+            <img
+                [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag"
+                class="me-2"
+                style="width: 20px"
+            />
+            <ngb-highlight [result]="country.name" [term]="(term$ | async) || ''"/>
+        </td>
+
+        <td data-label="Area">{{ country.area | number }}</td>
+
+        <td data-label="Population">{{ country.population | number }}</td>
+        
+        <td>
+            <div class="d-flex gap-2 justify-content-center">
+
+                <button type="button" class="btn btn-primary" (click)="edit(country)">
+                    <i class="bi bi-pencil"></i>
+                </button>
+
+                <button type="button" class="btn btn-danger" (click)="confirmDeleteSingle(country)">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            </div>
+        </td>
+    </ng-template>
+
+    <ng-template #rowExpand let-country>
+        <div class="p-3 bg-white">
+            <h5>{{ country.name }}</h5>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente eligendi quis, deserunt, asperiores mollitia dolorem soluta harum, dolores sed voluptatem ratione inventore qui quisquam obcaecati libero nam atque accusamus aliquid.
+        </div>
+    </ng-template>
+
+    <ng-template #tfoot>
+        <td colspan="2">Summary</td>
+        <td>Tot. {{ countries.length }}</td>
+        <td>{{ totArea | number }}</td>
+        <td colspan="2">{{ totPopulation | number }}</td>
+    </ng-template>
+</app-table>

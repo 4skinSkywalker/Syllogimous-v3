@@ -1,0 +1,72 @@
+<form
+    #fileUploadForm
+    id="file-upload-form"
+    class="uploader"
+    [class.not-clickable]="disabled"
+>
+
+    <input
+        id="file-upload"
+        type="file"
+        name="fileUpload"
+        accept="image/*"
+        (change)="fileSelectHandler($event)"
+    />
+
+    <label
+        #fileDrag
+        [class.d-none]="fileDragHidden"
+        for="file-upload"
+        id="file-drag"
+        (dragover)="fileDragHover($event)"
+        (dragleave)="fileDragHover($event)"
+        (drop)="fileSelectHandler($event)"
+    >
+
+        <img
+            id="file-image"
+            alt="Preview"
+            [src]="
+                base64
+                    ? 'data:image/png;base64,' + base64
+                    : '#'
+            "
+            [class.hidden]="!base64"
+        >
+
+        <div id="start" [class.hidden]="base64">
+
+            <i
+                class="fa fa-download"
+                [class.fa-download]="!disabled"
+                [class.fa-picture-o]="disabled"
+            ></i>
+
+            <div>
+                {{
+                    disabled
+                        ? "Image is not present"
+                        : "Select an image or drag here"
+                }}
+            </div>
+            
+            <span
+                *ngIf="!disabled"
+                id="file-upload-btn"
+                class="btn btn-primary shadow"
+            >
+                Select an image
+            </span>
+        </div>
+
+        <div class="text-center">
+            <button
+                *ngIf="!disabled && base64"
+                class="btn btn-danger shadow"
+                (click)="reset($event)"
+            >
+                Remove image
+            </button>
+        </div>
+    </label>
+</form>

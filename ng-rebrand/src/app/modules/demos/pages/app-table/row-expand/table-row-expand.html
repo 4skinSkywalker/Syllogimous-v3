@@ -1,0 +1,38 @@
+<p>This feature allows users to expand a row and view additional information associated with that specific row.</p>
+
+<app-table
+    [thead]="thead"
+    [tbody]="tbody"
+    [rowExpand]="rowExpand"
+    [items]="countries"
+>
+
+    <ng-template #thead>
+        <th>Country</th>
+        <th>Area</th>
+        <th>Population</th>
+    </ng-template>
+
+    <ng-template #tbody let-country>
+        
+        <td data-label="Flag">
+            <img
+                [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag"
+                class="me-2"
+                style="width: 20px"
+            />
+            {{ country.name }}
+        </td>
+
+        <td data-label="Area">{{ country.area | number }}</td>
+        
+        <td data-label="Population">{{ country.population | number }}</td>
+    </ng-template>
+
+    <ng-template #rowExpand let-country>
+        <div class="p-3 bg-white">
+            <h5>{{ country.name }}</h5>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente eligendi quis, deserunt, asperiores mollitia dolorem soluta harum, dolores sed voluptatem ratione inventore qui quisquam obcaecati libero nam atque accusamus aliquid.
+        </div>
+    </ng-template>
+</app-table>

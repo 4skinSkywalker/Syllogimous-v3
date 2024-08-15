@@ -1,0 +1,44 @@
+<div class="d-grid gap-4 p-md-3">
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Text masking</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>Text masking helps users input data in a specific format.<br>Only works on inputs with <code>type="text"</code> due to API limitations.</p>
+
+            <div class="flexgrid flexgrid--3">
+        
+                <app-input
+                    name="euro"
+                    label="Amount of Euros"
+                    [mask]="numMask.getMask()"
+                    [helper]="'Unmasked: ' + numMask.maskToNumber(euro.value)"
+                    [ngControl]="euro"
+                    [floatingLabel]="true"
+                />
+
+                <app-input
+                    name="phone"
+                    label="Phone number"
+                    [mask]="phoneMask"
+                    [helper]="'Unmasked: ' + unmaskPhone(phone.value)"
+                    [ngControl]="phone"
+                    [floatingLabel]="true"
+                />
+        
+                <app-input
+                    name="email"
+                    label="Email address"
+                    [mask]="emailMask"
+                    helper="No need to unmask"
+                    [ngControl]="email"
+                    [floatingLabel]="true"
+                />
+            </div>
+        </div>
+    </section>
+</div>

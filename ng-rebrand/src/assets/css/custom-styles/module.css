@@ -1,0 +1,98 @@
+/* Start of BRAND */
+.app-brand {
+    align-items: center;
+    color: inherit !important;
+    display: flex;
+    font-size: 1.33rem;
+    gap: 0.75rem;
+    margin-right: var(--bs-navbar-brand-margin-end);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.app-brand > .pic {
+    width: 40px;
+    height: 40px;
+}
+/* End of BRAND */
+
+
+/* Start of NAVBAR */
+.app-navbar {
+    min-height: 64px;
+    border-bottom: 1px solid rgba(var(--app-gray_100), 1);
+}
+/* End of NAVBAR */
+
+
+/* Start of BUTTON */
+.btn-circle {
+    width: 42px;
+    height: 42px;
+    line-height: 1;
+    border-radius: 50%;
+}
+
+.btn-circle.btn-lg {
+    width: 54px;
+    height: 54px;
+}
+/* End of BUTTON */
+
+
+/* Start of CDK_DRAG */
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+*.cdk-drop-list-dragging *:not(.cdk-drag-placeholder) {
+    transform: translateZ(0);
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-preview {
+    z-index: 9000 !important;
+}
+/* End of CDK_DRAG */
+
+
+/* Start of TABLE */
+th[sortable] {
+    cursor: pointer;
+    user-select: none;
+}
+
+th[sortable]::before {
+    content: '\F3CA';
+    display: inline-block;
+    font-family: bootstrap-icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    margin-right: 4px;
+    vertical-align: -0.125em;
+}
+
+th[sortable].desc::before,
+th[sortable].asc::before {
+    content: '\F57B';
+}
+
+th[sortable].desc::before {
+    content: '\F575';
+}
+/* End of TABLE */

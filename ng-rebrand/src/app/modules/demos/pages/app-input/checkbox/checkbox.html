@@ -1,0 +1,52 @@
+<div class="d-grid gap-5 px-3 py-4">
+
+    <section>
+
+        <h4>Checkbox</h4>
+
+        <div class="d-grid gap-2">
+
+            <app-input
+                type="checkbox"
+                name="acceptTerms"
+                label="Accept terms & conditions"
+                [ngControl]="checkbox"
+            />
+
+            <app-input
+                type="checkbox"
+                name="acceptTerms"
+                label="Accept terms & conditions"
+                helper="Disabled checkbox"
+                [ngControl]="checkbox"
+                [disabled]="true"
+            />
+        </div>
+    </section>
+
+    <section>
+        
+        <h4>Radio</h4>
+
+        <div class="d-grid gap-2">
+
+            <app-input
+                type="radio"
+                [ngControl]="radio"
+                [options]="choices"
+                name="choice"
+                label="Select your genre"
+            />
+    
+            <app-input
+                type="radio"
+                name="choice"
+                label="Select your genre"
+                helper="Disabled radio selector"
+                [ngControl]="radio"
+                [options]="choices"
+                [disabled]="true"
+            />
+        </div>
+    </section>
+</div>

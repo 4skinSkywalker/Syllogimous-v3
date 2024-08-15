@@ -1,0 +1,178 @@
+<ng-template #paginationTemplate>
+	<div class="d-flex flex-wrap justify-content-center gap-2">
+	
+		<ngb-pagination
+			[collectionSize]="collectionSize"
+			[(page)]="page"
+			[pageSize]="pageSize"
+			(pageChange)="paginate()"
+			[maxSize]="3"
+			[rotate]="true"
+			[boundaryLinks]="true"
+		></ngb-pagination>
+	
+		<select
+			class="form-select"
+			style="width: auto"
+			[(ngModel)]="pageSize"
+			(ngModelChange)="paginate()"
+		>
+			<option *ngFor="let ps of pageSizes" [ngValue]="ps">{{ ps }}</option>
+		</select>
+	</div>
+</ng-template>
+
+<div
+	*ngIf="searchable || paginated"
+	class="d-flex justify-content-center justify-content-lg-between flex-wrap gap-2 p-3 mb-2"
+>
+
+	<div>
+		<app-input
+			*ngIf="searchable"
+			style="max-width: 250px"
+			[ngControl]="searchInput"
+			[name]="'search-input-' + _guid"
+			placeholder="Search ⌕"
+		></app-input>
+	</div>
+
+	<div
+		*ngIf="paginated"
+		class="d-flex flex-wrap justify-content-center gap-2"
+	>
+		<ng-container *ngTemplateOutlet="paginationTemplate" />
+	</div>
+</div>
+
+<div class="table-responsive" [ngStyle]="{ 'max-height': maxHeight }">
+	<table class="table table-striped" [style.table-layout]="tableFixed ? 'fixed' : null">
+	
+		<thead [class.sticky-head]="stickyHead">
+			<tr>
+	
+				<th *ngIf="selectable" style="width: 60px">
+					<div class="form-check">
+						<input
+							class="form-check-input"
+							type="checkbox"
+							(change)="
+								$any($event.currentTarget).checked
+									? onEveryRowSelect()
+									: onEveryRowDeselect()
+							"
+						>
+					</div>
+				</th>
+
+				<th *ngIf="rowExpand" style="width: 60px"></th>
+	
+				<ng-container *ngTemplateOutlet="thead"></ng-container>
+			</tr>
+		</thead>
+	
+		<tbody>
+
+			<ng-container *ngFor="let item of paginatedItems$ | async; let i = index; trackBy: trackByFn">
+				<ng-container *ngLet="{ collapsed: true } as _row">
+					
+					<tr [class.animated]="animated">
+			
+						<td *ngIf="selectable">
+							<div class="form-check">
+								<input
+									class="form-check-input"
+									type="checkbox"
+									[(ngModel)]="item._selected"
+									(change)="
+										$any($event.currentTarget).checked
+											? onRowSelect(item)
+											: onRowDeselect(item)
+									"
+								>
+							</div>
+						</td>
+	
+						<td *ngIf="rowExpand">
+							<button
+								type="button"
+								class="btn collapse-toggle"
+								(click)="_row.collapsed = !_row.collapsed"
+								[attr.aria-expanded]="!_row.collapsed"
+								aria-controls="collapseExample"
+							></button>
+						</td>
+			
+						<ng-container
+							*ngTemplateOutlet="
+								tbody;
+								context: {
+									$implicit: item,
+									index: i,
+									term$: lastTerm$
+								}
+							"
+						></ng-container>
+					</tr>
+	
+					<tr *ngIf="rowExpand">
+						<td class="row-expand" [attr.colspan]="colspan + (rowExpand ? 1 : 0)">
+							<div #collapse="ngbCollapse" [(ngbCollapse)]="_row.collapsed">
+								<ng-container
+									*ngTemplateOutlet="
+										rowExpand;
+										context: {
+											$implicit: item,
+											index: i,
+											term$: lastTerm$
+										}
+									"
+								></ng-container>
+							</div>
+						</td>
+					</tr>
+	
+					<tr *ngIf="rowExpand" class="hidden"></tr>
+				</ng-container>
+			</ng-container>
+
+			<td *ngIf="!(paginatedItems$ | async)?.length" [attr.colspan]="colspan + (rowExpand ? 1 : 0)">
+				<ng-container *ngIf="emptyTemplate; else showEmptyMessage">
+					<ng-container *ngTemplateOutlet="emptyTemplate"></ng-container>
+				</ng-container>
+				<ng-template #showEmptyMessage>
+					<div class="p-3 text-center">{{ emptyMessage }}</div>
+				</ng-template>
+			</td>
+		</tbody>
+
+		<tfoot *ngIf="tfoot && (showFootIfEmpty || (paginatedItems$ | async)?.length)">
+			<tr>
+				<ng-container *ngTemplateOutlet="tfoot"></ng-container>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+<div
+	*ngIf="duplicateControls && (searchable || paginated)"
+	class="d-flex justify-content-center justify-content-lg-between flex-wrap gap-2 p-3"
+>
+
+	<div>
+		<app-input
+			*ngIf="searchable"
+			style="max-width: 250px"
+			[ngControl]="searchInputRelay"
+			[name]="'search-input-relay-' + _guid"
+			placeholder="Search ⌕"
+		></app-input>
+	</div>
+
+	<div
+		*ngIf="paginated"
+		class="d-flex flex-wrap justify-content-center gap-2"
+	>
+		<ng-container *ngTemplateOutlet="paginationTemplate" />
+	</div>
+</div>

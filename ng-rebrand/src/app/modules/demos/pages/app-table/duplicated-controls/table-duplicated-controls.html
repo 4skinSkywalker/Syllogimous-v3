@@ -1,0 +1,34 @@
+<p>Apply the <code>duplicateControls</code> attribute set to <code>true</code> to enable controls at both the top and bottom of a table.</p>
+
+<app-table
+    [thead]="thead"
+    [tbody]="tbody"
+    [items]="countries"
+    [paginated]="true"
+    [pageSize]="5"
+    [searchable]="true"
+    [duplicateControls]="true"
+>
+
+    <ng-template #thead>
+        <th>Country</th>
+        <th>Area</th>
+        <th>Population</th>
+    </ng-template>
+
+    <ng-template #tbody let-country let-st$="term$">
+
+        <td data-label="Flag">
+            <img
+                [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag"
+                class="me-2"
+                style="width: 20px"
+            />
+            <ngb-highlight [result]="country.name" [term]="(st$ | async) || ''"/>
+        </td>
+
+        <td data-label="Area">{{ country.area | number }}</td>
+
+        <td data-label="Population">{{ country.population | number }}</td>
+    </ng-template>
+</app-table>

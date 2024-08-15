@@ -1,0 +1,152 @@
+<div class="d-grid gap-4 p-md-3">
+        
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Fixed label</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>The label remains fixed in its position, unaffected by user interactions.<br>It's a common and straightforward design pattern seen in many forms.</p>
+
+            <div class="flexgrid flexgrid--3 mb-3">
+    
+                <app-input
+                    name="text"
+                    label="Text"
+                    maxlength="6"
+                    helper="Maximum 6 characters"
+                    [ngControl]="text"
+                />
+        
+                <app-input
+                    type="number"
+                    name="number"
+                    label="Number"
+                    step="0.5"
+                    min="3"
+                    max="6"
+                    helper="Minimum 3, maximum 6"
+                    [ngControl]="number"
+                />
+        
+                <app-input
+                    type="password"
+                    name="password"
+                    label="Password"
+                    [ngControl]="password"
+                />
+            </div>
+    
+            <app-input
+                type="textarea"
+                name="textarea"
+                label="Textarea"
+                [ngControl]="textarea"
+            />
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Floating label</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>When a user clicks or focuses on the input field or starts typing, the label transitions to float above the field, making space for the user's input.</p>
+    
+            <div class="flexgrid flexgrid--3 mb-3">
+    
+                <app-input
+                    name="text"
+                    label="Text"
+                    maxlength="6"
+                    helper="Maximum 6 characters"
+                    [ngControl]="text"
+                    [floatingLabel]="true"
+                />
+        
+                <app-input
+                    type="number"
+                    name="number"
+                    label="Number"
+                    step="0.5"
+                    min="3"
+                    max="6"
+                    helper="Minimum 3, maximum 6"
+                    [ngControl]="number"
+                    [floatingLabel]="true"
+                />
+        
+                <app-input
+                    type="password"
+                    name="password"
+                    label="Password"
+                    [ngControl]="password"
+                    [floatingLabel]="true"
+                />
+            </div>
+    
+            <app-input
+                type="textarea"
+                name="textarea"
+                label="Textarea"
+                [ngControl]="textarea"
+                [floatingLabel]="true"
+            />
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Disabled</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>This example shows the above inputs in the disabled state.</p>
+
+            <div class="flexgrid flexgrid--3 mb-3">
+    
+                <app-input
+                    name="text"
+                    label="Text input"
+                    [ngControl]="textDisabled"
+                    [disabled]="true"
+                    [floatingLabel]="true"
+                />
+        
+                <app-input
+                    type="number"
+                    name="number"
+                    label="Number"
+                    [ngControl]="numberDisabled"
+                    [disabled]="true"
+                    [floatingLabel]="true"
+                />
+        
+                <app-input
+                    type="password"
+                    name="password"
+                    label="Password"
+                    [ngControl]="passwordDisabled"
+                    [disabled]="true"
+                    [floatingLabel]="true"
+                />
+            </div>
+        
+            <app-input
+                type="textarea"
+                name="textarea"
+                label="Textarea"
+                [ngControl]="textareaDisabled"
+                [disabled]="true"
+                [floatingLabel]="true"
+            />
+        </div>
+    </section>
+</div>

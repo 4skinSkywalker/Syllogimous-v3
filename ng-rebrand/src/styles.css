@@ -1,0 +1,7 @@
+/* Start of VARIABLES */
+:root {
+    --border-radius_sm: calc(var(--border-radius_md) * 0.2 / 0.25);
+    --border-radius_md: 1.1rem;
+    --border-radius_lg: calc(var(--border-radius_md) * 0.3 / 0.25);
+}
+/* End of VARIABLES */

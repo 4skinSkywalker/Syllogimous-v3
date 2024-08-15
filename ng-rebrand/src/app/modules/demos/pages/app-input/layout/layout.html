@@ -1,0 +1,55 @@
+<div class="d-grid gap-4 p-md-3">
+
+    <div>
+        <p class="mb-1">The <code>flexgrid</code> lets you define a flexible grid from 1 to 5 columns, which is sort of ideal for forms.</p>
+        <p class="mb-1">The <code>flexgrid--no-grow</code> is used if you don't want the elements to grow when the elements has wrapped.</p>
+        <p class="mb-1"><code>--flexgrid-col-min-width</code> controls the minimum width at which a flexgrid item wraps.</p>
+        <p><code>--flexgrid-gap</code> controls the horizontal and vertical space between flexgrid items.</p>
+    </div>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Flexgrid with grow</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>Resize the grid with the bottom-right handle to see the behavior.</p>
+
+            <div class="d-grid gap-3 resizeable">
+                <div *ngFor="let qty of [ 5, 4, 3, 2 ]">
+    
+                    <h6>{{ qty }}-cols layout</h6>
+        
+                    <div class="flexgrid" [ngClass]="'flexgrid--' + qty">
+                        <div class="input-placeholder" *ngFor="let n of Array(qty).fill(0)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Flexgrid without grow</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>Resize the grid with the bottom-right handle to see the behavior.</p>
+        
+            <div class="d-grid gap-3 resizeable">
+                <div *ngFor="let qty of [ 5, 4, 3, 2 ]">
+    
+                    <h6>{{ qty }}-cols layout</h6>
+        
+                    <div class="flexgrid flexgrid--no-grow" [ngClass]="'flexgrid--' + qty">
+                        <div class="input-placeholder" *ngFor="let n of Array(qty).fill(0)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

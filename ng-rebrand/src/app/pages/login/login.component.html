@@ -1,0 +1,74 @@
+<div class="subscription-wrapper">
+
+    <input hidden class="subscription-switch" id="subscription-switch" type="checkbox">
+
+    <div class="subscription-container">
+
+        <div class="login-container">
+
+            <h2>Login</h2>
+
+            <app-input
+                name="username"
+                label="Username"
+                [ngControl]="username"
+                [floatingLabel]="true"
+            ></app-input>
+
+            <app-input
+                type="password"
+                name="password" 
+                label="Password"
+                [ngControl]="password"
+                [floatingLabel]="true"
+            ></app-input>
+
+            <button class="btn btn-primary" (click)="login()">Login</button>
+        </div>
+
+        <div class="sign-up-container">
+
+            <h2>Sign Up</h2>
+
+            <app-input
+                name="email"
+                label="Email"
+                [ngControl]="email"
+                [floatingLabel]="true"
+            ></app-input>
+
+            <app-input
+                name="username"
+                label="Username"
+                [ngControl]="username"
+                [floatingLabel]="true"
+            ></app-input>
+
+            <app-input
+                type="password"
+                name="password" 
+                label="Password"
+                [ngControl]="password"
+                [floatingLabel]="true"
+            ></app-input>
+            
+            <button class="btn btn-primary">Sign Up</button>
+        </div>
+
+    </div>
+
+    <div class="login-btn-wrapper">
+
+        <h3>Have an account?</h3>
+
+        <label class="btn btn-primary" for="subscription-switch">Sign In</label>
+    </div>
+
+    <div class="sign-up-btn-wrapper">
+
+        <h3>Don't have it?</h3>
+
+        <label class="btn btn-primary" for="subscription-switch">Sign Up</label>
+    </div>
+
+</div>

@@ -1,0 +1,120 @@
+<div class="d-grid gap-4 p-md-3">
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Built-in validation</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>This example shows the default built-in validation messages.</p>
+
+            <app-input
+                name="text"
+                label="Text input with validation"
+                helper="Type a long message to see validation in action"
+                [ngControl]="textValidation"
+                [floatingLabel]="true"
+            />
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Custom errors with default errors</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>This examples shows the combination of both built-in and custom errors.<br>Both inputs have the built-in <code>required</code> validator alongside a custom validator each.</p>
+
+            <div class="flexgrid flexgrid--2">
+
+                <app-input
+                    name="onlyNumbers"
+                    label="Only numbers"
+                    helper="This input only allows for numbers"
+                    [ngControl]="onlyNumbers"
+                    [floatingLabel]="true"
+                >
+                    <ng-container customErrors>
+                        <div *ngIf="onlyNumbers.errors?.onlyNumbers">
+                            {{ onlyNumbers.errors?.onlyNumbers }}
+                        </div>
+                    </ng-container>
+                </app-input>
+        
+                <app-input
+                    name="notHelloWorld"
+                    label="Not hello world"
+                    helper='This input does not allow "hello world"'
+                    [ngControl]="notHelloWorld"
+                    [floatingLabel]="true"
+                >
+                    <ng-container customErrors>
+                        <div *ngIf="notHelloWorld.errors?.notHelloWorld">
+                            {{ notHelloWorld.errors?.notHelloWorld }}
+                        </div>
+                    </ng-container>
+                </app-input>
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Remove built-in errors (only custom errors)</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>This examples shows how to remove built-in validation entirely, using <code>[onlyCustomErrors]="true"</code>, and go with your own custom validation.</p>
+
+            <div class="flexgrid flexgrid--2">
+
+                <app-input
+                    name="customMinLength"
+                    label="Custom min length"
+                    helper='Try something shorter than 4 chars then try "joe"'
+                    [onlyCustomErrors]="true"
+                    [ngControl]="customMinLength"
+                    [floatingLabel]="true"
+                >
+                    <ng-container customErrors>
+
+                        <div *ngIf="customMinLength.errors?.required">
+                            This input value is required!!!
+                        </div>
+
+                        <div *ngIf="customMinLength.errors?.minLength">
+                            {{ customMinLength.errors?.minLength }}
+                        </div>
+                    </ng-container>
+                </app-input>
+
+                <app-input
+                    name="customMaxLength"
+                    label="Custom max length"
+                    helper='Try something longer than 6 chars then try "abracadabra"'
+                    [onlyCustomErrors]="true"
+                    [ngControl]="customMaxLength"
+                    [floatingLabel]="true"
+                >
+                    <ng-container customErrors>
+
+                        <div *ngIf="customMaxLength.errors?.required">
+                            This input value is required!!!
+                        </div>
+
+                        <div *ngIf="customMaxLength.errors?.maxLength">
+                            {{ customMaxLength.errors?.maxLength }}
+                        </div>
+                    </ng-container>
+                </app-input>
+            </div>
+        </div>
+    </section>
+</div>

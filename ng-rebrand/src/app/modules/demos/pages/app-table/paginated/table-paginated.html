@@ -1,0 +1,33 @@
+<p>Apply the <code>paginated</code> attribute set to <code>true</code> to paginate the rows of the table.<br>Use <code>pageSize</code> and <code>pageSizes</code> to control the pagination.</p>
+
+<app-table
+    [thead]="thead"
+    [tbody]="tbody"
+    [items]="countries"
+    [paginated]="true"
+    [pageSize]="5"
+    [pageSizes]="[ 5, 10, 15, 30, 55 ]"
+>
+
+    <ng-template #thead>
+        <th>Country</th>
+        <th>Area</th>
+        <th>Population</th>
+    </ng-template>
+
+    <ng-template #tbody let-country let-st$="searchTerm$">
+
+        <td data-label="Flag">
+            <img
+                [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag"
+                class="me-2"
+                style="width: 20px"
+            />
+            {{ country.name }}
+        </td>
+
+        <td data-label="Area">{{ country.area | number }}</td>
+        
+        <td data-label="Population">{{ country.population | number }}</td>
+    </ng-template>
+</app-table>

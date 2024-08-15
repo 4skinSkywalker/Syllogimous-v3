@@ -1,0 +1,123 @@
+:host {
+    background-image: var(--app-sidebar-gradient);
+    display: grid;
+    height: 100vh;
+    place-items: center;
+}
+
+.subscription-wrapper {
+  position: relative;
+  width: clamp(250px, 500px, 100vw);
+  height: 300px;
+  color: #fff;
+  background-color: #345;
+  box-shadow: 0 5px 10px #0004;
+  border-radius: 5px;
+}
+
+.subscription-container {
+  position: absolute;
+  top: -50px;
+  left: 40px;
+  right: 0;
+  z-index: 1;
+  width: 250px;
+  height: 400px;
+  color: rgba(var(--app-gray_1000), 1);
+  background-color: rgba(var(--app-gray_0), 1);
+  background-size: 200% 200%;
+  background-position: 50% 50%;
+  box-shadow: -5px 5px 10px #0004;
+  transition: all .3s ease;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+.login-btn-wrapper,
+.sign-up-btn-wrapper {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  justify-content: center;
+  width: 100px;
+  text-align: center;
+}
+
+.login-btn-wrapper {
+  left: 50px;
+}
+
+.sign-up-btn-wrapper {
+  right: 50px;
+}
+
+.login-container,
+.sign-up-container {
+  position: absolute;
+  display: grid;
+  align-content: center;
+  grid-gap: 1em;
+  width: 100%;
+  padding: 1em;
+  transition: all .3s ease;
+}
+
+.login-container {
+  left: 0;
+}
+
+.sign-up-container {
+  right: -250px;
+}
+
+.subscription-switch:checked ~ .subscription-container .login-container {
+  left: -250px;
+}
+
+.subscription-switch:checked ~ .subscription-container .sign-up-container {
+  right: 0;
+}
+
+@media (min-width: 500px) {
+
+    .subscription-switch:checked ~ .subscription-container {
+        left: calc(100% - 40px);
+        transform: translateX(-100%);
+        background-position: 100% 100%;
+        box-shadow: 5px 5px 10px #0004;
+    }
+}
+
+@media (max-width: 500px) {
+
+    .subscription-wrapper {
+        height: 100vh;
+    }
+
+    .subscription-container {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .login-btn-wrapper,
+    .sign-up-btn-wrapper {
+        position: fixed;
+        top: 14vh;
+    }
+}
+
+@media (max-width: 500px) and (max-height: 700px) {
+
+    .login-btn-wrapper,
+    .sign-up-btn-wrapper {
+        position: fixed;
+        top: 7vh;
+    }
+
+    .login-btn-wrapper > h3,
+    .sign-up-btn-wrapper > h3 {
+        display: none;
+    }
+}

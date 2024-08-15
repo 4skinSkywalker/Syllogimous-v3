@@ -1,0 +1,23 @@
+.lh-0 {
+    line-height: 0 !important;
+}
+
+.no-text-break {
+    white-space: nowrap;
+}
+
+.clickable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.not-clickable {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.pseudo-disabled {
+    background-color: rgba(var(--app-gray_50), 1);
+    cursor: not-allowed;
+    pointer-events: none;
+}

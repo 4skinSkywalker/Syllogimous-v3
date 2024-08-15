@@ -1,0 +1,54 @@
+<ng-template #toastTemplate let-toasts="toasts" let-position="position">
+    <ng-container *ngFor="let toast of toasts; let i = index; trackBy: trackById">
+        <ngb-toast
+            *ngIf="toast.position === position"
+            style="font-size: 1.15rem; width: 500px;"
+            [class]="toast.classname"
+            [autohide]="true"
+            [delay]="toast.delay || 5000"
+            (hidden)="toastService.remove(toast)"
+        >
+            <div class="d-flex align-items-start">
+        
+                <div style="flex: 1 0 0;">
+        
+                    <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
+                        <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
+                    </ng-template>
+        
+                    <ng-template #text>{{ toast.textOrTpl }}</ng-template>
+                </div>
+        
+                <span style="cursor: pointer;" (click)="deleteToast(i)"><i class="bi bi-x-lg"></i></span>
+            </div>
+        </ngb-toast>
+    </ng-container>
+</ng-template>
+
+<div class="toast-container position-fixed top-0 start-0 p-3">
+    <ng-container *ngTemplateOutlet="toastTemplate; context: {
+        toasts: this.toastService.toasts,
+        position: 'top-left'
+    }"></ng-container>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <ng-container *ngTemplateOutlet="toastTemplate; context: {
+        toasts: this.toastService.toasts,
+        position: 'top-right'
+    }"></ng-container>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <ng-container *ngTemplateOutlet="toastTemplate; context: {
+        toasts: this.toastService.toasts,
+        position: 'bottom-right'
+    }"></ng-container>
+</div>
+
+<div class="toast-container position-fixed bottom-0 start-0 p-3">
+    <ng-container *ngTemplateOutlet="toastTemplate; context: {
+        toasts: this.toastService.toasts,
+        position: 'bottom-left'
+    }"></ng-container>
+</div>

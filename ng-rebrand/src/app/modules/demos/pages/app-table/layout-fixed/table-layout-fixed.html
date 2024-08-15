@@ -1,0 +1,60 @@
+<p>This feature allows the exclusive and indipendent horizontal scroll of the inside content without expanding the parent table.</p>
+
+<app-table
+    [thead]="thead"
+    [tbody]="tbody"
+    [items]="hierarchicalData"
+    [rowExpand]="rowExpand"
+    [tableFixed]="true"
+    [colspan]="3"
+>
+
+    <ng-template #thead>
+        <th>Title</th>
+        <th>Description</th>
+        <th># of children</th>
+    </ng-template>
+
+    <ng-template #tbody let-item>
+        <td data-label="Title">{{ item.title }}</td>
+        <td data-label="Description">{{ item.description }}</td>
+        <td data-label="# of children">{{ item.children.length }}</td>
+    </ng-template>
+
+    <ng-template #rowExpand let-item>
+        <div class="p-3 bg-white">
+            <app-table
+                [thead]="nestedHead"
+                [tbody]="nestedBody"
+                [items]="item.children"
+            >
+
+                <ng-template #nestedHead>
+                    <th>Id</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Field 1</th>
+                    <th>Field 2</th>
+                    <th>Field 3</th>
+                    <th>Field 4</th>
+                    <th>Field 5</th>
+                </ng-template>
+
+                <ng-template #nestedBody let-subitem>
+                    <td data-label="Id">{{ subitem.id }}</td>
+                    <td data-label="First name">{{ subitem.firstName }}</td>
+                    <td data-label="Last name">{{ subitem.lastName }}</td>
+                    <td data-label="Email">{{ subitem.email }}</td>
+                    <td data-label="Gender">{{ subitem.gender }}</td>
+                    <td data-label="Field 1">{{ subitem.field1 }}</td>
+                    <td data-label="Field 2">{{ subitem.field2 }}</td>
+                    <td data-label="Field 3">{{ subitem.field3 }}</td>
+                    <td data-label="Field 4">{{ subitem.field4 }}</td>
+                    <td data-label="Field 5">{{ subitem.field5 }}</td>
+                </ng-template>
+            </app-table>
+        </div>
+    </ng-template>
+</app-table>

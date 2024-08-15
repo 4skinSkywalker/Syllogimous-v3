@@ -1,0 +1,32 @@
+/* Start of VARIABLES */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+:root {
+    --app-body-background: var(--app-gray_100);
+    --app-sidebar-gradient: linear-gradient(135deg, rgba(var(--app-blue_400), 1), rgba(var(--app-indigo_400), 1));
+    --flexgrid-col-min-width: 20ch;
+    --flexgrid-gap: 1rem;
+}
+/* End of VARIABLES */
+
+
+/* Start of RESETS */
+body {
+    background: rgba(var(--app-body-background), 1);
+    font-family: "Roboto", var(--bs-font-sans-serif);
+}
+
+ngb-typeahead-window {
+    width: 100%;
+    max-height: 450px;
+    overflow: auto;
+}
+
+ngb-typeahead-window .dropdown-item {
+    white-space: initial;
+}
+
+.pagination {
+    margin-bottom: 0 !important;
+}
+/* End of RESETS */

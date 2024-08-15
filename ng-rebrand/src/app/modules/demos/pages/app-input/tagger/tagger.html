@@ -1,0 +1,110 @@
+<div class="d-grid gap-4 p-md-3">
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Tagger</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>The <code>type="tagger"</code> is an opinionated component that merges autocomplete with an array to allows for multiple autocompleted selection.</p>
+
+            <app-input
+                type="tagger"
+                name="flavors-deduped"
+                label="Flavors"
+                [options]="flavorList"
+                [formatter]="flavorsFormatter"
+                [filter]="flavorsFilter"
+                [ngControl]="flavors"
+                [floatingLabel]="true"
+            />
+
+            <div class="card card-body mt-2">
+                {{ flavors.value | json }}
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Tagger with duplicates</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>Apply <code>[deduped]="false"</code> if you need a tagger with duplicated entries.</p>
+
+            <app-input
+                type="tagger"
+                name="flavor-with-duplicates"
+                label="Flavors"
+                [deduped]="false"
+                [options]="flavorList"
+                [formatter]="flavorsFormatter"
+                [filter]="flavorsFilter"
+                [ngControl]="flavorsWithDuplicates"
+                [floatingLabel]="true"
+            />
+
+            <div class="card card-body mt-2">
+                {{ flavorsWithDuplicates.value | json }}
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Tagger with duplicates</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>You can customize the message showing the index of the choice.</p>
+
+            <app-input
+                type="tagger"
+                name="layers"
+                label="Layers"
+                [deduped]="false"
+                [options]="layerNodes"
+                [formatter]="layerNodesFormatter"
+                [filter]="layerNodesFilter"
+                [ngControl]="layerNodesCtrl"
+                [floatingLabel]="true"
+            />
+
+            <div class="card card-body mt-2">
+                {{ layerNodesCtrl.value | json }}
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Tagger with free tagging</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>Apply <code>[freeTag]="true"</code> if you need a tagger that doesn't depend on an array.</p>
+
+            <app-input
+                type="tagger"
+                name="free-tagger"
+                label="Free tag"
+                [freeTag]="true"
+                [ngControl]="freeTagger"
+                [floatingLabel]="true"
+            />
+
+            <div class="card card-body mt-2">
+                {{ freeTagger.value | json }}
+            </div>
+        </div>
+    </section>
+</div>

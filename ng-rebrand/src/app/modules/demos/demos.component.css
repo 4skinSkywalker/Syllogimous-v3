@@ -1,0 +1,40 @@
+.components-container {
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    padding: 2.5rem 1rem;
+}
+
+.ctx-nav > *:first-child {
+    position: sticky;
+    top: 0;
+}
+
+.ctx-nav .nav a {
+    color: inherit;
+    font-size: 90%;
+    padding: 0.25rem 1rem;
+}
+
+.nav .nav-link.active {
+    background-color: rgba(var(--app-gray_100), 1);
+    border: 1px solid rgba(var(--app-gray_200), 1);
+    border-bottom: none;
+}
+
+app-copy-paster {
+    margin-top: -2.85rem;
+    position: absolute;
+    right: 0.5rem;
+}
+
+@media (max-width: 800px) {
+
+    .components-container {
+        grid-template-columns: 100%;
+        padding: 0.5rem;
+    }
+
+    .ctx-nav {
+        order: -1;
+    }
+}

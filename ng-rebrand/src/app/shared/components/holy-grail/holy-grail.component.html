@@ -1,0 +1,55 @@
+<div class="sb-layout">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sb-layout__side sb-layout__side--l" [class.is-open]="sidebarService.isLeftOpen">
+        <div class="sb-header">
+            <div>
+                <ng-content select="[sidebarLeftHeader]"></ng-content>
+            </div>
+            <button class="btn" (click)="sidebarService.toggleLeft()">✕</button>
+        </div>
+        <div class="sb-content">
+            <ng-content select="[sidebarLeftContent]"></ng-content>
+        </div>
+    </aside>
+    <!-- NAVBAR -->
+    <div class="sb-layout__nav">
+        <nav class="app-navbar navbar navbar-light bg-white border-0">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center">
+                    <button *ngIf="hasSidebarLeft" class="btn" (click)="sidebarService.toggleLeft()">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <ng-content select="[navbarContent]"></ng-content>
+                </div>
+                <div class="d-flex align-items-center">
+                    <button class="btn" (click)="logout()">
+                        <i class="fa fa-power-off"></i>
+                    </button>
+                    <button *ngIf="hasSidebarRight" class="btn" (click)="sidebarService.toggleRight()">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- MAIN -->
+    <main class="sb-layout__main">
+        <ng-content select="[mainContent]"></ng-content>
+    </main>
+    <!-- FOOTER -->
+    <footer class="sb-layout__footer">
+        <ng-content select="[footerContent]"></ng-content>
+    </footer>
+    <!-- RIGHT SIDEBAR-->
+    <aside class="sb-layout__side sb-layout__side--r" [class.is-open]="sidebarService.isRightOpen">
+        <div class="sb-header">
+            <button class="btn" (click)="sidebarService.toggleRight()">✕</button>
+            <div>
+                <ng-content select="[sidebarRightHeader]"></ng-content>
+            </div>
+        </div>
+        <div class="sb-content">
+            <ng-content select="[sidebarRightContent]"></ng-content>
+        </div>
+    </aside>
+</div>

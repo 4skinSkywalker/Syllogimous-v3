@@ -1,0 +1,54 @@
+<div class="d-grid gap-5 px-3 py-4">
+
+    <p class="mb-0">The following charts are powered by <a href="https://gionkunz.github.io/chartist-js/index.html">Chartist.JS</a>.</p>
+
+    <section>
+        <h4>Simple line chart</h4>
+        <app-chart [configuration]="simpleLineChart"></app-chart>
+    </section>
+
+    <section>
+        <h4>Holes in data</h4>
+        <app-chart [configuration]="holesInData"></app-chart>
+    </section>
+
+    <section>
+        <h4>Filled holes in data</h4>
+        <app-chart [configuration]="filledHolesInData"></app-chart>
+    </section>
+
+    <section>
+        <h4>Only whole numbers</h4>
+        <app-chart [configuration]="onlyWholeNumbers"></app-chart>
+    </section>
+
+    <section>
+        <h4>Line scatter diagram</h4>
+        <app-chart [configuration]="lineScatterDiagram"></app-chart>
+    </section>
+
+    <section>
+        <h4>Line chart with area</h4>
+        <app-chart [configuration]="lineChartWithArea"></app-chart>
+    </section>
+
+    <section>
+        <h4>Bi-polar line chart</h4>
+        <app-chart [configuration]="bipolarLineChart"></app-chart>
+    </section>
+
+    <section>
+        <h4>Line smoothing</h4>
+        <app-chart [configuration]="lineSmoothing"></app-chart>
+    </section>
+
+    <section>
+        <h4>Series overrides</h4>
+        <app-chart [configuration]="seriesOverrides"></app-chart>
+    </section>
+
+    <section>
+        <h4>Time series with date-fns</h4>
+        <app-chart [configuration]="timeSeriesWithDateFns"></app-chart>
+    </section>
+</div>

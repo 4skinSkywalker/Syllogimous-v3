@@ -1,0 +1,125 @@
+<div class="d-grid gap-4 p-md-3">
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Standard temporal inputs</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>The following inputs are the browser standard for picking various temporal values.</p>
+
+            <div class="flexgrid flexgrid--3">
+
+                <app-input
+                    type="date"
+                    name="date"
+                    label="Date"
+                    min="2018-01-01"
+                    max="2018-12-31"
+                    helper="Min 2018-01-01, max 2018-12-31"
+                    [ngControl]="date1"
+                    [floatingLabel]="true"
+                />
+
+                <app-input
+                    type="time"
+                    name="date"
+                    label="Time"
+                    [ngControl]="date2"
+                    [floatingLabel]="true"
+                />
+
+                <app-input
+                    type="datetime"
+                    name="date"
+                    label="Date & time"
+                    min="2018-06-07T00:00"
+                    max="2018-06-14T00:00"
+                    helper="Min 2018-06-07 00:00, max 2018-06-14 00:00"
+                    [ngControl]="date3"
+                    [floatingLabel]="true"
+                />
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Year input</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>Year input provides an easy way to select an year from a range of years.</p>
+
+            <div class="flexgrid flexgrid--2">
+    
+                <app-input
+                    type="year"
+                    name="year"
+                    label="Year"
+                    [helper]="'Pick a year between a range: ' + (year1.value ? year1.value : '--')"
+                    [ngControl]="year1"
+                    [floatingLabel]="true"
+                />
+    
+                <app-input
+                    type="year"
+                    name="year"
+                    label="Year"
+                    min="2020"
+                    max="2030"
+                    [helper]="'With a year already selected: ' + (year2.value ? year2.value : '--')"
+                    [ngControl]="year2"
+                    [floatingLabel]="true"
+                />
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Monthpicker</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>Monthpicker provides a selection pattern for both year and month, or month only.<br></p>
+
+            <div class="flexgrid flexgrid--2 mb-3">
+
+                <app-monthpicker
+                    name="monthpicker"
+                    label="Pick start month"
+                    [helper]="'maxDate: ' + (endMonth.value | json)"
+                    [maxDate]="endMonth.value"
+                    [ngControl]="startMonth"
+                    [floatingLabel]="true"
+                />
+
+                <app-monthpicker
+                    name="monthpicker"
+                    label="Pick end month"
+                    [helper]="'minDate: ' + (startMonth.value | json)"
+                    [minDate]="startMonth.value"
+                    [ngControl]="endMonth"
+                    [floatingLabel]="true"
+                />
+            </div>
+
+            <app-monthpicker
+                name="monthpicker"
+                label="Only month"
+                [helper]="'Without year: ' + (monthWithoutYear.value | json)"
+                [removeYear]="true"
+                [ngControl]="monthWithoutYear"
+                [floatingLabel]="true"
+            />
+        </div>
+
+    </section>
+</div>

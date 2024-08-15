@@ -1,0 +1,113 @@
+<div class="d-grid gap-4 p-md-3">
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Autocomplete</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>The autocomplete assists users by suggesting items based on predetermined options.</p>
+
+            <div class="flexgrid flexgrid--2 mb-2">
+
+                <app-input
+                    type="autocomplete"
+                    name="s-1"
+                    label="All the results"
+                    helper="This shows all the results"
+                    [options]="states"
+                    [formatter]="statesFormatter"
+                    [template]="autocompleteTemplate1"
+                    [filter]="statesFilter"
+                    [ngControl]="state"
+                    [floatingLabel]="true"
+                />
+                <ng-template #autocompleteTemplate1 let-r="result" let-t="term">
+                    <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px" />
+                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                </ng-template>
+    
+                <app-input
+                    type="autocomplete"
+                    name="s-2"
+                    label="Limited results"
+                    helper="This only shows the first 15 results"
+                    [limit]="15"
+                    [limitTextFactory]="onlyFewStatesTextFactory"
+                    [options]="states"
+                    [formatter]="statesFormatter"
+                    [template]="autocompleteTemplate2"
+                    [filter]="statesFilter"
+                    [ngControl]="state"
+                    [floatingLabel]="true"
+                />
+                <ng-template #autocompleteTemplate2 let-r="result" let-t="term">
+                    <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px" />
+                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                </ng-template>
+            </div>
+    
+            <div class="card card-body">
+                {{ state.value | json }}
+            </div>
+        </div>
+    </section>
+
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Autocomplete with custom search</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>Use <code>[customSearch]="..."</code> if your autocomplete needs to trigger an asynchronous HTTP search.</p>
+
+            <app-input
+                type="autocomplete"
+                name="book"
+                label="Search a book"
+                [formatter]="booksFormatter"
+                [customSearch]="customBookSearch"
+                [template]="bookTemplate"
+                [ngControl]="book"
+                [floatingLabel]="true"
+            />
+            <ng-template #bookTemplate let-r="result" let-t="term">
+                <div class="d-flex position-relative">
+
+                    <div class="flex-shrink-0">
+                        <img height="64" [src]="'assets/images/books/' + r.image" [alt]="r.title + ' cover'">
+                    </div>
+
+                    <div class="d-grid flex-grow-1 ms-3" style="justify-items: start">
+
+                        <ngb-highlight [result]="r.title" [term]="t"></ngb-highlight>
+
+                        <a
+                            class="fst-italic text-reset"
+                            target="_blank"
+                            [href]="r.link"
+                            (click)="$event.stopPropagation()"
+                        >
+                            Go to Wikipedia
+                        </a>
+
+                        <div class="small">Pages {{ r.pages }}</div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <div class="card card-body mt-2">
+                <ng-container *ngIf="searching; else showResult">
+                    <span class="spinner-border spinner-border-sm"></span>
+                </ng-container>
+                <ng-template #showResult>
+                    {{ book.value | json }}
+                </ng-template>
+            </div>
+        </div>
+    </section>
+</div>

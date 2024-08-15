@@ -1,0 +1,16 @@
+<app-input
+    type="autocomplete"
+    name="component"
+    label="Search a component ⌕"
+    [floatingLabel]="true"
+    [options]="searchRoutes"
+    [formatter]="cmpFormatter"
+    [template]="rt"
+    [ngControl]="cmpControl"
+></app-input>
+<ng-template #rt let-r="result" let-t="term">
+    <div [routerLink]="r.path">
+        <ngb-highlight style="font-size: 1.05rem;" [result]="r.title" [term]="t"></ngb-highlight>
+        <div style="font-size: 0.8rem; padding-left: 0.25rem; margin-bottom: 0.25rem;">{{ r.path }}</div>
+    </div>
+</ng-template>

@@ -1,0 +1,41 @@
+.highlight {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.app-monthpicker {
+    position: relative;
+}
+
+.app-monthpicker__toggle {
+    position: absolute;
+    inset: 0 0 0 0;
+}
+
+.app-monthpicker__toggle::after {
+    all: unset !important;
+}
+
+.app-monthpicker__reset-icon,
+.app-monthpicker__calendar-icon {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.app-monthpicker__reset-icon {
+    right: 2.25rem;
+}
+
+.app-monthpicker__calendar-icon {
+    right: 0.75rem;
+}
+
+.app-month-picker__input.is-invalid ~ .app-monthpicker__reset-icon {
+    right: 3.75rem;
+}
+
+.app-month-picker__input.is-invalid ~ .app-monthpicker__calendar-icon {
+    right: 2.25rem;
+}

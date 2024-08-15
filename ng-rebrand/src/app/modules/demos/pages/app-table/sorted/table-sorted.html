@@ -1,0 +1,31 @@
+<p>Apply the <code>sortable</code> attribute to the heading columns set to a specific path (can be a nested path as "user.info.firstName") to enable sorting.</p>
+
+<app-table
+    [thead]="thead"
+    [tbody]="tbody"
+    [items]="countries"
+    #at
+>
+
+    <ng-template #thead>
+        <th sortable="name" (sort)="at.sort($event)">Country</th>
+        <th sortable="area" (sort)="at.sort($event)">Area</th>
+        <th sortable="population" (sort)="at.sort($event)">Population</th>
+    </ng-template>
+
+    <ng-template #tbody let-country>
+
+        <td data-label="Flag">
+            <img
+                [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag"
+                class="me-2"
+                style="width: 20px"
+            />
+            {{ country.name }}
+        </td>
+
+        <td data-label="Area">{{ country.area | number}}</td>
+        
+        <td data-label="Population">{{ country.population | number }}</td>
+    </ng-template>
+</app-table>

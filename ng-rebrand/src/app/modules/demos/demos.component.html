@@ -1,0 +1,126 @@
+<app-breadcrumb-router></app-breadcrumb-router>
+
+<div class="components-container container">
+
+    <div class="d-flex flex-column gap-4 gap-md-5">
+        <div
+            *ngFor="let demo of demos"
+            [id]="demo.id"
+            class="card shadow"
+            style="background: #f7f7f7;"
+        >
+            <div class="card-body p-md-4">
+
+                <div class="d-flex align-items-center gap-2 mb-3">
+        
+                    <div class="fs-2 fw-bold me-auto">{{ demo.title }}</div>
+        
+                    <div>
+                        <input
+                            type="checkbox"
+                            autocomplete="off" 
+                            class="btn-check"
+                            [id]="'btn-check' + demo.id"
+                            (click)="toggle(demo.id)"
+                        >
+                        <label
+                            class="btn btn-secondary text-nowrap"
+                            [for]="'btn-check' + demo.id"
+                        >
+                            <i class="bi bi-code-slash"></i> Code
+                        </label>
+                    </div>
+                </div>
+                
+                <div *ngIf="checks[demo.id]" class="card overflow-hidden mb-3 bg-light">
+
+                    <ng-container *ngIf="demo.files; else codeAndMarkup">
+                        <div class="card-header border-bottom-0" style="padding: 0.75rem 0 0;">
+                            <nav ngbNav #nav="ngbNav" class="nav-tabs nav px-3">
+                                <ng-container *ngFor="let file of demo.files" ngbNavItem>
+                                    <a ngbNavLink>{{ file.name }}</a>
+                                    <ng-template ngbNavContent>
+                                        <app-copy-paster [value]="file.source"/>
+                                        <pre><code [innerHtml]="file.source | highlight"></code></pre>
+                                    </ng-template>
+                                </ng-container>
+                            </nav>
+                        </div>
+                        
+                        <div [ngbNavOutlet]="nav" class="card-body" style="padding: 0; max-height: 500px; overflow: auto;"></div>
+                    </ng-container>
+
+                    <ng-template #codeAndMarkup>
+                        <div class="card-header border-bottom-0" style="padding: 0.75rem 0 0;">
+                            <nav ngbNav #nav="ngbNav" class="nav-tabs nav px-3">
+                                <ng-container ngbNavItem>
+                                    <a ngbNavLink>Markup</a>
+                                    <ng-template ngbNavContent>
+                                        <app-copy-paster [value]="demo.markup"></app-copy-paster>
+                                        <pre class="language-html"><code [innerHtml]="demo.markup | highlight"></code></pre>
+                                    </ng-template>
+                                </ng-container>
+                                <ng-container ngbNavItem>
+                                    <a ngbNavLink>Code</a>
+                                    <ng-template ngbNavContent>
+                                        <app-copy-paster [value]="demo.code"></app-copy-paster>
+                                        <pre class="language-js"><code [innerHtml]="demo.code | highlight"></code></pre>
+                                    </ng-template>
+                                </ng-container>
+                            </nav>
+                        </div>
+                        
+                        <div [ngbNavOutlet]="nav" class="card-body" style="padding: 0; max-height: 500px; overflow: auto;"></div>
+                    </ng-template>
+                </div>
+        
+                <ng-container [ngComponentOutlet]="demo.type"></ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="ctx-nav">
+
+        <div>
+            <app-search-router class="d-block p-3" [searchRoutes]="searchRoutes"></app-search-router>
+    
+            <ul class="nav flex-column text-muted py-4 px-3">
+                <li
+                    *ngFor="let demo of demos"
+                    class="nav-item"
+                >
+                    <a
+                        class="nav-link"
+                        routerLink="./"
+                        [fragment]="demo.id"
+                    >{{ demo.title }}</a>
+                </li>
+                <ng-container *ngIf="bootstrapUrl || ngBootstrapUrl"><hr></ng-container>
+                <ng-container *ngIf="bootstrapUrl">
+                    <li class="nav-item">
+                        <a
+                            [attr.href]="bootstrapUrl"
+                            target="_blank"
+                            class="nav-link"
+                            style="text-transform: capitalize;"
+                        >
+                            <i class="bi bi-box-arrow-in-right"></i> Native Bootstrap {{ componentName }}
+                        </a>
+                    </li>
+                </ng-container>
+                <ng-container *ngIf="ngBootstrapUrl">
+                    <li class="nav-item">
+                        <a
+                            [attr.href]="ngBootstrapUrl"
+                            target="_blank"
+                            class="nav-link"
+                            style="text-transform: capitalize;"
+                        >
+                            <i class="bi bi-box-arrow-in-right"></i> NG Bootstrap {{ componentName }}
+                        </a>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+    </div>
+</div>

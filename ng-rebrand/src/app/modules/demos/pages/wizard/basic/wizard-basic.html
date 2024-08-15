@@ -1,0 +1,54 @@
+<nav ngbNav #nav="ngbNav" [destroyOnHide]="false" class="wiz">
+
+    <ng-container ngbNavItem>
+        <a ngbNavLink class="wiz__step">
+            <div class="wiz__title">Step 1</div>
+            <div class="wiz__descr">Some random text here</div>
+        </a>
+        <ng-template ngbNavContent>
+            <p>
+                Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth
+                master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
+                keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat
+                salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.
+            </p>
+        </ng-template>
+    </ng-container>
+
+    <ng-container ngbNavItem>
+        <a ngbNavLink class="wiz__step">
+            <div class="wiz__title">Step 2</div>
+            <div class="wiz__descr">Some random text here</div>
+        </a>
+        <ng-template ngbNavContent>
+            <p>
+                Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui. Raw denim you probably haven't heard of them jean shorts Austin.
+                master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
+                keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat
+                salvia cillum iphone. Nesciunt tofu stumptown aliqua, retro synth
+            </p>
+            <div class="text-center">
+                <button class="btn btn-primary" (click)="disabled = !disabled">{{ disabled ? "Enable" : "Disable" }} Step 3</button>
+            </div>
+        </ng-template>
+    </ng-container>
+
+    <ng-container ngbNavItem [disabled]="disabled">
+        <a ngbNavLink class="wiz__step">
+            <div class="wiz__title">Step 3</div>
+            <div class="wiz__descr">I am disabled</div>
+        </a>
+        <ng-template ngbNavContent>
+            <p>
+                Nesciunt tofu stumptown aliqua, retro synth. Raw denim you probably haven't heard of them jean shorts Austin.
+                master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro
+                keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat
+                salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.
+            </p>
+        </ng-template>
+    </ng-container>
+</nav>
+
+<div [ngbNavOutlet]="nav" class="mt-3"></div>
+
+<p class="mt-5 mb-0">To know more about <code>ngbNav</code> visit <a target="_blank" href="https://ng-bootstrap.github.io/#/components/nav/api">NG Bootstrap Nav API</a></p>

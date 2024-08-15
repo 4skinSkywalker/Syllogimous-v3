@@ -1,0 +1,137 @@
+<div class="d-grid gap-4 p-md-3">
+        
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Complete form</h4>
+        </div>
+        
+        <div class="card-body">
+
+            <p>Complete form with almost all available form controls.<br>This includes input elements necessary for filling out and submitting information.</p>
+
+            <div class="flexgrid flexgrid--3">
+    
+                <app-input
+                    name="firstName"
+                    label="First name"
+                    [ngControl]="form.controls.firstName"
+                    [disabled]="true"
+                    [floatingLabel]="true"
+                />
+    
+                <app-input
+                    name="lastName"
+                    label="Last name"
+                    [ngControl]="form.controls.lastName"
+                    [disabled]="true"
+                    [floatingLabel]="true"
+                />
+    
+                <app-input
+                    name="email"
+                    label="Email address"
+                    [ngControl]="form.controls.email"
+                    [floatingLabel]="true"
+                />
+            </div>
+    
+            <div class="flexgrid flexgrid--3">
+    
+                <app-input
+                    name="city"
+                    label="City"
+                    [ngControl]="form.controls.city"
+                    [floatingLabel]="true"
+                    [disabled]="disableFields.value!"
+                />
+    
+                <app-input
+                    type="autocomplete"
+                    name="state"
+                    label="State"
+                    [ngControl]="form.controls.state"
+                    [options]="states"
+                    [formatter]="statesFormatter"
+                    [template]="autocompleteTemplate"
+                    [filter]="statesFilter"
+                    [floatingLabel]="true"
+                    [disabled]="disableFields.value!"
+                />
+                <ng-template #autocompleteTemplate let-r="result" let-t="term">
+                    <img [src]="'https://upload.wikimedia.org/wikipedia/commons/thumb/' + r['flag']" class="me-1" style="width: 16px" />
+                    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+                </ng-template>
+    
+                <app-input
+                    type="number"
+                    name="zip"
+                    label="ZIP"
+                    [ngControl]="form.controls.zip"
+                    [floatingLabel]="true"
+                />
+            </div>
+    
+            <div class="py-3">
+                <app-input
+                    type="tagger"
+                    name="flavors"
+                    label="Ice-cream flavors"
+                    [ngControl]="form.controls.flavors"
+                    [options]="flavorList"
+                    [formatter]="flavorsFormatter"
+                    [filter]="flavorsFilter"
+                    [floatingLabel]="true"
+                />
+            </div>
+    
+            <div class="d-flex flex-wrap gap-3 mb-3">
+    
+                <app-input
+                    type="checkbox"
+                    name="agree"
+                    label="Agree to terms and conditions"
+                    [ngControl]="form.controls.agree"
+                />
+    
+                <app-input
+                    type="checkbox"
+                    name="disableForm"
+                    label="Disable form (reactive approach)"
+                    [ngControl]="disableForm"
+                />
+    
+                <app-input
+                    type="checkbox"
+                    name="disableFields"
+                    label="Disable fields (template approach)"
+                    [ngControl]="disableFields"
+                />
+            </div>
+    
+            <div class="text-center">
+                <button
+                    class="btn btn-primary"
+                    [disabled]="form.disabled ? true : form.invalid"
+                    (click)="submit()"
+                >
+                    Submit
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="card shadow">
+
+        <div class="card-header">
+            <h4 class="m-0">Form value</h4>
+        </div>
+
+        <div class="card-body">
+
+            <p>The formatted output of the form value.<br>Fiddle with the inputs to see realtime changes in the form value down below.</p>
+    
+            <pre>{{ getFormattedForm() }}</pre>
+        </div>
+    </section>
+</div>

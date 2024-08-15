@@ -1,0 +1,41 @@
+<p>Apply the <code>selectable</code> attribute set to <code>true</code> to enable multiple row selection.<br>Bind to the events <code>rowSelected</code> and <code>rowDeselected</code> to run code on selection and deselection.</p>
+
+<app-table
+    #at
+    [thead]="thead"
+    [tbody]="tbody"
+    [items]="countries"
+    [selectable]="true"
+    (rowSelected)="selectedToast($event)"
+    (rowDeselected)="deselectedToast($event)"
+>
+
+    <ng-template #thead>
+        <th>Country</th>
+        <th>Area</th>
+        <th>Population</th>
+    </ng-template>
+
+    <ng-template #tbody let-country>
+
+        <td data-label="Flag">
+            <img
+                [src]="'https://upload.wikimedia.org/wikipedia/commons/' + country.flag"
+                class="me-2"
+                style="width: 20px"
+            />
+            {{ country.name }}
+        </td>
+
+        <td data-label="Area">{{ country.area | number }}</td>
+        
+        <td data-label="Population">{{ country.population | number }}</td>
+    </ng-template>
+</app-table>
+
+<div class="card mt-4">
+    <div class="card-header">Selected countries</div>
+    <ul class="list-group list-group-flush" style="min-height: 40px">
+        <li class="list-group-item" *ngFor="let country of at.selectedRows">{{ country.name }}</li>
+    </ul>
+</div>

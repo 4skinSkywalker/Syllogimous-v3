@@ -1,0 +1,20 @@
+{
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "explorer.confirmDragAndDrop": false,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "hexeditor.columnWidth": 16,
+    "hexeditor.showDecodedText": true,
+    "hexeditor.defaultEndianness": "little",
+    "hexeditor.inspectorType": "aside",
+    "html.format.wrapAttributes": "force-expand-multiline",
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#691883",
+        "editorLineNumber.foreground": "#b148d2"
+    }
+}

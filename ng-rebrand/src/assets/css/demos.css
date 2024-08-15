@@ -1,0 +1,77 @@
+pre {
+    margin-bottom: 0;
+}
+
+pre code {
+    background-color: rgba(var(--app-gray_100), 1);
+    border: 0;
+    display: block;
+    padding: 20px;
+    line-height: 1.3;
+    text-align: left;
+    white-space: break-spaces;
+}
+
+ngb-datepicker.rtl {
+    direction: rtl
+}
+
+ngb-datepicker.rtl ngb-datepicker-navigation-select select.form-select {
+    background-position: left .25rem center
+}
+
+ngb-datepicker.rtl .ngb-dp-arrow.right .ngb-dp-navigation-chevron {
+    transform: rotate(-135deg);
+    margin: 0 0 0 .25rem
+}
+
+ngb-datepicker.rtl .ngb-dp-navigation-chevron {
+    transform: rotate(45deg);
+    margin: 0 .25rem 0 0
+}
+
+ngb-datepicker.hebrew .ngb-dp-day {
+    width: 2.75rem;
+    height: 2.75rem;
+    line-height: 1rem
+}
+
+ngb-datepicker.hebrew .ngb-dp-weekday {
+    width: 2.75rem
+}
+
+ngb-carousel .carousel-item img {
+    width: 100%
+}
+
+ngbd-table-filtering span.ngb-highlight {
+    background-color: #ff0
+}
+
+ngbd-table-complete span.ngb-highlight {
+    background-color: #ff0
+}
+
+ngb-carousel .picsum-img-wrapper {
+    position: relative;
+    height: 0;
+    padding-top: 55%
+}
+
+ngb-carousel .picsum-img-wrapper>img {
+    position: absolute;
+    inset: 0
+}
+
+.input-placeholder {
+    width: 100%;
+}
+
+.input-placeholder::before {
+    content: '';
+    background: rgba(var(--app-gray_50), 1);
+    border: 1px solid #bbb;
+    border-radius: var(--border-radius_md);
+    display: block;
+    height: 38px;
+}
