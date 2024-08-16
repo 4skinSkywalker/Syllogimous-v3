@@ -92,6 +92,7 @@ export enum EnumQuestionType {
     Direction = "Direction",
     Direction3D = "Direction3D",
     Direction4D = "Direction4D",
+    Analogy = "Analogy",
 }
 
 export class Question {
@@ -99,6 +100,8 @@ export class Question {
     isValid = false;
     rule = "";
     bucket: string[] = [];
+    buckets: string[][][] = [];
+    wordCoordMap: Record<string, [number, number] | [number, number, number] | [number, number, number, number]> = {};
     premises: string[] = [];
     conclusion = "";
     createdAt = new Date().getTime();

@@ -54,7 +54,7 @@ export class Engine {
             let prev = first;
             let curr: string[] = [];
     
-            const buckets = [[prev], []];
+            question.buckets = [[prev], []];
             let prevBucket = 0;
     
             question.premises = [];
@@ -73,7 +73,7 @@ export class Engine {
                     prevBucket = (prevBucket + 1) % 2;
                 }
 
-                buckets[prevBucket].push(curr);
+                question.buckets[prevBucket].push(curr);
     
                 prev = curr;
             }
@@ -85,8 +85,8 @@ export class Engine {
 
             question.conclusion = `<span class="subject">${first}</span> is ${relation} <span class="subject">${curr}</span>`;
             question.isValid = isSameAs
-                ? buckets[0].includes(curr)
-                : buckets[1].includes(curr);
+                ? question.buckets[0].includes(curr)
+                : question.buckets[1].includes(curr);
         } while(isPremiseLikeConclusion(question.premises, question.conclusion));
     
         shuffle(question.premises);
@@ -177,6 +177,7 @@ export class Engine {
             conclusionDirection = findDirection(wordCoordMap[words[0]], wordCoordMap[words[length-1]]);
         }
 
+        question.wordCoordMap = wordCoordMap;
         question.isValid = coinFlip();
         const oppositeDirection = findDirection(wordCoordMap[words[length-1]], wordCoordMap[words[0]]);
         const direction = question.isValid ? conclusionDirection : oppositeDirection;
@@ -222,23 +223,24 @@ export class Engine {
                 ];
 
                 if (this.settings.enableNegation && coinFlip()) {
-                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[dirName]}</span> of <span class="subject">${words[i]}</span>`);
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> is <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[dirName]}</span> of <span class="subject">${words[i]}</span>`);
                 } else {
-                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> is ${dirName} of <span class="subject">${words[i]}</span>`);
                 }
             }
     
             conclusionDirection = findDirection3D(wordCoordMap[words[0]], wordCoordMap[words[length-1]]);
         }
 
+        question.wordCoordMap = wordCoordMap;
         question.isValid = coinFlip();
         const oppositeDirection = findDirection3D(wordCoordMap[words[length-1]], wordCoordMap[words[0]]);
         const direction = question.isValid ? conclusionDirection : oppositeDirection;
 
         if (this.settings.enableNegation && coinFlip()) {
-            question.conclusion = `<span class="subject">${words[0]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[direction]}</span> of <span class="subject">${words[words.length-1]}</span>`;
+            question.conclusion = `<span class="subject">${words[0]}</span> is <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[direction]}</span> of <span class="subject">${words[words.length-1]}</span>`;
         } else {
-            question.conclusion = `<span class="subject">${words[0]}</span> is at ${direction} of <span class="subject">${words[words.length-1]}</span>`;
+            question.conclusion = `<span class="subject">${words[0]}</span> is ${direction} of <span class="subject">${words[words.length-1]}</span>`;
         }
     
         shuffle(question.premises);
@@ -262,6 +264,7 @@ export class Engine {
     
             for (let i = 0; i < words.length - 1; i++) {
                 const timeIndex =  pickUniqueItems([-1,0,1], 1).picked[0];
+                const timeName = TIME_NAMES[timeIndex + 1];
                 const dirIndex = 1 + Math.floor(Math.random()*(DIRECTION_NAMES_3D.length - 1));
                 const dirName = DIRECTION_NAMES_3D[dirIndex];
                 const dirCoord = DIRECTION_COORDS_3D[dirIndex];
@@ -278,27 +281,174 @@ export class Engine {
                 ];
 
                 if (this.settings.enableNegation && coinFlip()) {
-                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[dirName]}</span> of <span class="subject">${words[i]}</span>`);
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> ${timeName} <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[dirName]}</span> of <span class="subject">${words[i]}</span>`);
                 } else {
-                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> ${timeName} ${dirName} of <span class="subject">${words[i]}</span>`);
                 }
             }
     
             conclusionDirection = findDirection4D(wordCoordMap[words[0]], wordCoordMap[words[length-1]]);
         }
 
+        question.wordCoordMap = wordCoordMap;
         question.isValid = coinFlip();
         const oppositeDirection = findDirection4D(wordCoordMap[words[length-1]], wordCoordMap[words[0]]);
         const direction = question.isValid ? conclusionDirection : oppositeDirection;
 
         if (this.settings.enableNegation && coinFlip()) {
-            question.conclusion = `<span class="subject">${words[0]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[direction.spatial]}</span> of <span class="subject">${words[words.length-1]}</span>`;
+            question.conclusion = `<span class="subject">${words[0]}</span> ${direction.temporal} <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[direction.spatial]}</span> of <span class="subject">${words[words.length-1]}</span>`;
         } else {
-            question.conclusion = `<span class="subject">${words[0]}</span> is at ${direction} of <span class="subject">${words[words.length-1]}</span>`;
+            question.conclusion = `<span class="subject">${words[0]}</span> ${direction.temporal} ${direction.spatial} of <span class="subject">${words[words.length-1]}</span>`;
         }
 
         shuffle(question.premises);
         
+        return question;
+    }
+
+    createAnalogy(length: number) {
+        const choiceIndices = [];
+    
+        if (this.settings.enableDistinction) {
+            choiceIndices.push(0);
+        }
+        if (this.settings.enableComparisonNumerical) {
+            choiceIndices.push(1);
+        }
+        if (this.settings.enableComparisonChronological) {
+            choiceIndices.push(2);
+        }
+        if (this.settings.enableDirection) {
+            choiceIndices.push(3);
+        }
+        if (this.settings.enableDirection3D) {
+            choiceIndices.push(4);
+        }
+        if (this.settings.enableDirection4D) {
+            choiceIndices.push(5);
+        }
+    
+        const choiceIndex = pickUniqueItems(choiceIndices, 1).picked[0];
+
+        let question = new Question(EnumQuestionType.Analogy);
+        let isValidSame = false;
+        let a, b, c, d;
+        let indexOfA, indexOfB, indexOfC, indexOfD;
+
+        const flip = coinFlip();
+
+        switch (choiceIndex) {
+            case 0:
+                question = this.createDistinction(length);
+                question.type = EnumQuestionType.Analogy;
+                question.conclusion = "";
+        
+                [a, b, c, d] = pickUniqueItems([...question.buckets[0], ...question.buckets[1]], 4).picked;
+                question.conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
+                [
+                    indexOfA,
+                    indexOfB,
+                    indexOfC,
+                    indexOfD
+                ] = [
+                    Number(question.buckets[0].indexOf(a) !== -1),
+                    Number(question.buckets[0].indexOf(b) !== -1),
+                    Number(question.buckets[0].indexOf(c) !== -1),
+                    Number(question.buckets[0].indexOf(d) !== -1)
+                ];
+                isValidSame = (indexOfA === indexOfB && indexOfC === indexOfD) || (indexOfA !== indexOfB && indexOfC !== indexOfD);
+                break;
+            case 1:
+            case 2:
+                const type = choiceIndex === 1 ? EnumQuestionType.ComparisonNumerical : EnumQuestionType.ComparisonChronological;
+                question = this.createComparison(length, type);
+                question.type = EnumQuestionType.Analogy;
+                question.conclusion = "";
+
+                [a, b, c, d] = pickUniqueItems(question.bucket, 4).picked;
+                question.conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
+                [indexOfA, indexOfB] = [question.bucket.indexOf(a), question.bucket.indexOf(b)];
+                [indexOfC, indexOfD] = [question.bucket.indexOf(c), question.bucket.indexOf(d)];
+                isValidSame = (indexOfA > indexOfB && indexOfC > indexOfD) || (indexOfA < indexOfB && indexOfC < indexOfD);
+                break;
+            case 3:
+                while (flip !== isValidSame) {
+                    question = this.createDirection(length);
+                    question.conclusion = "";
+
+                    [a, b, c, d] = pickUniqueItems(Object.keys(question.wordCoordMap), 4).picked;
+                    question.conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+        
+                    const dirA = findDirection(question.wordCoordMap[a] as any, question.wordCoordMap[b] as any);
+                    const dirB = findDirection(question.wordCoordMap[c] as any, question.wordCoordMap[d] as any);
+                    isValidSame = dirA === dirB;
+                }
+                break;
+            case 4:
+                while (flip !== isValidSame) {
+                    question = this.createDirection3D(length);
+                    question.conclusion = "";
+
+                    [a, b, c, d] = pickUniqueItems(Object.keys(question.wordCoordMap), 4).picked;
+                    question.conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
+                    const dirA = findDirection3D(question.wordCoordMap[a] as any, question.wordCoordMap[b] as any);
+                    const dirB = findDirection3D(question.wordCoordMap[c] as any, question.wordCoordMap[d] as any);
+                    isValidSame = dirA === dirB;
+                }
+                break;
+            case 5:
+                while (flip !== isValidSame) {
+                    question = this.createDirection4D(length);
+                    question.conclusion = "";
+
+                    [a, b, c, d] = pickUniqueItems(Object.keys(question.wordCoordMap), 4).picked;
+                    question.conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
+
+                    const { spatial, temporal } = findDirection4D(question.wordCoordMap[a] as any, question.wordCoordMap[b] as any);
+                    const { spatial: spatial2, temporal: temporal2 } = findDirection4D(question.wordCoordMap[c] as any, question.wordCoordMap[d] as any);
+                    isValidSame = (spatial === spatial2) && (temporal === temporal2);
+                }
+                break;
+        }
+
+        const isSameRelation = coinFlip();
+        question.isValid = isSameRelation ? isValidSame : !isValidSame;
+
+        if (this.settings.enableNegation && coinFlip()) {
+            if (isSameRelation) {
+                if (choiceIndex < 1) {
+                    question.conclusion += '<div class="analogy-conclusion-relation is-negated">is different from</div>';
+                } else {
+                    question.conclusion += '<div class="analogy-conclusion-relation is-negated">has a different relation from</div>';
+                }
+            } else {
+                if (choiceIndex < 1) {
+                    question.conclusion += '<div class="analogy-conclusion-relation is-negated">is the same as</div>';
+                } else {
+                    question.conclusion += '<div class="analogy-conclusion-relation is-negated">has the same relation as</div>';
+                }
+            }
+        } else {
+            if (isSameRelation) {
+                if (choiceIndex < 1) {
+                    question.conclusion += '<div class="analogy-conclusion-relation">is the same as</div>';
+                } else {
+                    question.conclusion += '<div class="analogy-conclusion-relation">has the same relation as</div>';
+                }
+            } else {
+                if (choiceIndex < 1) {
+                    question.conclusion += '<div class="analogy-conclusion-relation">is different from</div>';
+                } else {
+                    question.conclusion += '<div class="analogy-conclusion-relation">has a different relation from</div>';
+                }
+            }
+        }
+
+        question.conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
+    
         return question;
     }
 
@@ -532,197 +682,5 @@ function createNestedBinaryQuestion(length) {
         premises,
         conclusion
     };
-}
-
-function createSameDifferent(length) {
-
-    // Create a pool based on user preferences
-    const choiceIndices = [];
-
-    if (savedata.enableDistinction)
-        choiceIndices.push(0);
-    if (savedata.enableComparison)
-        choiceIndices.push(1);
-    if (savedata.enableTemporal)
-        choiceIndices.push(2);
-    if (savedata.enableDirection)
-        choiceIndices.push(3);
-    if (savedata.enableDirection3D)
-        choiceIndices.push(4);
-    if (savedata.enableDirection4D)
-        choiceIndices.push(5);
-
-    const choiceIndex = pickUniqueItems(choiceIndices, 1).picked[0];
-    let choice;
-    let conclusion = "";
-    let subtype;
-    let isValid, isValidSame;
-    let a, b, c, d;
-    let indexOfA, indexOfB, indexOfC, indexOfD;
-
-    if (choiceIndex === 0) {
-
-        choice = createSameOpposite(length);
-        subtype = "Same/Opposite";
-
-        // Pick 4 different items
-        [a, b, c, d] = pickUniqueItems([...choice.buckets[0], ...choice.buckets[1]], 4).picked;
-        conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
-
-        // Find in which side a, b, c and d are
-        [
-            indexOfA,
-            indexOfB,
-            indexOfC,
-            indexOfD
-        ] = [
-            Number(choice.buckets[0].indexOf(a) !== -1),
-            Number(choice.buckets[0].indexOf(b) !== -1),
-            Number(choice.buckets[0].indexOf(c) !== -1),
-            Number(choice.buckets[0].indexOf(d) !== -1)
-        ];
-        isValidSame = indexOfA === indexOfB && indexOfC === indexOfD
-                   || indexOfA !== indexOfB && indexOfC !== indexOfD;
-    }
-    else if (choiceIndex === 1) {
-
-        choice = createMoreLess(length);
-        subtype = "More/Less";
-
-        // Pick 4 different items
-        [a, b, c, d] = pickUniqueItems(choice.bucket, 4).picked;
-        conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
-
-        // Find indices of elements
-        [indexOfA, indexOfB] = [choice.bucket.indexOf(a), choice.bucket.indexOf(b)];
-        [indexOfC, indexOfD] = [choice.bucket.indexOf(c), choice.bucket.indexOf(d)];
-        isValidSame = indexOfA > indexOfB && indexOfC > indexOfD
-                   || indexOfA < indexOfB && indexOfC < indexOfD;
-    }
-    else if (choiceIndex === 2) {
-
-        choice = createBeforeAfter(length);
-        subtype = "Before/After";
-
-        // Pick 4 different items
-        [a, b, c, d] = pickUniqueItems(choice.bucket, 4).picked;
-        conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
-
-        // Find indices of elements
-        [indexOfA, indexOfB] = [choice.bucket.indexOf(a), choice.bucket.indexOf(b)];
-        [indexOfC, indexOfD] = [choice.bucket.indexOf(c), choice.bucket.indexOf(d)];
-        isValidSame = indexOfA > indexOfB && indexOfC > indexOfD
-                   || indexOfA < indexOfB && indexOfC < indexOfD;
-    }
-    else if (choiceIndex === 3) {
-
-        subtype = "Direction";
-
-        const flip = coinFlip();
-        while (flip !== isValidSame) {
-            conclusion = "";
-            choice = createDirectionQuestion(length);
-
-            // Pick 4 different items
-            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4).picked;
-            conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
-
-            // Find if A to B has same relation of C to D
-            isValidSame = findDirection(choice.wordCoordMap[a], choice.wordCoordMap[b]) === findDirection(choice.wordCoordMap[c], choice.wordCoordMap[d]);
-        }
-    } else if (choiceIndex === 4) {
-
-        subtype = "Direction Three D";
-
-        const flip = coinFlip();
-        while (flip !== isValidSame) {
-            conclusion = "";
-            choice = createDirectionQuestion3D(length);
-
-            // Pick 4 different items
-            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4).picked;
-            conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
-
-            // Find if A to B has same relation of C to D
-            isValidSame = findDirection3D(choice.wordCoordMap[a], choice.wordCoordMap[b]) === findDirection3D(choice.wordCoordMap[c], choice.wordCoordMap[d]);
-        }
-    } else {
-
-        subtype = "Space Time";
-
-        const flip = coinFlip();
-        while (flip !== isValidSame) {
-            conclusion = "";
-            choice = createDirectionQuestion4D(length);
-
-            // Pick 4 different items
-            [a, b, c, d] = pickUniqueItems(Object.keys(choice.wordCoordMap), 4).picked;
-            conclusion += `<span class="subject">${a}</span> to <span class="subject">${b}</span>`;
-
-            // Find if A to B has same relation of C to D
-            const {
-                spatial,
-                temporal
-            } = findDirection4D(choice.wordCoordMap[a], choice.wordCoordMap[b]);
-            const {
-                spatial: spatial2,
-                temporal: temporal2
-            } = findDirection4D(choice.wordCoordMap[c], choice.wordCoordMap[d]);
-            isValidSame = spatial === spatial2 && temporal === temporal2;
-        }
-    }
-
-    if (coinFlip()) {
-        isValid = isValidSame;
-        if (choiceIndex < 1) {
-            const cs = [
-                '<div class="analogy-conclusion-relation">is the same as</div>',
-                '<div class="analogy-conclusion-relation is-negated">is different from</div>'
-            ];
-            conclusion += (coinFlip() && savedata.enableNegation)
-                ? pickUniqueItems(cs, 1).picked[0]
-                : cs[0];
-        }
-        else {
-            const cs = [
-                '<div class="analogy-conclusion-relation">has the same relation as</div>',
-                '<div class="analogy-conclusion-relation is-negated">has a different relation from</div>'
-            ];
-            conclusion += (coinFlip() && savedata.enableNegation)
-                ? pickUniqueItems(cs, 1).picked[0]
-                : cs[0];
-        }
-    }
-    else {
-        isValid = !isValidSame;
-        if (choiceIndex < 1) {
-            const cs = [
-                '<div class="analogy-conclusion-relation">is different from</div>',
-                '<div class="analogy-conclusion-relation is-negated">is the same as</div>'
-            ];
-            conclusion += (coinFlip() && savedata.enableNegation)
-                ? pickUniqueItems(cs, 1).picked[0]
-                : cs[0];
-
-        }
-        else {
-            const cs = [
-                '<div class="analogy-conclusion-relation">has a different relation from</div>',
-                '<div class="analogy-conclusion-relation is-negated">has the same relation as</div>',
-            ];
-            conclusion += (coinFlip() && savedata.enableNegation)
-                ? pickUniqueItems(cs, 1).picked[0]
-                : cs[0];
-        }
-    }
-    conclusion += `<span class="subject">${c}</span> to <span class="subject">${d}</span>`;
-
-    choice.label = "analogy";
-    choice.category = "Analogy: " + subtype;
-    choice.createdAt = new Date().getTime();
-    choice.isValid = isValid;
-    choice.conclusion = conclusion;
-
-    return choice;
 }
 */
