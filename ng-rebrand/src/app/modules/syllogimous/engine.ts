@@ -1,5 +1,6 @@
+import { DIRECTION_COORDS, DIRECTION_COORDS_3D, DIRECTION_NAMES, DIRECTION_NAMES_3D, DIRECTION_NAMES_3D_INVERSE, DIRECTION_NAMES_INVERSE, TIME_NAMES } from "./engine-constants";
 import { EnumQuestionType, Question, Settings } from "./engine-models";
-import { coinFlip, getRandomRuleInvalid, getRandomRuleValid, getRandomSymbols, getRelation, getSyllogism, isPremiseLikeConclusion, makeMetaRelations, pickUniqueItems, shuffle } from "./engine-utils";
+import { coinFlip, findDirection, findDirection3D, findDirection4D, getRandomRuleInvalid, getRandomRuleValid, getRandomSymbols, getRelation, getSyllogism, getSymbols, isPremiseLikeConclusion, makeMetaRelations, pickUniqueItems, shuffle } from "./engine-utils";
 
 export class Engine {
     settings = new Settings();
@@ -138,6 +139,169 @@ export class Engine {
         return question;
     }
 
+    createDirection(length: number) {
+        length++;
+    
+        const symbols = getSymbols(this);
+        const words = pickUniqueItems(symbols, length).picked;
+        const question = new Question(EnumQuestionType.Direction);
+
+        let wordCoordMap: Record<string, [number, number]> = {};
+        let conclusionDirection = "";
+
+        while (!conclusionDirection) {
+            wordCoordMap = {};
+            question.premises = [];
+    
+            for (let i = 0; i < words.length - 1; i++) {
+                const dirIndex = 1 + Math.floor(Math.random()*(DIRECTION_NAMES.length - 1));
+                const dirName = DIRECTION_NAMES[dirIndex]!;
+                const dirCoord = DIRECTION_COORDS[dirIndex];
+
+                if (i === 0) {
+                    wordCoordMap[words[i]] = [0,0];
+                }
+
+                wordCoordMap[words[i+1]] = [
+                    wordCoordMap[words[i]][0] + dirCoord[0], // x
+                    wordCoordMap[words[i]][1] + dirCoord[1]  // y
+                ];
+
+                if (this.settings.enableNegation && coinFlip()) {
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_INVERSE as any)[dirName]}</span> of <span class="subject">${words[i]}</span>`);
+                } else {
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
+                }
+            }
+    
+            conclusionDirection = findDirection(wordCoordMap[words[0]], wordCoordMap[words[length-1]]);
+        }
+
+        question.isValid = coinFlip();
+        const oppositeDirection = findDirection(wordCoordMap[words[length-1]], wordCoordMap[words[0]]);
+        const direction = question.isValid ? conclusionDirection : oppositeDirection;
+
+        if (this.settings.enableNegation && coinFlip()) {
+            question.conclusion = `<span class="subject">${words[0]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_INVERSE as any)[direction]}</span> of <span class="subject">${words[words.length-1]}</span>`;
+        } else {
+            question.conclusion = `<span class="subject">${words[0]}</span> is at ${direction} of <span class="subject">${words[words.length-1]}</span>`;
+        }
+    
+        shuffle(question.premises);
+        
+        return question;
+    }
+
+    createDirection3D(length: number) {
+        length++;
+    
+        const symbols = getSymbols(this);
+        const words = pickUniqueItems(symbols, length).picked;
+        const question = new Question(EnumQuestionType.Direction);
+    
+        let wordCoordMap: Record<string, [number, number, number]> = {};
+        let conclusionDirection = "";
+
+        while (!conclusionDirection) {
+            wordCoordMap = {};
+            question.premises = [];
+    
+            for (let i = 0; i < words.length - 1; i++) {
+                const dirIndex = 1 + Math.floor(Math.random() * (DIRECTION_NAMES_3D.length - 1));
+                const dirName = DIRECTION_NAMES_3D[dirIndex];
+                const dirCoord = DIRECTION_COORDS_3D[dirIndex];
+
+                if (i === 0) {
+                    wordCoordMap[words[i]] = [0,0,0];
+                }
+
+                wordCoordMap[words[i+1]] = [
+                    wordCoordMap[words[i]][0] + dirCoord[0], // x
+                    wordCoordMap[words[i]][1] + dirCoord[1], // y
+                    wordCoordMap[words[i]][2] + dirCoord[2], // z
+                ];
+
+                if (this.settings.enableNegation && coinFlip()) {
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[dirName]}</span> of <span class="subject">${words[i]}</span>`);
+                } else {
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
+                }
+            }
+    
+            conclusionDirection = findDirection3D(wordCoordMap[words[0]], wordCoordMap[words[length-1]]);
+        }
+
+        question.isValid = coinFlip();
+        const oppositeDirection = findDirection3D(wordCoordMap[words[length-1]], wordCoordMap[words[0]]);
+        const direction = question.isValid ? conclusionDirection : oppositeDirection;
+
+        if (this.settings.enableNegation && coinFlip()) {
+            question.conclusion = `<span class="subject">${words[0]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[direction]}</span> of <span class="subject">${words[words.length-1]}</span>`;
+        } else {
+            question.conclusion = `<span class="subject">${words[0]}</span> is at ${direction} of <span class="subject">${words[words.length-1]}</span>`;
+        }
+    
+        shuffle(question.premises);
+        
+        return question;
+    }
+
+    createDirection4D(length: number) {
+        length++;
+    
+        const symbols = getSymbols(this);
+        const words = pickUniqueItems(symbols, length).picked;
+        const question = new Question(EnumQuestionType.Direction);
+    
+        let wordCoordMap: Record<string, [number, number, number, number]> = {};
+        let conclusionDirection = { spatial: "", temporal: "" };
+
+        while (!conclusionDirection.spatial) {
+            wordCoordMap = {};
+            question.premises = [];
+    
+            for (let i = 0; i < words.length - 1; i++) {
+                const timeIndex =  pickUniqueItems([-1,0,1], 1).picked[0];
+                const dirIndex = 1 + Math.floor(Math.random()*(DIRECTION_NAMES_3D.length - 1));
+                const dirName = DIRECTION_NAMES_3D[dirIndex];
+                const dirCoord = DIRECTION_COORDS_3D[dirIndex];
+
+                if (i === 0) {
+                    wordCoordMap[words[i]] = [0,0,0,0];
+                }
+
+                wordCoordMap[words[i+1]] = [
+                    wordCoordMap[words[i]][0] + dirCoord[0], // x
+                    wordCoordMap[words[i]][1] + dirCoord[1], // y
+                    wordCoordMap[words[i]][2] + dirCoord[2], // z
+                    wordCoordMap[words[i]][3] + timeIndex,   // time
+                ];
+
+                if (this.settings.enableNegation && coinFlip()) {
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[dirName]}</span> of <span class="subject">${words[i]}</span>`);
+                } else {
+                    question.premises.push(`<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`);
+                }
+            }
+    
+            conclusionDirection = findDirection4D(wordCoordMap[words[0]], wordCoordMap[words[length-1]]);
+        }
+
+        question.isValid = coinFlip();
+        const oppositeDirection = findDirection4D(wordCoordMap[words[length-1]], wordCoordMap[words[0]]);
+        const direction = question.isValid ? conclusionDirection : oppositeDirection;
+
+        if (this.settings.enableNegation && coinFlip()) {
+            question.conclusion = `<span class="subject">${words[0]}</span> is at <span class="is-negated">${(DIRECTION_NAMES_3D_INVERSE as any)[direction.spatial]}</span> of <span class="subject">${words[words.length-1]}</span>`;
+        } else {
+            question.conclusion = `<span class="subject">${words[0]}</span> is at ${direction} of <span class="subject">${words[words.length-1]}</span>`;
+        }
+
+        shuffle(question.premises);
+        
+        return question;
+    }
+
     createBinary(length: number) {
         // TODO: Validate min length
 
@@ -199,15 +363,21 @@ export class Engine {
                 this.createComparison(length, EnumQuestionType.ComparisonChronological)
             );
         }
-        /*if (this.settings.enableDirection) {
-            pool.push(createDirectionQuestion);
+        if (this.settings.enableDirection) {
+            pool.push((length: number) =>
+                this.createDirection(length)
+            );
         }
         if (this.settings.enableDirection3D) {
-            pool.push(createDirectionQuestion3D);
+            pool.push((length: number) =>
+                this.createDirection3D(length)
+            );
         }
         if (this.settings.enableDirection4D) {
-            pool.push(createDirectionQuestion4D);
-        }*/
+            pool.push((length: number) =>
+                this.createDirection4D(length)
+            );
+        }
 
         const question = new Question(EnumQuestionType.Binary);
         const flip = coinFlip();
@@ -239,6 +409,10 @@ export class Engine {
         return question;
     }
 }
+
+
+
+
 
 
 /*
@@ -550,247 +724,5 @@ function createSameDifferent(length) {
     choice.conclusion = conclusion;
 
     return choice;
-}
-
-function createDirectionQuestion(length) {
-    length++;
-
-    const words = pickUniqueItems(symbols, length).picked;
-
-    let wordCoordMap = {};
-    let premises = [];
-    let conclusion;
-    let conclusionDirName;
-    while (!conclusionDirName) {
-
-        wordCoordMap = {};
-        premises = [];
-
-        for (let i = 0; i < words.length - 1; i++) {
-            const dirIndex = 1 + Math.floor(Math.random()*(dirNames.length - 1));
-            const dirName = dirNames[dirIndex];
-            const dirCoord = dirCoords[dirIndex];
-            if (i === 0) {
-                wordCoordMap[words[i]] = [0,0];
-            }
-            wordCoordMap[words[i+1]] = [
-                wordCoordMap[words[i]][0] + dirCoord[0], // x
-                wordCoordMap[words[i]][1] + dirCoord[1]  // y
-            ];
-            const ps = [
-                `<span class="subject">${words[i+1]}</span> is at ${dirName} of <span class="subject">${words[i]}</span>`,
-                `<span class="subject">${words[i+1]}</span> is at <span class="is-negated">${nameInverseDir[dirName]}</span> of <span class="subject">${words[i]}</span>`,
-            ];
-            premises.push((!savedata.enableNegation)
-                ? ps[0]
-                : pickUniqueItems(ps, 1).picked[0]);
-        }
-
-        conclusionDirName = findDirection(
-            wordCoordMap[words[0]],
-            wordCoordMap[words[length-1]]
-        );
-    }
-
-    let isValid;
-    if (coinFlip()) { // correct
-        isValid = true;
-        const cs = [
-            `<span class="subject">${words[0]}</span> is at ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> is at <span class="is-negated">${nameInverseDir[conclusionDirName]}</span> of <span class="subject">${words[words.length-1]}</span>`,
-        ];
-        conclusion = (!savedata.enableNegation)
-            ? cs[0]
-            : pickUniqueItems(cs, 1).picked[0];
-    }
-    else {            // wrong
-        isValid = false;
-        let oppositeDirection = findDirection(
-            wordCoordMap[words[length-1]],
-            wordCoordMap[words[0]]
-        );
-        const cs = [
-            `<span class="subject">${words[0]}</span> is at ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> is at <span class="is-negated">${nameInverseDir[oppositeDirection]}</span> of <span class="subject">${words[words.length-1]}</span>`
-        ];
-        conclusion = (!savedata.enableNegation)
-            ? cs[0]
-            : pickUniqueItems(cs, 1).picked[0];;
-    }
-
-    shuffle(premises);
-    
-    return {
-        label: "direction",
-        category: "Space Two D",
-        createdAt: new Date().getTime(),
-        wordCoordMap,
-        isValid,
-        premises,
-        conclusion
-    }
-}
-
-function createDirectionQuestion3D(length) {
-    length++;
-
-    const words = pickUniqueItems(symbols, length).picked;
-
-    let wordCoordMap = {};
-    let premises = [];
-    let conclusion;
-    let conclusionDirName;
-    while (!conclusionDirName) {
-
-        wordCoordMap = {};
-        premises = [];
-
-        for (let i = 0; i < words.length - 1; i++) {
-            const dirIndex = 1 + Math.floor(Math.random()*(dirNames3D.length - 1));
-            const dirName = dirNames3D[dirIndex];
-            const dirCoord = dirCoords3D[dirIndex];
-            if (i === 0) {
-                wordCoordMap[words[i]] = [0,0,0];
-            }
-            wordCoordMap[words[i+1]] = [
-                wordCoordMap[words[i]][0] + dirCoord[0], // x
-                wordCoordMap[words[i]][1] + dirCoord[1], // y
-                wordCoordMap[words[i]][2] + dirCoord[2], // z
-            ];
-            const ps = [
-                `<span class="subject">${words[i+1]}</span> is ${dirName} of <span class="subject">${words[i]}</span>`,
-                `<span class="subject">${words[i+1]}</span> is <span class="is-negated">${nameInverseDir3D[dirName]}</span> of <span class="subject">${words[i]}</span>`,
-            ];
-            premises.push((!savedata.enableNegation)
-                ? ps[0]
-                : pickUniqueItems(ps, 1).picked[0]);
-        }
-
-        conclusionDirName = findDirection3D(
-            wordCoordMap[words[0]],
-            wordCoordMap[words[length-1]]
-        );
-    }
-
-    let isValid;
-    if (coinFlip()) { // correct
-        isValid = true;
-        const cs = [
-            `<span class="subject">${words[0]}</span> is ${conclusionDirName} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> is <span class="is-negated">${nameInverseDir3D[conclusionDirName]}</span> of <span class="subject">${words[words.length-1]}</span>`,
-        ];
-        conclusion = (!savedata.enableNegation)
-            ? cs[0]
-            : pickUniqueItems(cs, 1).picked[0];
-    }
-    else {            // wrong
-        isValid = false;
-        let oppositeDirection = findDirection3D(
-            wordCoordMap[words[length-1]],
-            wordCoordMap[words[0]]
-        );
-        const cs = [
-            `<span class="subject">${words[0]}</span> is ${oppositeDirection} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> is <span class="is-negated">${nameInverseDir3D[oppositeDirection]}</span> of <span class="subject">${words[words.length-1]}</span>`
-        ];
-        conclusion = (!savedata.enableNegation)
-            ? cs[0]
-            : pickUniqueItems(cs, 1).picked[0];;
-    }
-
-    shuffle(premises);
-    
-    return {
-        label: "direction3D",
-        category: "Space Three D",
-        createdAt: new Date().getTime(),
-        wordCoordMap,
-        isValid,
-        premises,
-        conclusion
-    }
-}
-
-function createDirectionQuestion4D(length) {
-    length++;
-
-    const words = pickUniqueItems(symbols, length).picked;
-
-    let wordCoordMap = {};
-    let premises = [];
-    let conclusion;
-    let conclusionDirName = { spatial: null };
-    while (!conclusionDirName.spatial) {
-
-        wordCoordMap = {};
-        premises = [];
-
-        for (let i = 0; i < words.length - 1; i++) {
-            const timeIndex =  pickUniqueItems([-1,0,1], 1).picked[0];
-            const timeName = timeNames[timeIndex + 1];
-            const dirIndex = 1 + Math.floor(Math.random()*(dirNames3D.length - 1));
-            const dirName = dirNames3D[dirIndex];
-            const dirCoord = dirCoords3D[dirIndex];
-            if (i === 0) {
-                wordCoordMap[words[i]] = [0,0,0,0];
-            }
-            wordCoordMap[words[i+1]] = [
-                wordCoordMap[words[i]][0] + dirCoord[0], // x
-                wordCoordMap[words[i]][1] + dirCoord[1], // y
-                wordCoordMap[words[i]][2] + dirCoord[2], // z
-                wordCoordMap[words[i]][3] + timeIndex,   // time
-            ];
-            const ps = [
-                `<span class="subject">${words[i+1]}</span> ${timeName} ${dirName} of <span class="subject">${words[i]}</span>`,
-                `<span class="subject">${words[i+1]}</span> ${timeName} of <span class="is-negated">${nameInverseDir3D[dirName]}</span> of <span class="subject">${words[i]}</span>`,
-            ];
-            premises.push((!savedata.enableNegation)
-                ? ps[0]
-                : pickUniqueItems(ps, 1).picked[0]);
-        }
-
-        conclusionDirName = findDirection4D(
-            wordCoordMap[words[0]],
-            wordCoordMap[words[length-1]]
-        );
-    }
-
-    let isValid;
-    if (coinFlip()) { // correct
-        isValid = true;
-        const cs = [
-            `<span class="subject">${words[0]}</span> ${conclusionDirName.temporal} ${conclusionDirName.spatial} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> ${conclusionDirName.temporal} of <span class="is-negated">${nameInverseDir3D[conclusionDirName.spatial]}</span> of <span class="subject">${words[words.length-1]}</span>`,
-        ];
-        conclusion = (!savedata.enableNegation)
-            ? cs[0]
-            : pickUniqueItems(cs, 1).picked[0];
-    }
-    else {            // wrong
-        isValid = false;
-        let oppositeDirection = findDirection4D(
-            wordCoordMap[words[length-1]],
-            wordCoordMap[words[0]]
-        );
-        const cs = [
-            `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal} ${oppositeDirection.spatial} of <span class="subject">${words[words.length-1]}</span>`,
-            `<span class="subject">${words[0]}</span> ${oppositeDirection.temporal} of <span class="is-negated">${nameInverseDir3D[oppositeDirection.spatial]}</span> of <span class="subject">${words[words.length-1]}</span>`
-        ];
-        conclusion = (!savedata.enableNegation)
-            ? cs[0]
-            : pickUniqueItems(cs, 1).picked[0];;
-    }
-
-    shuffle(premises);
-    
-    return {
-        label: "direction4D",
-        category: "Space Time",
-        createdAt: new Date().getTime(),
-        wordCoordMap,
-        isValid,
-        premises,
-        conclusion
-    }
 }
 */

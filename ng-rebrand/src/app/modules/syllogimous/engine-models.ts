@@ -13,10 +13,7 @@ export class Settings {
     enableCarouselMode = false;
     enableMeaningfulWords = true;
     enableNegation = false;
-    enableStroopEffect = false;
     enableMeta = false;
-    
-    removeNegationExplainer = false;
 
     enableDistinction = true;
     timerDistinction = 30;
@@ -92,6 +89,9 @@ export enum EnumQuestionType {
     ComparisonNumerical = "Comparison - Numerical",
     ComparisonChronological = "Comparison - Chronological",
     Binary = "Binary",
+    Direction = "Direction",
+    Direction3D = "Direction3D",
+    Direction4D = "Direction4D",
 }
 
 export class Question {
