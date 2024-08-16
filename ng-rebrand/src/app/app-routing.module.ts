@@ -18,6 +18,11 @@ const routes: Routes = [
             import('./modules/docs/docs.module').then(m => m.DocsModule),
         canActivate: ["guardAdmin"]
     },
+    {
+        path: 'playground',
+        loadChildren: () =>
+            import('./modules/syllogimous/syllogimous.module').then(m => m.SyllogimousModule)
+    },
 ];
 
 @NgModule({

@@ -1,0 +1,26 @@
+<div class="playcard card shadow">
+    <div class="toolbar card-header">
+        <div>
+            <span>Level: 5 / 100</span>
+        </div>
+        <div>
+            <button class="btn btn-sm">
+                <i class="bi bi-gear"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body position-relative">
+        <ngb-progressbar class="timerbar" type="success" [value]="25"></ngb-progressbar>
+        <div>
+            {{phases[phaseIndex]}}
+        </div>
+    </div>
+    <div class="toolbar card-footer">
+        <div></div>
+        <div>
+            <button class="btn btn-sm" (click)="phaseNext()">
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
