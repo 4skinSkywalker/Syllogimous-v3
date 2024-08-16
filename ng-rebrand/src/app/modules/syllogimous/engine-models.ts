@@ -43,7 +43,6 @@ export class Settings {
     enableBinary = false;
     timerBinary = 30;
 
-    nestedBinaryDepth = 1;
     enableAnd = true;
     enableNand = true;
     enableOr = true;
