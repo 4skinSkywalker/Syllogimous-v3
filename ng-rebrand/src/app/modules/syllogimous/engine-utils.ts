@@ -1,6 +1,6 @@
 import { Engine } from "./engine";
 import { DIRECTION_COORDS, DIRECTION_COORDS_3D, DIRECTION_NAMES, DIRECTION_NAMES_3D, FORMS, NOUNS, STRINGS, TIME_NAMES, VALID_RULES } from "./engine-constants";
-import { EnumQuestionCategory, Picked } from "./engine-models";
+import { EnumQuestionType, Picked, Question } from "./engine-models";
 
 export function genBinKey(booleans: boolean[]) {
     return booleans.map(value => (value ? '1' : '0')).join('');
@@ -184,23 +184,27 @@ export function getMetaReplacer(engine: Engine, choosenPair: Picked<string>, rel
     const [a, b] = choosenSubjects.map(m => m[1]);
 
     const isSameAs = (relations[0] === relations[1]) === (negations[0] === negations[1]);
-    const relation = getRelation(engine, EnumQuestionCategory.Distinction, isSameAs);
+    const relation = getRelation(engine, EnumQuestionType.Distinction, isSameAs);
 
-    return `$1 ${relation} <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+    return `$1 ${relation} (<span class="subject">${a}</span> to <span class="subject">${b}</span>) to `;
 }
 
-export function getRelation(engine: Engine, questionCategory: EnumQuestionCategory, isPositive: boolean) {
+export function getRelation(engine: Engine, type: EnumQuestionType, isPositive: boolean) {
     let positive = "";
     let negative = "";
 
-    switch (questionCategory) {
-        case EnumQuestionCategory.Distinction:
+    switch (type) {
+        case EnumQuestionType.Distinction:
             positive = "same as";
             negative = "opposite of";
             break;
-        case EnumQuestionCategory.Distinction:
+        case EnumQuestionType.ComparisonNumerical:
             positive = "more than";
             negative = "less than";
+            break;
+        case EnumQuestionType.ComparisonChronological:
+            positive = "after";
+            negative = "before";
             break;
     }
 
@@ -216,4 +220,25 @@ export function getRelation(engine: Engine, questionCategory: EnumQuestionCatego
         }
     }
     return relation;
+}
+
+export function makeMetaRelations(engine: Engine, question: Question, length: number) {
+    if (engine.settings.enableMeta && coinFlip()) {
+        const numOfMetaRelations = 1 + Math.floor(Math.random() * Math.floor((length - 1) / 2));
+        let _premises = pickUniqueItems(question.premises, numOfMetaRelations * 2);
+        question.premises = [ ..._premises.remaining ];
+    
+        while (_premises.picked.length) {
+            const choosenPair = pickUniqueItems(_premises.picked, 2);
+            const negations = choosenPair.picked.map(p => /is-negated/.test(p));
+            const relations = choosenPair.picked.map(p => p.match(/is (?:<span class="is-negated">)*(.*?)(?:<\/span>)* /)![1]);
+    
+            const replacer = getMetaReplacer(engine, choosenPair, relations, negations);
+            const newPremise = choosenPair.picked[1].replace(/(is) (.*)(?=<span class="subject">)/, replacer);
+    
+            question.premises.push(choosenPair.picked[0], newPremise);
+    
+            _premises = { picked: choosenPair.remaining, remaining: [] };
+        }
+    }
 }

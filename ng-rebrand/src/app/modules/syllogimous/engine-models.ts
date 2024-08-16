@@ -85,22 +85,16 @@ export class Settings {
     }
 }
 
-export enum EnumQuestionLabel {
+export enum EnumQuestionType {
     Syllogism = "Syllogism",
     Distinction = "Distinction",
-    Comparison = "Comparison",
-}
-
-export enum EnumQuestionCategory {
-    Syllogism = "Syllogism",
-    Distinction = "Distinction",
-    Comparison = "Comparison",
+    ComparisonNumerical = "Comparison - Numerical",
+    ComparisonChronological = "Comparison - Chronological",
 }
 
 export class Question {
-    label: EnumQuestionLabel;
-    category: EnumQuestionCategory;
-    isValid: boolean;
+    type: EnumQuestionType;
+    isValid = false;
     rule = "";
     bucket: string[] = [];
     premises: string[] = [];
@@ -108,12 +102,8 @@ export class Question {
     createdAt = new Date().getTime();
 
     constructor(
-        label: EnumQuestionLabel,
-        category: EnumQuestionCategory,
-        isValid: boolean
+        type: EnumQuestionType
     ) {
-        this.label = label;
-        this.category = category;
-        this.isValid = isValid;
+        this.type = type;
     }
 }
