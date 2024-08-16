@@ -1,6 +1,6 @@
 import { Engine } from "./engine";
 import { DIRECTION_COORDS, DIRECTION_COORDS_3D, DIRECTION_NAMES, DIRECTION_NAMES_3D, FORMS, NOUNS, STRINGS, TIME_NAMES, VALID_RULES } from "./engine-constants";
-import { Picked } from "./engine-models";
+import { EnumQuestionCategory, Picked } from "./engine-models";
 
 export function genBinKey(booleans: boolean[]) {
     return booleans.map(value => (value ? '1' : '0')).join('');
@@ -179,42 +179,41 @@ export function getSyllogism(engine: Engine, s: string, p: string, m: string, ru
     return [major, minor, conclusion];
 }
 
-export function getMetaSubstitution(
-    engine: Engine,
-    choosenPair: Picked<string>,
-    relations: string[],
-    negations: boolean[]
-) {
+export function getMetaReplacer(engine: Engine, choosenPair: Picked<string>, relations: string[], negations: boolean[]) {
     const choosenSubjects = [...choosenPair.picked[0].matchAll(/<span class="subject">(.*?)<\/span>/g)];
     const [a, b] = choosenSubjects.map(m => m[1]);
 
-    // TODO: Simplify this by string concat
-    const lookupMap = {
-        "0000": `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "0001": `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "0010": `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "0011": `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "0100": `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "0101": `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "0110": `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "0111": `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "1000": `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "1001": `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "1010": `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "1011": `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "1100": `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "1101": `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "1110": `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-        "1111": `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `,
-    };
+    const isSameAs = (relations[0] === relations[1]) === (negations[0] === negations[1]);
+    const relation = getRelation(engine, EnumQuestionCategory.Distinction, isSameAs);
 
-    const lookupKey = genBinKey([ 
-        negations[0], 
-        negations[1], 
-        (relations[0] === relations[1]), 
-        engine.settings.enableNegation 
-    ]);
+    return `$1 ${relation} <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
+}
 
+export function getRelation(engine: Engine, questionCategory: EnumQuestionCategory, isPositive: boolean) {
+    let positive = "";
+    let negative = "";
 
-    return (lookupMap as any)[lookupKey] as string;
+    switch (questionCategory) {
+        case EnumQuestionCategory.Distinction:
+            positive = "same as";
+            negative = "opposite of";
+            break;
+        case EnumQuestionCategory.Distinction:
+            positive = "more than";
+            negative = "less than";
+            break;
+    }
+
+    let relation = isPositive ? positive : negative;
+    if (engine.settings.enableNegation && coinFlip()) {
+        switch (relation) {
+            case positive:
+                relation = `<span class="is-negated">${negative}</span>`;
+                break;
+            case negative:
+                relation = `<span class="is-negated">${positive}</span>`;
+                break;
+        }
+    }
+    return relation;
 }

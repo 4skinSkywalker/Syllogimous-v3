@@ -1,5 +1,5 @@
 import { EnumQuestionCategory, EnumQuestionLabel, Question, Settings } from "./engine-models";
-import { coinFlip, getRandomRuleInvalid, getRandomRuleValid, getRandomSymbols, getSyllogism, isPremiseLikeConclusion, pickUniqueItems, shuffle } from "./engine-utils";
+import { coinFlip, getMetaReplacer, getRandomRuleInvalid, getRandomRuleValid, getRandomSymbols, getRelation, getSyllogism, isPremiseLikeConclusion, pickUniqueItems, shuffle } from "./engine-utils";
 
 export class Engine {
     settings = new Settings();
@@ -36,9 +36,7 @@ export class Engine {
         for (let i = 3; i < length; i++) {
             const rnd = Math.floor(Math.random() * (i - 1));
             const flip = coinFlip();
-            const [ p, m ] = flip
-                ? [question.bucket[i], question.bucket[rnd]]
-                : [question.bucket[rnd], question.bucket[i]];
+            const [ p, m ] = flip ? [question.bucket[i], question.bucket[rnd]] : [question.bucket[rnd], question.bucket[i]];
             question.premises.push(getSyllogism(this, "#####", p, m, getRandomRuleInvalid())[0]);
         }
     
@@ -46,160 +44,80 @@ export class Engine {
     
         return question;
     }
+
+    createSameOpposite(length: number) {
+        length++;
+
+        const isValid = coinFlip();
+        const symbols = getRandomSymbols(this, length);
+        const question = new Question(
+            EnumQuestionLabel.Distinction,
+            EnumQuestionCategory.Distinction,
+            isValid
+        );
+
+        do {
+            const rnd = Math.floor(Math.random() * symbols.length);
+            const first = symbols.splice(rnd, 1)
+            let prev = first;
+            let curr: string[] = [];
+    
+            const buckets = [[prev], []];
+            let prevBucket = 0;
+    
+            question.premises = [];
+
+            for (let i = 0; i < length - 1; i++) {
+                const rnd = Math.floor(Math.random() * symbols.length);
+                curr = symbols.splice(rnd, 1);
+    
+                const isSameAs = coinFlip();
+
+                question.premises.push(`<span class="subject">${prev}</span> ${getRelation(this, isSameAs)} <span class="subject">${curr}</span>`);
+
+                // TODO: Figure out what this was for...
+                if (!isSameAs) {
+                    prevBucket = (prevBucket + 1) % 2;
+                }
+
+                buckets[prevBucket].push(curr);
+    
+                prev = curr;
+            }
+
+            if (this.settings.enableMeta) {
+                const numOfMetaRelations = 1 + Math.floor(Math.random() * Math.floor((length - 1) / 2));
+                let _premises = pickUniqueItems(question.premises, numOfMetaRelations * 2);
+                question.premises = [ ..._premises.remaining ];
+    
+                while (_premises.picked.length) {
+                    const choosenPair = pickUniqueItems(_premises.picked, 2);
+                    const negations = choosenPair.picked.map(p => /is-negated/.test(p));
+                    const relations = choosenPair.picked.map(p => p.match(/is (?:<span class="is-negated">)?(.*) (?:as|of)/)![1]);
+    
+                    const replacer = getMetaReplacer(this, choosenPair, relations, negations);
+                    const newPremise = choosenPair.picked[1].replace(/(is) (.*)(?=<span class="subject">)/, replacer);
+    
+                    question.premises.push(choosenPair.picked[0], newPremise);
+    
+                    _premises = { picked: choosenPair.remaining, remaining: [] };
+                }
+            }
+
+            const isSameAs = coinFlip();
+            
+            question.conclusion = `<span class="subject">${first}</span> ${getRelation(this, isSameAs)} <span class="subject">${curr}</span>`;
+            question.isValid = isSameAs ? buckets[0].includes(curr) : buckets[1].includes(curr);
+        } while(isPremiseLikeConclusion(question.premises, question.conclusion));
+    
+        shuffle(question.premises);
+    
+        return question;
+    }
 }
+
 
 /*
-function metaSubstitution(choosenPair, relations, negations) {
-
-    // Generate substitution string
-    let substitution;
-    const [a, b] = [
-            ...choosenPair.picked[0]
-            .matchAll(/<span class="subject">(.*?)<\/span>/g)
-        ]
-        .map(m => m[1]);
-    if (!negations[0] && !negations[1] && relations[0] === relations[1])
-        substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    if (!negations[0] && negations[1] && relations[0] === relations[1])
-        substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    if (negations[0] && !negations[1] && relations[0] === relations[1])
-        if (savedata.enableNegation)
-            substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-        else
-            substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    if (negations[0] && negations[1] && relations[0] === relations[1])
-        if (savedata.enableNegation)
-            substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-        else
-            substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-
-    if (!negations[0] && !negations[1] && relations[0] !== relations[1])
-        if (savedata.enableNegation)
-            substitution = `$1 <span class="is-negated">same as</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-        else
-            substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    if (!negations[0] && negations[1] && relations[0] !== relations[1])
-        if (savedata.enableNegation)
-            substitution = `$1 <span class="is-negated">opposite of</span> <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-        else
-            substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    if (negations[0] && !negations[1] && relations[0] !== relations[1])
-        substitution = `$1 same as <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-    if (negations[0] && negations[1] && relations[0] !== relations[1])
-        substitution = `$1 opposite of <span class="is-meta">(<span class="subject">${a}</span> to <span class="subject">${b}</span>)</span> to `;
-
-    return substitution;
-}
-
-function createSameOpposite(length) {
-    length++;
-
-    let buckets;
-    let isValid;
-    let premises;
-    let conclusion;
-    do {
-        let rnd = Math.floor(Math.random() * symbols.length);
-        let first = symbols.splice(rnd, 1)
-        let prev = first;
-        let curr;
-
-        buckets = [[prev], []];
-        let prevBucket = 0;
-
-        premises = [];
-
-        for (let i = 0; i < length - 1; i++) {
-            let rnd = Math.floor(Math.random() * symbols.length);
-            curr = symbols.splice(rnd, 1);
-
-            if (coinFlip()) {
-                const ps = [
-                    `<span class="subject">${prev}</span> is same as <span class="subject">${curr}</span>`,
-                    `<span class="subject">${prev}</span> is <span class="is-negated">opposite of</span> <span class="subject">${curr}</span>`,
-                ];
-                premises.push((!savedata.enableNegation)
-                    ? ps[0]
-                    : pickUniqueItems(ps, 1).picked[0]);
-                buckets[prevBucket].push(curr);
-            } else {
-                const ps = [
-                    `<span class="subject">${prev}</span> is opposite of <span class="subject">${curr}</span>`,
-                    `<span class="subject">${prev}</span> is <span class="is-negated">same as</span> <span class="subject">${curr}</span>`,
-                ];
-                premises.push((!savedata.enableNegation)
-                    ? ps[0]
-                    : pickUniqueItems(ps, 1).picked[0]);
-                prevBucket = (prevBucket + 1) % 2;
-                buckets[prevBucket].push(curr);
-            }
-
-            prev = curr;
-        }
-
-        if (savedata.enableMeta) {
-
-            // Randomly choose a number of meta-relations
-            const numOfMetaRelations = 1 + Math.floor(Math.random() * Math.floor((length - 1) / 2));
-            let _premises = pickUniqueItems(premises, numOfMetaRelations * 2);
-            premises = [ ..._premises.remaining ];
-
-            while (_premises.picked.length) {
-
-                const choosenPair = pickUniqueItems(_premises.picked, 2);
-                const negations = choosenPair.picked.map(p => /is-negated/.test(p));
-                const relations = choosenPair.picked.map(p =>
-                    p.match(/is (?:<span class="is-negated">)?(.*) (?:as|of)/)[1]
-                );
-        
-                const substitution = metaSubstitution(choosenPair, relations, negations);
-
-                // Replace relation with meta-relation via substitution string
-                const metaPremise = choosenPair.picked[1]
-                    .replace(/(is) (.*)(?=<span class="subject">)/, substitution);
-
-                // Push premise and its corresponding meta-premise
-                premises.push(choosenPair.picked[0], metaPremise);
-
-                // Update _premises so that it doesn't end up in an infinite loop
-                _premises = { picked: choosenPair.remaining };
-            }
-        }
-
-        if (coinFlip()) {
-            const cs = [
-                `<span class="subject">${first}</span> is same as <span class="subject">${curr}</span>`,
-                `<span class="subject">${first}</span> is <span class="is-negated">opposite of</span> <span class="subject">${curr}</span>`,
-            ];
-            conclusion = (!savedata.enableNegation)
-                ? cs[0]
-                : pickUniqueItems(cs, 1).picked[0];
-            isValid = buckets[0].includes(curr);
-        } else {
-            const cs = [
-                `<span class="subject">${first}</span> is opposite of <span class="subject">${curr}</span>`,
-                `<span class="subject">${first}</span> is <span class="is-negated">same as</span> <span class="subject">${curr}</span>`,
-            ];
-            conclusion = (!savedata.enableNegation)
-                ? cs[0]
-                : pickUniqueItems(cs, 1).picked[0];
-            isValid = buckets[1].includes(curr);
-        }
-    } while(isPremiseSimilarToConlusion(premises, conclusion));
-
-    shuffle(premises);
-
-    return {
-        label: "distinction",
-        category: "Distinction",
-        createdAt: new Date().getTime(),
-        buckets,
-        isValid,
-        premises,
-        conclusion
-    };
-}
-
 function createMoreLess(length) {
     length++;
 

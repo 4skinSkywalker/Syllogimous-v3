@@ -87,10 +87,14 @@ export class Settings {
 
 export enum EnumQuestionLabel {
     Syllogism = "Syllogism",
+    Distinction = "Distinction",
+    Comparison = "Comparison",
 }
 
 export enum EnumQuestionCategory {
     Syllogism = "Syllogism",
+    Distinction = "Distinction",
+    Comparison = "Comparison",
 }
 
 export class Question {
