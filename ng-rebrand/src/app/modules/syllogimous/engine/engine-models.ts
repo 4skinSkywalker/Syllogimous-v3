@@ -6,9 +6,8 @@ export interface Picked<T> {
 }
 
 export class Settings {
-    premises = 2;
     score = 0;
-    questions = [];
+    history = [];
 
     enableCarouselMode = false;
     enableMeaningfulWords = true;
@@ -16,33 +15,15 @@ export class Settings {
     enableMeta = false;
 
     enableDistinction = true;
-    timerDistinction = 30;
-
     enableComparisonNumerical = true;
-    timerComparisonNumerical = 30;
-
     enableComparisonChronological = true;
-    timerComparisonChronological = 30;
-
     enableSyllogism = true;
-    timerSyllogism = 30;
-
     enableDirection = true;
-    timerDirection = 30;
-
     enableDirection3D = false;
-    timerDirection3D = 30;
-
     enableDirection4D = false;
-    timerDirection4D = 30;
-
     enableAnalogy = false;
-    timerAnalogy = 30;
-    onlyAnalogy = false;
-
     enableBinary = false;
-    timerBinary = 30;
-
+    
     enableAnd = true;
     enableNand = true;
     enableOr = true;
@@ -50,9 +31,27 @@ export class Settings {
     enableXor = true;
     enableXnor = true;
 
-    constructor() {
+    timerDistinction = 30;
+    timerComparisonNumerical = 30;
+    timerComparisonChronological = 30;
+    timerSyllogism = 30;
+    timerDirection = 30;
+    timerDirection3D = 30;
+    timerDirection4D = 30;
+    timerAnalogy = 30;
+    timerBinary = 30;
 
-        // Load settings from localStorage
+    premisesDistinction = 2;
+    premisesComparisonNumerical = 2;
+    premisesComparisonChronological = 2;
+    premisesSyllogism = 2;
+    premisesDirection = 2;
+    premisesDirection3D = 2;
+    premisesDirection4D = 2;
+    premisesAnalogy = 2;
+    premisesBinary = 2;
+
+    constructor() {
         const _settings = localStorage.getItem(LOCALSTORAGE_KEY);
         if (_settings) {
             const settings = JSON.parse(_settings);
@@ -61,7 +60,6 @@ export class Settings {
                 .forEach(k => (this as any)[k] = settings[k]);
         }
 
-        // Setup a proxy so that all changes gets saved into localStorage
         return new Proxy(this, {
             set: (target, property, value) => {
                 if (property in target) {

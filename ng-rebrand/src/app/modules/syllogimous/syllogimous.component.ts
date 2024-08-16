@@ -13,4 +13,13 @@ export class SyllogimousComponent {
     phaseNext() {
         this.phaseIndex = (this.phaseIndex + 1) % this.phases.length;
     }
+
+    /*
+    Adept
+    Savant
+    Mastermind
+    Visionary
+    Genius
+    Luminary
+    */
 }
