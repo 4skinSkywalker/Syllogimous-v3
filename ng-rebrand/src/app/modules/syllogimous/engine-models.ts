@@ -13,38 +13,39 @@ export class Settings {
     enableCarouselMode = false;
     enableMeaningfulWords = true;
     enableNegation = false;
-    removeNegationExplainer = false;
     enableStroopEffect = false;
     enableMeta = false;
+    
+    removeNegationExplainer = false;
 
     enableDistinction = true;
-    distinctionTimer = 30;
+    timerDistinction = 30;
 
-    enableComparison = true;
-    comparisonTimer = 30;
+    enableComparisonNumerical = true;
+    timerComparisonNumerical = 30;
 
-    enableTemporal = true;
-    temporalTimer = 30;
+    enableComparisonChronological = true;
+    timerComparisonChronological = 30;
 
     enableSyllogism = true;
-    syllogismTimer = 30;
+    timerSyllogism = 30;
 
     enableDirection = true;
-    directionTimer = 30;
+    timerDirection = 30;
 
     enableDirection3D = false;
-    direction3DTimer = 30;
+    timerDirection3D = 30;
 
     enableDirection4D = false;
-    direction4DTimer = 30;
+    timerDirection4D = 30;
 
     enableAnalogy = false;
-    analogyTimer = 30;
+    timerAnalogy = 30;
     onlyAnalogy = false;
 
     enableBinary = false;
-    binaryTimer = 30;
-    onlyBinary = false;
+    timerBinary = 30;
+
     nestedBinaryDepth = 1;
     enableAnd = true;
     enableNand = true;
@@ -90,6 +91,7 @@ export enum EnumQuestionType {
     Distinction = "Distinction",
     ComparisonNumerical = "Comparison - Numerical",
     ComparisonChronological = "Comparison - Chronological",
+    Binary = "Binary",
 }
 
 export class Question {

@@ -118,7 +118,7 @@ export class Engine {
 
             makeMetaRelations(this, question, length);
 
-            let a = Math.floor(Math.random() * question.bucket.length);
+            const a = Math.floor(Math.random() * question.bucket.length);
             let b = Math.floor(Math.random() * question.bucket.length);
             while (a === b) {
                 b = Math.floor(Math.random() * question.bucket.length);
@@ -137,106 +137,111 @@ export class Engine {
     
         return question;
     }
+
+    createBinary(length: number) {
+        // TODO: Validate min length
+
+        const operands = [];
+        const operandNames = [];
+        const operandTemplates = [];
+        const pool = [];
+    
+        if (this.settings.enableAnd) {
+            operands.push("a&&b");
+            operandNames.push("AND");
+            operandTemplates.push('$a <div class="is-connector">and</div> $b');
+        }
+        if (this.settings.enableNand) {
+            operands.push("!(a&&b)");
+            operandNames.push("NAND");
+            operandTemplates.push('$a <div class="is-connector">and</div> $b <div class="is-connector">are not both true</div>');
+        }
+        if (this.settings.enableOr) {
+            operands.push("a||b");
+            operandNames.push("OR");
+            operandTemplates.push('$a <div class="is-connector">or</div> $b');
+        }
+        if (this.settings.enableNor) {
+            operands.push("!(a||b)");
+            operandNames.push("NOR");
+            operandTemplates.push('$a <div class="is-connector">and</div> $b <div class="is-connector">are both false</div>');
+        }
+        if (this.settings.enableXor) {
+            operands.push("!(a&&b)&&(a||b)");
+            operandNames.push("XOR");
+            operandTemplates.push('$a <div class="is-connector">differs from</div> $b');
+        }
+        if (this.settings.enableXnor) {
+            operands.push("!(!(a&&b)&&(a||b))");
+            operandNames.push("XNOR");
+            operandTemplates.push('$a <div class="is-connector">is equal to</div> $b');
+        }
+    
+        if (!operands.length) return;
+    
+        if (this.settings.enableSyllogism) {
+            pool.push((length: number) =>
+                this.createSyllogism(length)
+            );
+        }
+        if (this.settings.enableDistinction) {
+            pool.push((length: number) =>
+                this.createDistinction(length)
+            );
+        }
+        if (this.settings.enableComparisonNumerical) {
+            pool.push((length: number) =>
+                this.createComparison(length, EnumQuestionType.ComparisonNumerical)
+            );
+        }
+        if (this.settings.enableComparisonChronological) {
+            pool.push((length: number) =>
+                this.createComparison(length, EnumQuestionType.ComparisonChronological)
+            );
+        }
+        /*if (this.settings.enableDirection) {
+            pool.push(createDirectionQuestion);
+        }
+        if (this.settings.enableDirection3D) {
+            pool.push(createDirectionQuestion3D);
+        }
+        if (this.settings.enableDirection4D) {
+            pool.push(createDirectionQuestion4D);
+        }*/
+
+        const question = new Question(EnumQuestionType.Binary);
+        const flip = coinFlip();
+        const operandIndex = Math.floor(Math.random()*operands.length);
+        const operand = operands[operandIndex];
+
+        do {
+            const picked = pickUniqueItems(pool, 2).picked;
+    
+            const choices = [
+                picked[0](Math.floor(length / 2)),
+                picked[1](Math.ceil(length / 2))
+            ];
+        
+            question.premises = [...choices[0].premises, ...choices[1].premises];
+            shuffle(question.premises);
+        
+            question.conclusion = operandTemplates[operandIndex]
+                .replace("$a", choices[0].conclusion)
+                .replace("$b", choices[1].conclusion);
+
+            question.isValid = eval(
+                operand
+                    .replaceAll("a", String(choices[0].isValid))
+                    .replaceAll("b", String(choices[1].isValid))
+            );
+        } while (flip !== question.isValid);
+    
+        return question;
+    }
 }
 
 
 /*
-function createBinaryQuestion(length) {
-
-    const operands = [];
-    const operandNames = [];
-    const operandTemplates = [];
-
-    if (savedata.enableAnd) {
-        operands.push("a&&b");
-        operandNames.push("AND");
-        operandTemplates.push('$a <div class="is-connector">and</div> $b');
-    }
-    if (savedata.enableNand) {
-        operands.push("!(a&&b)");
-        operandNames.push("NAND");
-        operandTemplates.push('$a <div class="is-connector">and</div> $b <div class="is-connector">are not both true</div>');
-    }
-    if (savedata.enableOr) {
-        operands.push("a||b");
-        operandNames.push("OR");
-        operandTemplates.push('$a <div class="is-connector">or</div> $b');
-    }
-    if (savedata.enableNor) {
-        operands.push("!(a||b)");
-        operandNames.push("NOR");
-        operandTemplates.push('$a <div class="is-connector">and</div> $b <div class="is-connector">are both false</div>');
-    }
-    if (savedata.enableXor) {
-        operands.push("!(a&&b)&&(a||b)");
-        operandNames.push("XOR");
-        operandTemplates.push('$a <div class="is-connector">differs from</div> $b');
-    }
-    if (savedata.enableXnor) {
-        operands.push("!(!(a&&b)&&(a||b))");
-        operandNames.push("XNOR");
-        operandTemplates.push('$a <div class="is-connector">is equal to</div> $b');
-    }
-
-    if (!operands.length) return;
-
-    const pool = [];
-
-    if (savedata.enableDistinction)
-        pool.push(createSameOpposite);
-    if (savedata.enableComparison)
-        pool.push(createMoreLess);
-    if (savedata.enableTemporal)
-        pool.push(createBeforeAfter);
-    if (savedata.enableDirection)
-        pool.push(createDirectionQuestion);
-    if (savedata.enableDirection3D)
-        pool.push(createDirectionQuestion3D);
-    if (savedata.enableDirection4D)
-        pool.push(createDirectionQuestion4D);
-    if (savedata.enableSyllogism)
-        pool.push(createSyllogism);
-
-    let choice;
-    let choice2;
-    let premises;
-    let conclusion = "";
-    const flip = coinFlip();
-    let isValid;
-    const operandIndex = Math.floor(Math.random()*operands.length);
-    const operand = operands[operandIndex];
-    while (flip !== isValid) {
-        let [generator, generator2] = pickUniqueItems(pool, 2).picked;
-
-        [choice, choice2] = [
-            generator(Math.floor(length/2)),
-            generator2(Math.ceil(length/2))
-        ];
-    
-        premises = [...choice.premises, ...choice2.premises];
-        shuffle(premises);
-    
-        conclusion = operandTemplates[operandIndex]
-            .replace("$a", choice.conclusion)
-            .replace("$b", choice2.conclusion);
-
-        isValid = eval(
-            operand
-                .replaceAll("a", choice.isValid)
-                .replaceAll("b", choice2.isValid)
-        );
-    }
-
-    return {
-        label: "binary",
-        category: `Binary: ${choice.category} ${operandNames[operandIndex]} ${choice2.category}`,
-        createdAt: new Date().getTime(),
-        isValid,
-        premises,
-        conclusion
-    };
-}
-
 function createNestedBinaryQuestion(length) {
 
     let depth = +savedata.nestedBinaryDepth;
