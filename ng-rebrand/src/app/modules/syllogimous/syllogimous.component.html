@@ -1,27 +1,89 @@
 <div class="playcard card shadow">
-    <div class="toolbar card-header">
-        <div>
-            <span class="badge bg-primary">Adept</span>
-            <small class="text-muted ms-1">1984 pts</small>
-        </div>
-        <div>
-            <button class="btn btn-sm">
-                <i class="bi bi-gear"></i>
-            </button>
+    <div class="great-title">
+        <div>s</div>
+        <div>y</div>
+        <div>l</div>
+        <div>l</div>
+        <div>o</div>
+        <div>g</div>
+        <div>i</div>
+        <div>m</div>
+        <div>o</div>
+        <div>u</div>
+        <div>s</div>
+        <div class="great-title-version">v4</div>
+    </div>
+    <div class="playcard-header card-header">
+        <div class="playcard-toolbar">
+            <div>
+                <span class="badge bg-primary">Adept</span>
+                <small class="text-muted ms-1">1984 pts</small>
+            </div>
+            <div>
+                <button class="btn btn-sm">
+                    <i class="bi bi-gear"></i>
+                </button>
+            </div>
         </div>
     </div>
-    <div class="card-body position-relative">
+    <div class="card-body p-0 overflow-hidden position-relative">
         <ngb-progressbar class="timerbar" type="success" [value]="25"></ngb-progressbar>
-        <div>
-            {{phases[phaseIndex]}}
+        <div class="playcard-body">
+            <ng-container [ngSwitch]="screen">
+                <div *ngSwitchCase="EnumScreens.Start">
+                    <button class="btn btn-primary" (click)="start()">Start</button>
+                </div>
+                <div *ngSwitchCase="EnumScreens.Tutorial">
+                    Tutorial
+                </div>
+                <div *ngSwitchCase="EnumScreens.InGame">
+                    <div *ngFor="let p of question?.premises" [innerHTML]="p"></div>
+                    <div [innerHTML]="question?.conclusion"></div>
+                </div>
+                <div *ngSwitchCase="EnumScreens.Feedback">
+                    Feedback
+                </div>
+                <div *ngSwitchCase="EnumScreens.LevelUp">
+                    Level up
+                </div>
+            </ng-container>
         </div>
     </div>
-    <div class="toolbar card-footer">
-        <div></div>
-        <div>
-            <button class="btn btn-sm" (click)="phaseNext()">
-                <i class="bi bi-arrow-right"></i>
-            </button>
-        </div>
+    <div class="playcard-footer card-footer">
+        <ng-container [ngSwitch]="screen">
+            <div *ngSwitchCase="EnumScreens.Start">
+                <small class="text-muted">Start</small>
+            </div>
+            <div *ngSwitchCase="EnumScreens.Tutorial">
+                <div class="playcard-toolbar">
+                    <div>
+                        <div class="form-check">
+                            <input #dontShowAnymore class="form-check-input" type="checkbox" value="" id="dontShowAnymore">
+                            <label class="form-check-label" for="dontShowAnymore">
+                                Don't show anymore
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <button
+                            class="btn btn-sm btn-outline-primary"
+                            (click)="skipTutorial(dontShowAnymore.checked)"
+                        >Skip tutorial</button>
+                    </div>
+                </div>
+            </div>
+            <div *ngSwitchCase="EnumScreens.InGame">
+                <div class="d-flex gap-3 justify-content-center">
+                    <button class="btn btn-danger col-3" (click)="checkQuestion(false)">False</button>
+                    <button class="btn btn-success col-3" (click)="checkQuestion(true)">True</button>
+                </div>
+            </div>
+            <div *ngSwitchCase="EnumScreens.Feedback">
+                Feedback
+            </div>
+            <div *ngSwitchCase="EnumScreens.LevelUp">
+                Level up
+            </div>
+        </ng-container>
     </div>
 </div>

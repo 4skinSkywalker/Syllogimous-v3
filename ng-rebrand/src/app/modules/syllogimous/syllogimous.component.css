@@ -2,17 +2,46 @@
     display: grid;
     place-items: center;
     height: 100vh;
+    background-color: #8EC5FC;
+    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+}
+
+.great-title {
+    display: flex;
+    align-items: end;
+    justify-content: space-evenly;
+    position: absolute;
+    width: 100%;
+    bottom: 100%;
+    font-size: 2.5rem;
+    line-height: 1;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.great-title-version {
+    font-size: 1rem;
+    text-transform: lowercase;
+    margin-bottom: 0.25rem;
 }
 
 .playcard {
-    min-width: 320px;
-    min-height: 320px;
+    width: 400px;
+    height: 400px;
 }
 
-.toolbar {
+.playcard-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.playcard-body {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    overflow: auto;
+    padding: 1rem;
 }
 
 .timerbar {
@@ -22,4 +51,11 @@
     top: 0;
     border-radius: 0;
     height: 4px;
+}
+
+@media(max-width: 768px) {
+    .playcard {
+        width: 100vw;
+        height: 100vh;
+    }
 }
