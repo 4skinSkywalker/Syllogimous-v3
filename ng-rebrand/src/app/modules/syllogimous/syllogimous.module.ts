@@ -12,6 +12,7 @@ import { TutorialDirectionComponent } from './components/tutorial-direction/tuto
 import { TutorialDirection3DComponent } from './components/tutorial-direction3D/tutorial-direction3D.component';
 import { TutorialDirection4DComponent } from './components/tutorial-direction4D/tutorial-direction4D.component';
 import { TutorialAnalogyComponent } from './components/tutorial-analogy/tutorial-analogy.component';
+import { TutorialBinaryComponent } from './components/tutorial-binary/tutorial-binary.component';
 
 const routes: Routes = [
   { path: '', component: SyllogimousComponent }
@@ -29,6 +30,7 @@ const routes: Routes = [
     TutorialDirection3DComponent,
     TutorialDirection4DComponent,
     TutorialAnalogyComponent,
+    TutorialBinaryComponent,
   ],
   imports: [
     CommonModule,
