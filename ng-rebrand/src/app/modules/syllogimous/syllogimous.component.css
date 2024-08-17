@@ -6,6 +6,12 @@
     background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
 }
 
+:host ::ng-deep .playcard-header, 
+:host ::ng-deep .playcard-footer {
+    background: transparent;
+    border: none;
+}
+
 .great-title {
     display: flex;
     align-items: end;
@@ -17,6 +23,7 @@
     line-height: 1;
     text-transform: uppercase;
     font-weight: 700;
+    color: #0008;
 }
 
 .great-title-version {
@@ -26,8 +33,8 @@
 }
 
 .playcard {
-    width: 30rem;
-    height: 30rem;
+    width: min(35rem, 100vw);
+    height: min(35rem, 100vh);
 }
 
 .playcard-toolbar {

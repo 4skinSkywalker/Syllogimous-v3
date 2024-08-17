@@ -1,8 +1,9 @@
 import { Component } from "@angular/core";
 import { Engine } from "./engine/engine";
-import { Question } from "./engine/engine-models";
+import { EnumQuestionType, Question } from "./engine/engine-models";
 
 export enum EnumScreens {
+    Intro = "Intro",
     Start = "Start",
     Tutorial = "Tutorial",
     InGame = "In Game",
@@ -17,16 +18,21 @@ export enum EnumScreens {
 })
 export class SyllogimousComponent {
     EnumScreens = EnumScreens;
+    EnumQuestionType = EnumQuestionType;
     
-    screen = EnumScreens.Start;
+    screen = EnumScreens.Intro;
 
     engine = new Engine();
     question?: Question;
 
+    skipIntro(dontShowAnymore: boolean) {
+        this.screen = EnumScreens.Start;
+    }
+
     start() {
         // TODO:
         // 1. Generate question
-        this.question = this.engine.createSyllogism(3);
+        this.question = this.engine.createComparison(3, EnumQuestionType.ComparisonChronological);
         // 2. Check if to display the tutorial
         this.screen = EnumScreens.Tutorial;
         // 3. Go to In Game phase
