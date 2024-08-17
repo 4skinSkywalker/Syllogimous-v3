@@ -11,6 +11,7 @@ import { TutorialComparisonChronologicalComponent } from './components/tutorial-
 import { TutorialDirectionComponent } from './components/tutorial-direction/tutorial-direction.component';
 import { TutorialDirection3DComponent } from './components/tutorial-direction3D/tutorial-direction3D.component';
 import { TutorialDirection4DComponent } from './components/tutorial-direction4D/tutorial-direction4D.component';
+import { TutorialAnalogyComponent } from './components/tutorial-analogy/tutorial-analogy.component';
 
 const routes: Routes = [
   { path: '', component: SyllogimousComponent }
@@ -27,6 +28,7 @@ const routes: Routes = [
     TutorialDirectionComponent,
     TutorialDirection3DComponent,
     TutorialDirection4DComponent,
+    TutorialAnalogyComponent,
   ],
   imports: [
     CommonModule,

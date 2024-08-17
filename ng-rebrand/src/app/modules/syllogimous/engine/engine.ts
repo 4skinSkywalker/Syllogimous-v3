@@ -403,6 +403,7 @@ export class Engine {
             case 4:
                 while (flip !== isValidSame) {
                     question = this.createDirection3D(length);
+                    question.type = EnumQuestionType.Analogy;
                     question.conclusion = "";
 
                     [a, b, c, d] = pickUniqueItems(Object.keys(question.wordCoordMap), 4).picked;
@@ -416,6 +417,7 @@ export class Engine {
             case 5:
                 while (flip !== isValidSame) {
                     question = this.createDirection4D(length);
+                    question.type = EnumQuestionType.Analogy;
                     question.conclusion = "";
 
                     [a, b, c, d] = pickUniqueItems(Object.keys(question.wordCoordMap), 4).picked;
