@@ -47,41 +47,15 @@
 
                 <ng-container *ngSwitchCase="EnumScreens.Tutorial">
                     <ng-container [ngSwitch]="question?.type">
-                        <ng-container *ngSwitchCase="EnumQuestionType.Distinction">
-                            <app-tutorial-distinction></app-tutorial-distinction>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="EnumQuestionType.Syllogism">
-                            <app-tutorial-syllogism></app-tutorial-syllogism>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="EnumQuestionType.ComparisonNumerical">
-                            <app-tutorial-comparison-numerical></app-tutorial-comparison-numerical>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="EnumQuestionType.ComparisonChronological">
-                            <app-tutorial-comparison-chronological></app-tutorial-comparison-chronological>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="EnumQuestionType.Direction">
-                            <app-tutorial-direction></app-tutorial-direction>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="EnumQuestionType.Direction3D">
-                            <app-tutorial-direction3D></app-tutorial-direction3D>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="EnumQuestionType.Direction4D">
-                            <app-tutorial-direction4D></app-tutorial-direction4D>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="EnumQuestionType.Analogy">
-                            <app-tutorial-analogy></app-tutorial-analogy>
-                        </ng-container>
-
-                        <ng-container *ngSwitchCase="EnumQuestionType.Binary">
-                            <app-tutorial-binary></app-tutorial-binary>
-                        </ng-container>
+                        <app-tutorial-distinction *ngSwitchCase="EnumQuestionType.Distinction"/>
+                        <app-tutorial-syllogism *ngSwitchCase="EnumQuestionType.Syllogism"/>
+                        <app-tutorial-comparison-numerical *ngSwitchCase="EnumQuestionType.ComparisonNumerical"/>
+                        <app-tutorial-comparison-chronological *ngSwitchCase="EnumQuestionType.ComparisonChronological"/>
+                        <app-tutorial-direction *ngSwitchCase="EnumQuestionType.Direction"/>
+                        <app-tutorial-direction3D *ngSwitchCase="EnumQuestionType.Direction3D"/>
+                        <app-tutorial-direction4D *ngSwitchCase="EnumQuestionType.Direction4D"/>
+                        <app-tutorial-analogy *ngSwitchCase="EnumQuestionType.Analogy"/>
+                        <app-tutorial-binary *ngSwitchCase="EnumQuestionType.Binary"/>
                     </ng-container>
                 </ng-container>
 

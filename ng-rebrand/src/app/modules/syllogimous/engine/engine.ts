@@ -390,6 +390,7 @@ export class Engine {
             case 3:
                 while (flip !== isValidSame) {
                     question = this.createDirection(length);
+                    question.type = EnumQuestionType.Analogy;
                     question.conclusion = "";
 
                     [a, b, c, d] = pickUniqueItems(Object.keys(question.wordCoordMap), 4).picked;

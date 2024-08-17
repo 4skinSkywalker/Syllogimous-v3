@@ -32,7 +32,7 @@ export class SyllogimousComponent {
     start() {
         // TODO:
         // 1. Generate question
-        this.question = this.engine.createBinary(4);
+        this.question = this.engine.createAnalogy(4);
         // 2. Check if to display the tutorial
         this.screen = EnumScreens.Tutorial;
         // 3. Go to In Game phase
