@@ -13,21 +13,21 @@
     position: absolute;
     width: 100%;
     bottom: 100%;
-    font-size: 2.5rem;
+    font-size: 3.5rem;
     line-height: 1;
     text-transform: uppercase;
     font-weight: 700;
 }
 
 .great-title-version {
-    font-size: 1rem;
+    font-size: 1.75rem;
     text-transform: lowercase;
     margin-bottom: 0.25rem;
 }
 
 .playcard {
-    width: 400px;
-    height: 400px;
+    width: 30rem;
+    height: 30rem;
 }
 
 .playcard-toolbar {

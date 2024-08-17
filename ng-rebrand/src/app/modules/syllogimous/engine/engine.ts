@@ -6,6 +6,8 @@ export class Engine {
     settings = new Settings();
 
     createSyllogism(length: number) {
+        if (length < 2) throw Error("Needs at least 2 premises.");
+
         length++;
     
         const question = new Question(EnumQuestionType.Syllogism);
@@ -43,6 +45,8 @@ export class Engine {
     }
 
     createDistinction(length: number) {
+        if (length < 2) throw Error("Needs at least 2 premises.");
+
         length++;
 
         const symbols = getRandomSymbols(this, length);
@@ -95,6 +99,8 @@ export class Engine {
     }
 
     createComparison(length: number, type: EnumQuestionType.ComparisonNumerical | EnumQuestionType.ComparisonChronological) {
+        if (length < 2) throw Error("Needs at least 2 premises.");
+
         length++;
 
         const question = new Question(type);
@@ -140,6 +146,8 @@ export class Engine {
     }
 
     createDirection(length: number) {
+        if (length < 2) throw Error("Needs at least 2 premises.");
+
         length++;
     
         const symbols = getSymbols(this);
@@ -194,6 +202,8 @@ export class Engine {
     }
 
     createDirection3D(length: number) {
+        if (length < 2) throw Error("Needs at least 2 premises.");
+
         length++;
     
         const symbols = getSymbols(this);
@@ -249,6 +259,8 @@ export class Engine {
     }
 
     createDirection4D(length: number) {
+        if (length < 2) throw Error("Needs at least 2 premises.");
+
         length++;
     
         const symbols = getSymbols(this);
@@ -307,6 +319,8 @@ export class Engine {
     }
 
     createAnalogy(length: number) {
+        if (length < 3) throw Error("Needs at least 3 premises.");
+
         const choiceIndices = [];
     
         if (this.settings.enableDistinction) {
@@ -453,7 +467,7 @@ export class Engine {
     }
 
     createBinary(length: number) {
-        // TODO: Validate min length
+        if (length < 4) throw Error("Needs at least 4 premises.");
 
         const operands = [];
         const operandNames = [];

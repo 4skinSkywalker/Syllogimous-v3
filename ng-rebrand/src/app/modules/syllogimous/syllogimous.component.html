@@ -1,5 +1,5 @@
 <div class="playcard card shadow">
-    <div class="great-title">
+    <div class="great-title d-none d-md-flex">
         <div>s</div>
         <div>y</div>
         <div>l</div>
@@ -16,11 +16,11 @@
     <div class="playcard-header card-header">
         <div class="playcard-toolbar">
             <div>
-                <span class="badge bg-primary">Adept</span>
-                <small class="text-muted ms-1">1984 pts</small>
+                <span class="badge fs-6 bg-primary">Adept</span>
+                <span class="text-muted ms-2">{{ engine.settings.score }} pts</span>
             </div>
             <div>
-                <button class="btn btn-sm">
+                <button class="btn">
                     <i class="bi bi-gear"></i>
                 </button>
             </div>
@@ -52,7 +52,7 @@
     <div class="playcard-footer card-footer">
         <ng-container [ngSwitch]="screen">
             <div *ngSwitchCase="EnumScreens.Start">
-                <small class="text-muted">Start</small>
+                Start
             </div>
             <div *ngSwitchCase="EnumScreens.Tutorial">
                 <div class="playcard-toolbar">
@@ -66,7 +66,7 @@
                     </div>
                     <div>
                         <button
-                            class="btn btn-sm btn-outline-primary"
+                            class="btn btn-outline-primary"
                             (click)="skipTutorial(dontShowAnymore.checked)"
                         >Skip tutorial</button>
                     </div>

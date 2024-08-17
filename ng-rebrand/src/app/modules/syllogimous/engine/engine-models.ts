@@ -7,9 +7,8 @@ export interface Picked<T> {
 
 export class Settings {
     score = 0;
-    history = [];
+    history: Question[] = [];
 
-    enableCarouselMode = false;
     enableMeaningfulWords = true;
     enableNegation = false;
     enableMeta = false;
@@ -48,34 +47,27 @@ export class Settings {
     premisesDirection = 2;
     premisesDirection3D = 2;
     premisesDirection4D = 2;
-    premisesAnalogy = 2;
-    premisesBinary = 2;
+    premisesAnalogy = 3;
+    premisesBinary = 4;
 
     constructor() {
-        const _settings = localStorage.getItem(LOCALSTORAGE_KEY);
-        if (_settings) {
-            const settings = JSON.parse(_settings);
-            Object.keys(settings)
-                .filter(k => k in this)
-                .forEach(k => (this as any)[k] = settings[k]);
-        }
-
-        return new Proxy(this, {
-            set: (target, property, value) => {
-                if (property in target) {
-                    const oldValue = (target as any)[property];
-                    if (oldValue !== value) {
-                        (target as any)[property] = value;
-                        this.onFieldChange(property as string, oldValue, value);
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
+        this.loadSettings();
     }
 
-    private onFieldChange(fieldName: string, oldValue: any, newValue: any) {
+    setSettings(settings: any) {
+        Object.keys(settings)
+            .filter(k => k in this)
+            .forEach(k => (this as any)[k] = settings[k]);
+    }
+
+    loadSettings() {
+        const _settings = localStorage.getItem(LOCALSTORAGE_KEY);
+        if (_settings) {
+            this.setSettings(JSON.parse(_settings))
+        }
+    }
+
+    saveSettings() {
         localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify({ ...this }));
     }
 }
@@ -102,6 +94,7 @@ export class Question {
     premises: string[] = [];
     conclusion = "";
     createdAt = new Date().getTime();
+    userAnswer?: boolean;
 
     constructor(
         type: EnumQuestionType

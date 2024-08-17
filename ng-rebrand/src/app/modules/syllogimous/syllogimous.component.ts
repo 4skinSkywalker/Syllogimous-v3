@@ -40,6 +40,8 @@ export class SyllogimousComponent {
     }
 
     checkQuestion(value: boolean) {
+        this.question!.userAnswer = value;
+        this.engine.settings.history.push(this.question!);
         this.screen = EnumScreens.Feedback;
     }
 
