@@ -19,7 +19,7 @@
     position: absolute;
     width: 100%;
     bottom: 100%;
-    font-size: 3.5rem;
+    font-size: 4rem;
     line-height: 1;
     text-transform: uppercase;
     font-weight: 700;
@@ -27,7 +27,7 @@
 }
 
 .great-title-version {
-    font-size: 1.75rem;
+    font-size: 2rem;
     text-transform: lowercase;
     margin-bottom: 0.25rem;
 }

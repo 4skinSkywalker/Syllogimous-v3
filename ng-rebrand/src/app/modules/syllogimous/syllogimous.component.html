@@ -41,7 +41,7 @@
 
 
                 <ng-container *ngSwitchCase="EnumScreens.Start">
-                    <button class="btn btn-lg btn-primary" (click)="start()">Press to Begin</button>
+                    <button class="btn btn-lg btn-primary" (click)="start()">Press to Play</button>
                 </ng-container>
 
 
@@ -61,6 +61,18 @@
 
                         <ng-container *ngSwitchCase="EnumQuestionType.ComparisonChronological">
                             <app-tutorial-comparison-chronological></app-tutorial-comparison-chronological>
+                        </ng-container>
+
+                        <ng-container *ngSwitchCase="EnumQuestionType.Direction">
+                            <app-tutorial-direction></app-tutorial-direction>
+                        </ng-container>
+
+                        <ng-container *ngSwitchCase="EnumQuestionType.Direction3D">
+                            <app-tutorial-direction3D></app-tutorial-direction3D>
+                        </ng-container>
+
+                        <ng-container *ngSwitchCase="EnumQuestionType.Direction4D">
+                            <app-tutorial-direction4D></app-tutorial-direction4D>
                         </ng-container>
                     </ng-container>
                 </ng-container>
@@ -104,7 +116,7 @@
                         <button
                             class="btn btn-outline-primary"
                             (click)="skipIntro(dontShowAnymore.checked)"
-                        >Skip intro</button>
+                        >Skip Intro</button>
                     </div>
                 </div>
             </ng-container>
@@ -129,7 +141,7 @@
                         <button
                             class="btn btn-outline-primary"
                             (click)="skipTutorial(dontShowAnymore.checked)"
-                        >Skip tutorial</button>
+                        >Skip Tutorial</button>
                     </div>
                 </div>
             </ng-container>

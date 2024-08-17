@@ -8,6 +8,9 @@ import { TutorialSyllogismComponent } from './components/tutorial-syllogism/tuto
 import { TutorialDistinctionComponent } from './components/tutorial-distinction/tutorial-distinction.component';
 import { TutorialComparisonNumericalComponent } from './components/tutorial-comparison-numerical/tutorial-comparison-numerical.component';
 import { TutorialComparisonChronologicalComponent } from './components/tutorial-comparison-chronological/tutorial-comparison-chronological.component';
+import { TutorialDirectionComponent } from './components/tutorial-direction/tutorial-direction.component';
+import { TutorialDirection3DComponent } from './components/tutorial-direction3D/tutorial-direction3D.component';
+import { TutorialDirection4DComponent } from './components/tutorial-direction4D/tutorial-direction4D.component';
 
 const routes: Routes = [
   { path: '', component: SyllogimousComponent }
@@ -21,6 +24,9 @@ const routes: Routes = [
     TutorialSyllogismComponent,
     TutorialComparisonNumericalComponent,
     TutorialComparisonChronologicalComponent,
+    TutorialDirectionComponent,
+    TutorialDirection3DComponent,
+    TutorialDirection4DComponent,
   ],
   imports: [
     CommonModule,

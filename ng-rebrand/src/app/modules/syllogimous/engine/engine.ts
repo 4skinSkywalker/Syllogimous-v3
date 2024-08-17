@@ -208,7 +208,7 @@ export class Engine {
     
         const symbols = getSymbols(this);
         const words = pickUniqueItems(symbols, length).picked;
-        const question = new Question(EnumQuestionType.Direction);
+        const question = new Question(EnumQuestionType.Direction3D);
     
         let wordCoordMap: Record<string, [number, number, number]> = {};
         let conclusionDirection = "";
@@ -265,7 +265,7 @@ export class Engine {
     
         const symbols = getSymbols(this);
         const words = pickUniqueItems(symbols, length).picked;
-        const question = new Question(EnumQuestionType.Direction);
+        const question = new Question(EnumQuestionType.Direction4D);
     
         let wordCoordMap: Record<string, [number, number, number, number]> = {};
         let conclusionDirection = { spatial: "", temporal: "" };
