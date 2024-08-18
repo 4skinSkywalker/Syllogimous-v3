@@ -1,0 +1,11 @@
+<div
+    *ngIf="{ validity: sylSrv.question.userAnswer === sylSrv.question.isValid } as d"
+    class="feedback-wrap"
+    [class.feedback-correct]="d.validity"
+    [class.feedback-incorrect]="!d.validity"
+>
+    <div class="fs-1 fw-bold text-uppercase">
+        {{ d.validity ? "Correct": "Incorrect" }}
+    </div>
+    <!-- TODO: Put a button here -->
+</div>

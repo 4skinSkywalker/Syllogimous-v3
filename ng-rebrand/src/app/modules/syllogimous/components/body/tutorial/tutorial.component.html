@@ -1,0 +1,11 @@
+<ng-container [ngSwitch]="sylSrv.question.type">
+    <app-tutorial-distinction *ngSwitchCase="EnumQuestionType.Distinction"/>
+    <app-tutorial-syllogism *ngSwitchCase="EnumQuestionType.Syllogism"/>
+    <app-tutorial-comparison-numerical *ngSwitchCase="EnumQuestionType.ComparisonNumerical"/>
+    <app-tutorial-comparison-chronological *ngSwitchCase="EnumQuestionType.ComparisonChronological"/>
+    <app-tutorial-direction *ngSwitchCase="EnumQuestionType.Direction"/>
+    <app-tutorial-direction3D *ngSwitchCase="EnumQuestionType.Direction3D"/>
+    <app-tutorial-direction4D *ngSwitchCase="EnumQuestionType.Direction4D"/>
+    <app-tutorial-analogy *ngSwitchCase="EnumQuestionType.Analogy"/>
+    <app-tutorial-binary *ngSwitchCase="EnumQuestionType.Binary"/>
+</ng-container>

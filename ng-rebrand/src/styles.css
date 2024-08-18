@@ -5,7 +5,3 @@
     --border-radius_lg: calc(var(--border-radius_md) * 0.3 / 0.25);
 }
 /* End of VARIABLES */
-
-.subject {
-    font-weight: 700;
-}

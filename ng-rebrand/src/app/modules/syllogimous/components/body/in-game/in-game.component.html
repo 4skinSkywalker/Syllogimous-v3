@@ -1,0 +1,9 @@
+<div class="battlefield">
+    <ngb-progressbar class="timerbar" type="success" [value]="25"></ngb-progressbar>
+
+    <small class="d-block text-muted">Premises</small>
+    <div *ngFor="let p of sylSrv.question.premises" class="premise" [innerHTML]="p"></div>
+
+    <small class="d-block text-muted mt-3">Conclusion</small>
+    <div class="conclusion" [innerHTML]="sylSrv.question.conclusion"></div>
+</div>

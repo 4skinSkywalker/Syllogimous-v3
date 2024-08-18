@@ -1,0 +1,20 @@
+.feedback-wrap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 0 0 var(--border-radius_md) var(--border-radius_md);
+}
+
+.feedback-correct {
+    background: linear-gradient(to bottom, #fff, #D4EDDA 50%, #D4EDDA);
+    color: #155724;
+}
+
+.feedback-incorrect {
+    background: linear-gradient(to bottom, #fff, #F8D7DA 50%, #F8D7DA);
+    color: #721C24;
+}

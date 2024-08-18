@@ -18,10 +18,10 @@
     <div class="playcard-header card-header">
         <div class="playcard-toolbar">
             <div>
-                <span class="badge fs-6 bg-primary">
-                    Adept <i class="bi bi-info-circle"></i>
+                <span class="badge fs-6 bg-secondary">
+                    {{ sylSrv.tier }} <i class="bi bi-info-circle"></i>
                 </span>
-                <span class="text-muted ms-2">{{ engine.settings.score }} pts</span>
+                <span class="text-muted ms-2">{{ sylSrv.score }} pts</span>
             </div>
             <div>
                 <button class="btn">
@@ -31,120 +31,23 @@
         </div>
     </div>
 
-
     <div class="card-body p-0 overflow-hidden position-relative">
         <div class="playcard-body">
-            <ng-container [ngSwitch]="screen">
-                <ng-container *ngSwitchCase="EnumScreens.Intro">
-                    <app-intro></app-intro>
-                </ng-container>
-
-
-                <ng-container *ngSwitchCase="EnumScreens.Start">
-                    <button class="btn btn-lg btn-primary" (click)="start()">Press to Play</button>
-                </ng-container>
-
-
-                <ng-container *ngSwitchCase="EnumScreens.Tutorial">
-                    <ng-container [ngSwitch]="question?.type">
-                        <app-tutorial-distinction *ngSwitchCase="EnumQuestionType.Distinction"/>
-                        <app-tutorial-syllogism *ngSwitchCase="EnumQuestionType.Syllogism"/>
-                        <app-tutorial-comparison-numerical *ngSwitchCase="EnumQuestionType.ComparisonNumerical"/>
-                        <app-tutorial-comparison-chronological *ngSwitchCase="EnumQuestionType.ComparisonChronological"/>
-                        <app-tutorial-direction *ngSwitchCase="EnumQuestionType.Direction"/>
-                        <app-tutorial-direction3D *ngSwitchCase="EnumQuestionType.Direction3D"/>
-                        <app-tutorial-direction4D *ngSwitchCase="EnumQuestionType.Direction4D"/>
-                        <app-tutorial-analogy *ngSwitchCase="EnumQuestionType.Analogy"/>
-                        <app-tutorial-binary *ngSwitchCase="EnumQuestionType.Binary"/>
-                    </ng-container>
-                </ng-container>
-
-
-                <ng-container *ngSwitchCase="EnumScreens.InGame">
-                    <div style="font-size: 1.5rem;">
-                        <ngb-progressbar class="timerbar" type="success" [value]="25"></ngb-progressbar>
-                        <div *ngFor="let p of question?.premises" [innerHTML]="p"></div>
-                        <div [innerHTML]="question?.conclusion"></div>
-                    </div>
-                </ng-container>
-
-
-                <ng-container *ngSwitchCase="EnumScreens.Feedback">
-                    Feedback
-                </ng-container>
-
-
-                <ng-container *ngSwitchCase="EnumScreens.LevelUp">
-                    Level up
-                </ng-container>
+            <ng-container [ngSwitch]="sylSrv.screen">
+                <app-body-intro    *ngSwitchCase="EnumScreens.Intro"/>
+                <app-body-start    *ngSwitchCase="EnumScreens.Start"/>
+                <app-body-tutorial *ngSwitchCase="EnumScreens.Tutorial"/>
+                <app-body-in-game  *ngSwitchCase="EnumScreens.InGame"/>
+                <app-body-feedback *ngSwitchCase="EnumScreens.Feedback"/>
             </ng-container>
         </div>
     </div>
 
-
     <div class="playcard-footer card-footer">
-        <ng-container [ngSwitch]="screen">
-            <ng-container *ngSwitchCase="EnumScreens.Intro">
-                <div class="playcard-toolbar">
-                    <div>
-                        <div class="form-check">
-                            <input #dontShowAnymore class="form-check-input" type="checkbox" value="" id="dontShowAnymore">
-                            <label class="form-check-label" for="dontShowAnymore">
-                                Don't show anymore
-                            </label>
-                        </div>
-                    </div>
-                    <div>
-                        <button
-                            class="btn btn-outline-primary"
-                            (click)="skipIntro(dontShowAnymore.checked)"
-                        >Skip Intro</button>
-                    </div>
-                </div>
-            </ng-container>
-
-
-            <ng-container *ngSwitchCase="EnumScreens.Start">
-
-            </ng-container>
-
-
-            <ng-container *ngSwitchCase="EnumScreens.Tutorial">
-                <div class="playcard-toolbar">
-                    <div>
-                        <div class="form-check">
-                            <input #dontShowAnymore class="form-check-input" type="checkbox" value="" id="dontShowAnymore">
-                            <label class="form-check-label" for="dontShowAnymore">
-                                Don't show anymore
-                            </label>
-                        </div>
-                    </div>
-                    <div>
-                        <button
-                            class="btn btn-outline-primary"
-                            (click)="skipTutorial(dontShowAnymore.checked)"
-                        >Skip Tutorial</button>
-                    </div>
-                </div>
-            </ng-container>
-
-
-            <div *ngSwitchCase="EnumScreens.InGame">
-                <div class="d-flex gap-3 justify-content-center">
-                    <button class="btn btn-lg btn-danger col-3" (click)="checkQuestion(false)">False</button>
-                    <button class="btn btn-lg btn-success col-3" (click)="checkQuestion(true)">True</button>
-                </div>
-            </div>
-
-
-            <ng-container *ngSwitchCase="EnumScreens.Feedback">
-
-            </ng-container>
-
-
-            <ng-container *ngSwitchCase="EnumScreens.LevelUp">
-
-            </ng-container>
+        <ng-container [ngSwitch]="sylSrv.screen">
+            <app-footer-intro    *ngSwitchCase="EnumScreens.Intro"/>
+            <app-footer-tutorial *ngSwitchCase="EnumScreens.Tutorial"/>
+            <app-footer-in-game  *ngSwitchCase="EnumScreens.InGame"/>
         </ng-container>
     </div>
 </div>

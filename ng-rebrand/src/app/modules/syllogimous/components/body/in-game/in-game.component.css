@@ -1,0 +1,13 @@
+.battlefield {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.timerbar {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    border-radius: 0;
+    height: 4px;
+}
