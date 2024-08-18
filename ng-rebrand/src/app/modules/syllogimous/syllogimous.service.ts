@@ -135,7 +135,7 @@ export class SyllogimousService {
         }
         this.pushIntoHistory(this.question);
         this.screen = EnumScreens.Feedback;
-        setTimeout(() => this.screen = EnumScreens.Start, 1000)
+        setTimeout(() => this.screen = EnumScreens.Start, 750)
     }
 
     createSyllogism(length: number) {

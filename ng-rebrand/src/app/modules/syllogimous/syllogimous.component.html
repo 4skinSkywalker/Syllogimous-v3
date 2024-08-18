@@ -38,9 +38,19 @@
                 <span class="text-muted ms-2">{{ sylSrv.score }} pts</span>
             </div>
             <div>
-                <button class="btn">
-                    <i class="bi bi-gear"></i>
-                </button>
+                <div ngbDropdown container="body">
+                    <button class="btn" ngbDropdownToggle>
+                        <i class="bi bi-gear"></i>
+                    </button>
+					<div ngbDropdownMenu>
+                        <button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.Intro">Introduction</button>
+						<button ngbDropdownItem>History</button>
+						<button ngbDropdownItem>Stats</button>
+						<button ngbDropdownItem>Tutorials</button>
+						<div class="dropdown-divider"></div>
+                        <a ngbDropdownItem href="https://www.linkedin.com/in/f3d3r1c07r0774/" target="_blank">About the creator</a>
+					</div>
+				</div>
             </div>
         </div>
     </div>
