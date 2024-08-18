@@ -18,9 +18,23 @@
     <div class="playcard-header card-header">
         <div class="playcard-toolbar">
             <div>
-                <span class="badge fs-6 bg-secondary">
+                <span
+                    class="badge clickable fs-6"
+                    [style.backgroundColor]="TIER_COLORS[sylSrv.tier].bgColor"
+                    [style.color]="TIER_COLORS[sylSrv.tier].textColor"
+                    [ngbTooltip]="tierTooltip"
+			        [autoClose]="'outside'"
+                    triggers="click"
+                >
                     {{ sylSrv.tier }} <i class="bi bi-info-circle"></i>
                 </span>
+                <ng-template #tierTooltip>
+                    <div class="text-start">
+                        <div *ngFor="let tier of tiers">
+                            <span class="badge" style="width: 80px;" [style.backgroundColor]="TIER_COLORS[tier].bgColor" [style.color]="TIER_COLORS[tier].textColor">{{ tier }}</span> {{ (TIER_SCORE_RANGES[tier].maxScore === Infinity) ? "above" : "" }} {{ (TIER_SCORE_RANGES[tier].minScore === -Infinity) ? "" : TIER_SCORE_RANGES[tier].minScore }} {{ (TIER_SCORE_RANGES[tier].maxScore === Infinity) ? "" : (TIER_SCORE_RANGES[tier].minScore === -Infinity) ? "below" : "-" }} {{ (TIER_SCORE_RANGES[tier].maxScore === Infinity) ? "" : (TIER_SCORE_RANGES[tier].maxScore + 1) }} pts
+                        </div>
+                    </div>
+                </ng-template>
                 <span class="text-muted ms-2">{{ sylSrv.score }} pts</span>
             </div>
             <div>

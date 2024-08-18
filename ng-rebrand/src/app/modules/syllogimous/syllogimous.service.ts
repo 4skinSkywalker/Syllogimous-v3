@@ -3,7 +3,7 @@ import { EnumQuestionType, Question } from "./models/question.models";
 import { coinFlip, findDirection, findDirection3D, findDirection4D, getRandomRuleInvalid, getRandomRuleValid, getRandomSymbols, getRelation, getSyllogism, getSymbols, isPremiseLikeConclusion, makeMetaRelations, pickUniqueItems, shuffle } from "./utils/engine.utils";
 import { DIRECTION_COORDS, DIRECTION_COORDS_3D, DIRECTION_NAMES, DIRECTION_NAMES_3D, DIRECTION_NAMES_3D_INVERSE, DIRECTION_NAMES_INVERSE, TIME_NAMES } from "./constants/engine.constants";
 import { EnumScreens, EnumTiers } from "./models/syllogimous.models";
-import { TIER_SETTINGS_MAP } from "./constants/syllogimous.constants";
+import { TIER_SCORE_ADJUSTMENTS, TIER_SCORE_RANGES, TIER_SETTINGS } from "./constants/syllogimous.constants";
 import { LS_DONT_SHOW, LS_HISTORY, LS_SCORE } from "./constants/local-storage.constants";
 
 @Injectable({
@@ -25,12 +25,17 @@ export class SyllogimousService {
     }
 
     get tier() {
-        // TODO: Run calc on score
+        for (const tier of Object.values(EnumTiers)) {
+            const range = TIER_SCORE_RANGES[tier];
+            if (this.score >= range.minScore && this.score <= range.maxScore) {
+                return tier as EnumTiers;
+            }
+        }
         return EnumTiers.Adept;
     }
 
     get settings() {
-        return TIER_SETTINGS_MAP[this.tier];
+        return TIER_SETTINGS[this.tier];
     }
 
     constructor() {
@@ -64,7 +69,38 @@ export class SyllogimousService {
     }
 
     createQuestion() {
-        // TODO: Create a random question with the current settings
+        const choices = [];
+        if (this.settings.enableDistinction) {
+            choices.push(() => this.createDistinction(this.settings.premisesDistinction));
+        }
+        if (this.settings.enableComparisonNumerical) {
+            choices.push(() => this.createComparison(this.settings.premisesComparisonNumerical, EnumQuestionType.ComparisonNumerical));
+        }
+        if (this.settings.enableComparisonChronological) {
+            choices.push(() => this.createComparison(this.settings.premisesComparisonChronological, EnumQuestionType.ComparisonChronological));
+        }
+        if (this.settings.enableSyllogism) {
+            choices.push(() => this.createSyllogism(this.settings.premisesSyllogism));
+        }
+        if (this.settings.enableDirection) {
+            choices.push(() => this.createDirection(this.settings.premisesDirection));
+        }
+        if (this.settings.enableDirection3D) {
+            choices.push(() => this.createDirection3D(this.settings.premisesDirection3D));
+        }
+        if (this.settings.enableDirection4D) {
+            choices.push(() => this.createDirection4D(this.settings.premisesDirection4D));
+        }
+        if (this.settings.enableAnalogy) {
+            choices.push(() => this.createAnalogy(this.settings.premisesAnalogy));
+        }
+        if (this.settings.enableBinary) {
+            choices.push(() => this.createBinary(this.settings.premisesBinary));
+        }
+
+        const randomQuestion = pickUniqueItems(choices, 1).picked[0]();
+        console.log("createQuestion()", randomQuestion);
+        this.question = randomQuestion!;
     }
 
     skipIntro(dontShowAnymore: boolean) {
@@ -75,9 +111,7 @@ export class SyllogimousService {
     }
 
     start() {
-        this.question = this.createAnalogy(4);
-        console.log(this.question.type, this.question.premises);
-
+        this.createQuestion();
         if (!localStorage.getItem(LS_DONT_SHOW + this.question.type)) {
             this.screen = EnumScreens.Tutorial;
         } else {
@@ -92,10 +126,16 @@ export class SyllogimousService {
         this.screen = EnumScreens.InGame;
     }
 
-    checkQuestion(value: boolean) {
+    checkQuestion(value?: boolean) {
         this.question.userAnswer = value;
+        if (this.question.userAnswer === this.question.isValid) {
+            this.score += TIER_SCORE_ADJUSTMENTS[this.tier].increment;
+        } else {
+            this.score = Math.max(0, this.score - TIER_SCORE_ADJUSTMENTS[this.tier].decrement);
+        }
         this.pushIntoHistory(this.question);
         this.screen = EnumScreens.Feedback;
+        setTimeout(() => this.screen = EnumScreens.Start, 1000)
     }
 
     createSyllogism(length: number) {
@@ -412,6 +452,18 @@ export class SyllogimousService {
     createAnalogy(length: number) {
         if (length < 3) throw Error("Needs at least 3 premises.");
 
+        const analogyEnables = [
+            this.settings.enableDistinction,
+            this.settings.enableComparisonNumerical,
+            this.settings.enableComparisonChronological,
+            this.settings.enableDirection,
+            this.settings.enableDirection3D,
+            this.settings.enableDirection4D
+        ];
+        if (analogyEnables.reduce((a, c) => a + +c, 0) < 1) {
+            throw new Error("Needs at least one of" + analogyEnables.join(", "));
+        }
+
         const choiceIndices = [];
     
         if (this.settings.enableDistinction) {
@@ -566,6 +618,19 @@ export class SyllogimousService {
 
     createBinary(length: number) {
         if (length < 4) throw Error("Needs at least 4 premises.");
+
+        const binaryEnables = [
+            this.settings.enableDistinction,
+            this.settings.enableComparisonNumerical,
+            this.settings.enableComparisonChronological,
+            this.settings.enableDirection,
+            this.settings.enableDirection3D,
+            this.settings.enableDirection4D,
+            this.settings.enableSyllogism
+        ];
+        if (binaryEnables.reduce((a, c) => a + +c, 0) < 1) {
+            throw new Error("Needs at least one of" + binaryEnables.join(", "));
+        }
 
         const operands = [];
         const operandNames = [];

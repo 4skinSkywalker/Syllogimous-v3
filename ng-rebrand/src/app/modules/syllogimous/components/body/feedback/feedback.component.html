@@ -1,11 +1,14 @@
 <div
-    *ngIf="{ validity: sylSrv.question.userAnswer === sylSrv.question.isValid } as d"
+    *ngIf="{
+        timeout: sylSrv.question.userAnswer === undefined,
+        validity: sylSrv.question.userAnswer === sylSrv.question.isValid
+    } as d"
     class="feedback-wrap"
-    [class.feedback-correct]="d.validity"
-    [class.feedback-incorrect]="!d.validity"
+    [class.feedback-timeout]="d.timeout"
+    [class.feedback-correct]="!d.timeout && d.validity"
+    [class.feedback-incorrect]="!d.timeout && !d.validity"
 >
     <div class="fs-1 fw-bold text-uppercase">
-        {{ d.validity ? "Correct": "Incorrect" }}
+        {{ d.timeout ? "Timeout" : d.validity ? "Correct": "Incorrect" }}
     </div>
-    <!-- TODO: Put a button here -->
 </div>

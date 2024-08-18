@@ -18,3 +18,8 @@
     background: linear-gradient(to bottom, #fff, #F8D7DA 50%, #F8D7DA);
     color: #721C24;
 }
+
+.feedback-timeout {
+    background: linear-gradient(to bottom, #fff, #E0E0E0 50%, #E0E0E0);
+    color: #424242;
+}
