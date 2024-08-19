@@ -10,16 +10,16 @@
 }
 
 .feedback-correct {
-    background: linear-gradient(to bottom, #fff, #D4EDDA 50%, #D4EDDA);
+    background: linear-gradient(to bottom, #0000, #D4EDDA 50%, #D4EDDA);
     color: #155724;
 }
 
 .feedback-incorrect {
-    background: linear-gradient(to bottom, #fff, #F8D7DA 50%, #F8D7DA);
+    background: linear-gradient(to bottom, #0000, #F8D7DA 50%, #F8D7DA);
     color: #721C24;
 }
 
 .feedback-timeout {
-    background: linear-gradient(to bottom, #fff, #E0E0E0 50%, #E0E0E0);
+    background: linear-gradient(to bottom, #0000, #E0E0E0 50%, #E0E0E0);
     color: #424242;
 }
