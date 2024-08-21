@@ -4,12 +4,14 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { FooterIntroComponent } from './intro/intro.component';
 import { FooterInGameComponent } from './in-game/in-game.component';
 import { FooterTutorialComponent } from './tutorial/tutorial.component';
+import { FooterHistoryComponent } from './history/history.component';
 
 @NgModule({
   declarations: [
     FooterIntroComponent,
     FooterTutorialComponent,
     FooterInGameComponent,
+    FooterHistoryComponent,
   ],
   imports: [
     CommonModule,
@@ -19,6 +21,7 @@ import { FooterTutorialComponent } from './tutorial/tutorial.component';
     FooterIntroComponent,
     FooterTutorialComponent,
     FooterInGameComponent,
+    FooterHistoryComponent,
   ]
 })
 export class FooterModule { }

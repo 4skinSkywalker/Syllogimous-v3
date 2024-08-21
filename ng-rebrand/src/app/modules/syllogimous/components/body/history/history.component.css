@@ -1,0 +1,21 @@
+:host {
+    position: absolute;
+    width: 100%;
+    max-height: 100%;
+    overflow: auto;
+}
+
+.correct {
+    background-color: #D4EDDA;
+    color: #155724;
+}
+
+.incorrect {
+    background-color: #F8D7DA;
+    color: #721C24;
+}
+
+.timeout {
+    background-color: #E0E0E0;
+    color: #424242;
+}

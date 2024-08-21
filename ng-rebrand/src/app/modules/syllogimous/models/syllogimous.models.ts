@@ -4,6 +4,7 @@ export enum EnumScreens {
     Tutorial = "Tutorial",
     InGame = "In Game",
     Feedback = "Feedback",
+    History = "History",
 }
 
 export enum EnumTiers {
