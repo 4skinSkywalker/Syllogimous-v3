@@ -47,6 +47,8 @@ export class SyllogimousService {
         } else {
             this.screen = EnumScreens.Start;
         }
+
+        this.createFamily(3);
     }
 
     loadScore() {
@@ -734,5 +736,27 @@ export class SyllogimousService {
         } while (flip !== question.isValid);
     
         return question;
+    }
+
+    createFamily(length: number) {
+        const generations = [];
+        for (let i = 2; i < 6; i++) {
+            const generation = [];
+            let male = true;
+            for (let j = 1; j < (i * 2) + 1; j++) {
+                generation.push({ male, name: "", mom: null, dad: null, children: [] });
+                male = !male;
+            }
+            generations.push(generation);
+        }
+
+        for (let generation of generations) {
+            // pickMale
+            // pickFemale
+            // pick N children from generations[i + 1], remove children from generation
+            // attach children to mom and dad
+            // attach mom and dad to each child
+        }
+        console.log(generations);
     }
 }
