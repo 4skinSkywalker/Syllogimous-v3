@@ -742,14 +742,9 @@ export class SyllogimousService {
     createFamily(length: number) {
         console.time("createFamily");
 
-        /*
-            Notes:
-            - Your nephew is the son of your brother or sister.
-            - Your niece is your brother or sister’s daughter.
-            - Grandson: grand/pa-ma -> son/daughter -> son
-            - Granddaughter: grand/pa-ma -> son/daughter -> daughter
-        */
+        const MAX_GENERATIONS = 12;
 
+        // Define names sets to enforce uniqueness of used names
         const momNames = new Set(FEMALE_NAMES);
         const dadNames = new Set(MALE_NAMES);
 
@@ -792,7 +787,7 @@ export class SyllogimousService {
         }
 
         const generations: ISubject[][] = [];
-        for (let i = 1; i <= 12; i++) {
+        for (let i = 1; i <= MAX_GENERATIONS; i++) {
             const generation: ISubject[] = [];
             let male = true;
             const nextGenLength = (i === 1) ? 2 : (i === 2) ? 3 : (generations[i - 2]?.length + generations[i - 3]?.length);
@@ -846,6 +841,62 @@ export class SyllogimousService {
             }
         }
         console.log(generations);
+
+        const choosenGeneration = generations[Math.ceil(MAX_GENERATIONS / 2)];
+        const routes = [ "mom", "dad", "uncle", "aunt", "brother", "sister" ];
+        let [ subject ] = pickUniqueItems(choosenGeneration, 1).picked;
+        const seen = new Set([ subject.name ]);
+
+        for (let i = 0; i < length; i++) {
+            let safe = 1e2;
+            while (true && safe--) {
+                const [ route ] = pickUniqueItems(routes, 1).picked;
+
+                /*
+                    Notes missing this relations:
+                    - Granddad
+                    - Grandmom
+                    - Grandson: grand/pa-ma -> son/daughter -> son
+                    - Granddaughter: grand/pa-ma -> son/daughter -> daughter
+                */
+                
+                let relative: ISubject | undefined = undefined;
+                if (route === "mom" || route === "dad") {
+                    relative = (subject as any)[route] as ISubject;
+                } else if (Array.isArray((subject as any)[route + "s"])) {
+                    [ relative ] = pickUniqueItems((subject as any)[route + "s"], 1).picked as ISubject[];
+                }
+
+                if (!relative || seen.has(relative.name)) {
+                    continue;
+                }
+
+                if (coinFlip()) {
+                    switch(route) {
+                        case "mom":
+                        case "dad": {
+                            console.log(`${subject.name} is the ${subject.male ? "son" : "daughter"} of ${relative.name}`);
+                            break;
+                        }
+                        case "uncle":
+                        case "aunt": {
+                            console.log(`${subject.name} is the ${subject.male ? "nephew" : "niece"} of ${relative.name}`);
+                            break;
+                        }
+                        case "brother":
+                        case "sister": {
+                            console.log(`${subject.name} is the ${subject.male ? "brother" : "sister"} of ${relative.name}`);
+                            break;
+                        }
+                    }
+                } else {
+                    console.log(`${relative.name} is the ${route} of ${subject.name}`);
+                }
+
+                subject = relative;
+                break;
+            }
+        }
 
         console.timeEnd("createFamily");
     }
