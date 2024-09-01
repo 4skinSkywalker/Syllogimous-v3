@@ -1,10 +1,11 @@
 import { Injectable } from "@angular/core";
 import { EnumQuestionType, Question } from "./models/question.models";
 import { coinFlip, findDirection, findDirection3D, findDirection4D, getRandomRuleInvalid, getRandomRuleValid, getRandomSymbols, getRelation, getSyllogism, getSymbols, isPremiseLikeConclusion, makeMetaRelations, pickUniqueItems, shuffle } from "./utils/engine.utils";
-import { DIRECTION_COORDS, DIRECTION_COORDS_3D, DIRECTION_NAMES, DIRECTION_NAMES_3D, DIRECTION_NAMES_3D_INVERSE, DIRECTION_NAMES_INVERSE, TIME_NAMES } from "./constants/engine.constants";
+import { DIRECTION_COORDS, DIRECTION_COORDS_3D, DIRECTION_NAMES, DIRECTION_NAMES_3D, DIRECTION_NAMES_3D_INVERSE, DIRECTION_NAMES_INVERSE, FEMALE_NAMES, MALE_NAMES, TIME_NAMES } from "./constants/engine.constants";
 import { EnumScreens, EnumTiers } from "./models/syllogimous.models";
 import { TIER_SCORE_ADJUSTMENTS, TIER_SCORE_RANGES, TIER_SETTINGS } from "./constants/syllogimous.constants";
 import { LS_DONT_SHOW, LS_HISTORY, LS_SCORE } from "./constants/local-storage.constants";
+import { guid } from "src/app/utils/uuid";
 
 @Injectable({
     providedIn: "root"
@@ -739,24 +740,113 @@ export class SyllogimousService {
     }
 
     createFamily(length: number) {
-        const generations = [];
-        for (let i = 2; i < 6; i++) {
-            const generation = [];
+        console.time("createFamily");
+
+        /*
+            Notes:
+            - Your nephew is the son of your brother or sister.
+            - Your niece is your brother or sister’s daughter.
+            - Grandson: grand/pa-ma -> son/daughter -> son
+            - Granddaughter: grand/pa-ma -> son/daughter -> daughter
+        */
+
+        const momNames = new Set(FEMALE_NAMES);
+        const dadNames = new Set(MALE_NAMES);
+
+        function pluckRandom<T>(s: Set<T>) {
+            const arr = [ ...s ];
+            const rnd = Math.floor(Math.random() * arr.length);
+            s.delete(arr[rnd]);
+            return arr[rnd];
+        }
+
+        interface ISubject {
+            male: boolean;
+            name: string;
+            mom?: ISubject;
+            dad?: ISubject;
+            uncles: ISubject[];
+            aunts: ISubject[];
+            sisters: ISubject[];
+            brothers: ISubject[];
+            children: ISubject[];
+        }
+
+        function pickUniqueSubjects(sample: number, generation: ISubject[], male?: boolean) {
+            const results: ISubject[] = [];
+            const lookup = generation
+                .filter(s => (male === undefined) ? s : (male === s.male))
+                .reduce((acc, curr) => (acc[guid()] = curr, acc), {} as Record<string, ISubject>);
+
+            if (sample > Object.values(lookup).length) {
+                return [];
+            }
+
+            while (results.length < sample) {
+                const ids = Object.keys(lookup);
+                const rndId = ids[Math.floor(Math.random() * ids.length)];
+                results.push(lookup[rndId]);
+                delete lookup[rndId];
+            }
+            return results;
+        }
+
+        const generations: ISubject[][] = [];
+        for (let i = 1; i <= 12; i++) {
+            const generation: ISubject[] = [];
             let male = true;
-            for (let j = 1; j < (i * 2) + 1; j++) {
-                generation.push({ male, name: "", mom: null, dad: null, children: [] });
+            const nextGenLength = (i === 1) ? 2 : (i === 2) ? 3 : (generations[i - 2]?.length + generations[i - 3]?.length);
+
+            for (let j = 0; j < nextGenLength; j++) {
+                generation.push({
+                    male,
+                    name: pluckRandom(male ? dadNames : momNames),
+                    mom: undefined,
+                    dad: undefined,
+                    uncles: [],
+                    aunts: [],
+                    sisters: [],
+                    brothers: [],
+                    children: []
+                });
                 male = !male;
             }
             generations.push(generation);
         }
 
-        for (let generation of generations) {
-            // pickMale
-            // pickFemale
-            // pick N children from generations[i + 1], remove children from generation
-            // attach children to mom and dad
-            // attach mom and dad to each child
+        for (let i = 0; i < generations.length - 1; i++) {
+            const parents = generations[i];
+            const children = generations[i + 1];
+
+            // Give parents to each child
+            for (const child of children) {
+                const mom = pickUniqueSubjects(1, parents, false)[0];
+                const dad = pickUniqueSubjects(1, parents, true)[0];
+                child.mom = mom;
+                child.dad = dad;
+                mom.children.push(child);
+                dad.children.push(child);
+            }
+
+            // Populate brothers/sisters and uncles/aunts
+            for (const child of children) {
+                const mom = child.mom!;
+                const dad = child.dad!;
+
+                const brothers = [ ...mom.children.filter(c => c !== child && c.male), ...dad.children.filter(c => c !== child && c.male) ];
+                const dedupedBrothers = Object.values(brothers.reduce((acc, curr) => (acc[curr.name] = curr, acc), {} as Record<string, ISubject>));
+                child.brothers.push(...dedupedBrothers);
+
+                const sisters = [ ...mom.children.filter(c => c !== child && !c.male), ...dad.children.filter(c => c !== child && !c.male) ];
+                const dedupedSisters = Object.values(sisters.reduce((acc, curr) => (acc[curr.name] = curr, acc), {} as Record<string, ISubject>));
+                child.sisters.push(...dedupedSisters);
+
+                child.uncles = [ ...mom.brothers, ...dad.brothers ];
+                child.aunts = [ ...mom.sisters, ...dad.sisters ];
+            }
         }
         console.log(generations);
+
+        console.timeEnd("createFamily");
     }
 }
