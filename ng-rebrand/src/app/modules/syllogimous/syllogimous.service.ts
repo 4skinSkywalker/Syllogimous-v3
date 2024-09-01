@@ -742,7 +742,7 @@ export class SyllogimousService {
     createFamily(length: number) {
         console.time("createFamily");
 
-        const MAX_GENERATIONS = 12;
+        const MATRIX_SIDE = 50;
 
         // Define names sets to enforce uniqueness of used names
         const momNames = new Set(FEMALE_NAMES);
@@ -760,11 +760,13 @@ export class SyllogimousService {
             name: string;
             mom?: ISubject;
             dad?: ISubject;
-            uncles: ISubject[];
-            aunts: ISubject[];
+            children: ISubject[];
+            maternalUncles: ISubject[];
+            paternalUncles: ISubject[];
+            maternalAunts: ISubject[];
+            paternalAunts: ISubject[];
             sisters: ISubject[];
             brothers: ISubject[];
-            children: ISubject[];
         }
 
         function pickUniqueSubjects(sample: number, generation: ISubject[], male?: boolean) {
@@ -787,19 +789,20 @@ export class SyllogimousService {
         }
 
         const generations: ISubject[][] = [];
-        for (let i = 1; i <= MAX_GENERATIONS; i++) {
+        for (let i = 0; i < MATRIX_SIDE; i++) {
             const generation: ISubject[] = [];
             let male = true;
-            const nextGenLength = (i === 1) ? 2 : (i === 2) ? 3 : (generations[i - 2]?.length + generations[i - 3]?.length);
 
-            for (let j = 0; j < nextGenLength; j++) {
+            for (let j = 0; j < MATRIX_SIDE; j++) {
                 generation.push({
                     male,
-                    name: pluckRandom(male ? dadNames : momNames),
+                    name: `${pluckRandom(male ? dadNames : momNames)}`, // (${male ? "m" : "f"})
                     mom: undefined,
                     dad: undefined,
-                    uncles: [],
-                    aunts: [],
+                    maternalUncles: [],
+                    paternalUncles: [],
+                    maternalAunts: [],
+                    paternalAunts: [],
                     sisters: [],
                     brothers: [],
                     children: []
@@ -836,48 +839,86 @@ export class SyllogimousService {
                 const dedupedSisters = Object.values(sisters.reduce((acc, curr) => (acc[curr.name] = curr, acc), {} as Record<string, ISubject>));
                 child.sisters.push(...dedupedSisters);
 
-                child.uncles = [ ...mom.brothers, ...dad.brothers ];
-                child.aunts = [ ...mom.sisters, ...dad.sisters ];
+                child.maternalUncles = mom.brothers;
+                child.paternalUncles = dad.brothers;
+
+                child.maternalAunts = mom.sisters;
+                child.paternalAunts = dad.sisters;
             }
         }
-        console.log(generations);
 
-        const choosenGeneration = generations[Math.ceil(MAX_GENERATIONS / 2)];
-        const routes = [ "mom", "dad", "uncle", "aunt", "brother", "sister", "granddad", "grandmom" ];
+        const choosenGeneration = generations[Math.ceil(MATRIX_SIDE / 2)];
+        const routes = [
+            "mom",
+            "dad",
+            "children",
+            "maternalUncles",
+            "paternalUncles",
+            "maternalAunts",
+            "paternalAunts",
+            "brothers",
+            "sisters",
+            "maternalGranddad",
+            "paternalGranddad",
+            "maternalGrandmom",
+            "paternalGrandmom"
+        ];
+        const routeRelation: Record<string, string> = {
+            "mom": "mom",
+            "dad": "dad",
+            "children": "child",
+            "maternalUncles": "maternal uncle",
+            "paternalUncles": "paternal uncle",
+            "maternalAunts": "maternal aunt",
+            "paternalAunts": "paternal aunt",
+            "brothers": "brother",
+            "sisters": "sister",
+            "maternalGranddad": "maternal granddad",
+            "paternalGranddad": "paternal granddad",
+            "maternalGrandmom": "maternal grandmom",
+            "paternalGrandmom": "paternal grandmom"
+        };
         let [ subject ] = pickUniqueItems(choosenGeneration, 1).picked;
         const seen = new Set([ subject.name ]);
 
         const question = new Question(EnumQuestionType.Family);
 
         for (let i = 0; i < length; i++) {
-            let safe = 1e2;
-            while (true && safe--) {
-                const [ route ] = pickUniqueItems(routes, 1).picked;
-
+            for (const route of shuffle(routes)) {
                 let relative: ISubject | undefined = undefined;
+                let relation = routeRelation[route];
                 switch(route) {
                     case "mom":
                     case "dad": {
                         relative = (subject as any)[route] as ISubject;
                         break;
                     }
-                    case "uncle":
-                    case "aunt":
-                    case "brother":
-                    case "sister": {
-                        if (Array.isArray((subject as any)[route + "s"])) {
-                            [ relative ] = pickUniqueItems((subject as any)[route + "s"], 1).picked as ISubject[];
+                    case "children":
+                    case "maternalUncles":
+                    case "paternalUncles":
+                    case "maternalAunts":
+                    case "paternalAunts":
+                    case "brothers":
+                    case "sisters": {
+                        if (Array.isArray((subject as any)[route])) {
+                            [ relative ] = pickUniqueItems((subject as any)[route], 1).picked as ISubject[];
                         }
                         break;
                     }
-                    case "granddad": {
-                        const _relative = coinFlip() ? subject.mom : subject.dad;
-                        relative = _relative?.dad;
+                    case "maternalGranddad": {
+                        relative = subject.mom?.dad;
                         break;
                     }
-                    case "grandmom": {
-                        const _relative = coinFlip() ? subject.mom : subject.dad;
-                        relative = _relative?.mom;
+                    case "paternalGranddad": {
+                        relative = subject.dad?.dad;
+                        break;
+                    }
+                    case "maternalGrandmom": {
+                        relative = subject.mom?.mom;
+                        break;
+                    }
+                    case "paternalGrandmom": {
+                        relative = subject.dad?.mom;
                         break;
                     }
                 }
@@ -886,41 +927,37 @@ export class SyllogimousService {
                     continue;
                 }
 
-                if (coinFlip()) {
+                if (coinFlip() && [ "mom", "dad", "children", "brothers", "sisters" ].includes(route)) {
                     switch(route) {
                         case "mom":
                         case "dad": {
-                            question.premises.push(`${subject.name} is the ${subject.male ? "son" : "daughter"} of ${relative.name}`);
+                            relation = `${subject.male ? "son" : "daughter"}`;
                             break;
                         }
-                        case "uncle":
-                        case "aunt": {
-                            question.premises.push(`${subject.name} is the ${subject.male ? "nephew" : "niece"} of ${relative.name}`);
+                        case "children": {
+                            relation = `${relative.male ? "dad" : "mom"}`;
                             break;
                         }
-                        case "brother":
-                        case "sister": {
-                            question.premises.push(`${subject.name} is the ${subject.male ? "brother" : "sister"} of ${relative.name}`);
-                            break;
-                        }
-                        case "granddad":
-                        case "grandmom": {
-                            question.premises.push(`${subject.name} is the ${subject.male ? "grandson" : "granddaughter"} of ${relative.name}`);
+                        case "brothers":
+                        case "sisters": {
+                            relation = `${subject.male ? "brother" : "sister"}`;
                             break;
                         }
                     }
+                    question.premises.push(`${subject.name} is the ${relation} of ${relative.name}`);
                 } else {
-                    question.premises.push(`${relative.name} is the ${route} of ${subject.name}`);
+                    question.premises.push(`${relative.name} is the ${relation} of ${subject.name}`);
                 }
 
                 subject = relative;
-                seen.add(subject.name);
+                seen.add(relative.name);
                 break;
             }
         }
 
-        shuffle(question.premises);
-        console.log(question);
+        // shuffle(question.premises);
+        console.log("premises", question.premises);
+        console.log("seen", [ ...seen ]);
 
         console.timeEnd("createFamily");
     }
