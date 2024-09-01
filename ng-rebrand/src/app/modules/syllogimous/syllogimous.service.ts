@@ -843,28 +843,43 @@ export class SyllogimousService {
         console.log(generations);
 
         const choosenGeneration = generations[Math.ceil(MAX_GENERATIONS / 2)];
-        const routes = [ "mom", "dad", "uncle", "aunt", "brother", "sister" ];
+        const routes = [ "mom", "dad", "uncle", "aunt", "brother", "sister", "granddad", "grandmom" ];
         let [ subject ] = pickUniqueItems(choosenGeneration, 1).picked;
         const seen = new Set([ subject.name ]);
+
+        const question = new Question(EnumQuestionType.Family);
 
         for (let i = 0; i < length; i++) {
             let safe = 1e2;
             while (true && safe--) {
                 const [ route ] = pickUniqueItems(routes, 1).picked;
 
-                /*
-                    Notes missing this relations:
-                    - Granddad
-                    - Grandmom
-                    - Grandson: grand/pa-ma -> son/daughter -> son
-                    - Granddaughter: grand/pa-ma -> son/daughter -> daughter
-                */
-                
                 let relative: ISubject | undefined = undefined;
-                if (route === "mom" || route === "dad") {
-                    relative = (subject as any)[route] as ISubject;
-                } else if (Array.isArray((subject as any)[route + "s"])) {
-                    [ relative ] = pickUniqueItems((subject as any)[route + "s"], 1).picked as ISubject[];
+                switch(route) {
+                    case "mom":
+                    case "dad": {
+                        relative = (subject as any)[route] as ISubject;
+                        break;
+                    }
+                    case "uncle":
+                    case "aunt":
+                    case "brother":
+                    case "sister": {
+                        if (Array.isArray((subject as any)[route + "s"])) {
+                            [ relative ] = pickUniqueItems((subject as any)[route + "s"], 1).picked as ISubject[];
+                        }
+                        break;
+                    }
+                    case "granddad": {
+                        const _relative = coinFlip() ? subject.mom : subject.dad;
+                        relative = _relative?.dad;
+                        break;
+                    }
+                    case "grandmom": {
+                        const _relative = coinFlip() ? subject.mom : subject.dad;
+                        relative = _relative?.mom;
+                        break;
+                    }
                 }
 
                 if (!relative || seen.has(relative.name)) {
@@ -875,28 +890,37 @@ export class SyllogimousService {
                     switch(route) {
                         case "mom":
                         case "dad": {
-                            console.log(`${subject.name} is the ${subject.male ? "son" : "daughter"} of ${relative.name}`);
+                            question.premises.push(`${subject.name} is the ${subject.male ? "son" : "daughter"} of ${relative.name}`);
                             break;
                         }
                         case "uncle":
                         case "aunt": {
-                            console.log(`${subject.name} is the ${subject.male ? "nephew" : "niece"} of ${relative.name}`);
+                            question.premises.push(`${subject.name} is the ${subject.male ? "nephew" : "niece"} of ${relative.name}`);
                             break;
                         }
                         case "brother":
                         case "sister": {
-                            console.log(`${subject.name} is the ${subject.male ? "brother" : "sister"} of ${relative.name}`);
+                            question.premises.push(`${subject.name} is the ${subject.male ? "brother" : "sister"} of ${relative.name}`);
+                            break;
+                        }
+                        case "granddad":
+                        case "grandmom": {
+                            question.premises.push(`${subject.name} is the ${subject.male ? "grandson" : "granddaughter"} of ${relative.name}`);
                             break;
                         }
                     }
                 } else {
-                    console.log(`${relative.name} is the ${route} of ${subject.name}`);
+                    question.premises.push(`${relative.name} is the ${route} of ${subject.name}`);
                 }
 
                 subject = relative;
+                seen.add(subject.name);
                 break;
             }
         }
+
+        shuffle(question.premises);
+        console.log(question);
 
         console.timeEnd("createFamily");
     }
