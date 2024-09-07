@@ -16,10 +16,6 @@
     border-radius: 0 !important;
 }
 
-:host ::ng-deep .accordion-button {
-    padding: 0.75rem;
-}
-
 :host ::ng-deep .accordion-item:not(:last-child) {
     border-bottom: 1px solid #eee;
 }

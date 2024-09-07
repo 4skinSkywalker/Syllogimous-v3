@@ -55,55 +55,74 @@
     </ul>
 </section>
 
-<section>
-    <h2>Time Based Stats</h2>
+<section class="mb-4">
+    <h2 class="text-center">Time-Based Stats</h2>
 
-    <div>
-        <h3>2 Premises</h3>
+    <ng-template #timeBasedStatsTemplate let-ps="ps">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <b>Average Time per Answer</b>
+                <div>{{ (this.timeBasedStats[ps] ? (this.timeBasedStats[ps].sum / (1000 * this.timeBasedStats[ps].count)) : 0) | number:".1-1" }} s</div>
+            </li>
+    
+            <li class="list-group-item">
+                <b>Fastest Answer</b>
+                <div>{{ ((this.timeBasedStats[ps]?.fastest / 1000) || 0) | number:".1-1" }} s</div>
+            </li>
+    
+            <li class="list-group-item">
+                <b>Slowest Answer</b>
+                <div>{{ ((this.timeBasedStats[ps]?.slowest / 1000) || 0) | number:".1-1" }} s</div>
+            </li>
+        </ul>
+    </ng-template>
 
-        <div>Average Time per Answer: </div>
-        <div>Fastest Answer: </div>
-        <div>Slowest Answer: </div>
-    </div>
+    <div *ngIf="{ activeTab: 2 } as d" style="max-width: 90%; margin: 0 auto;">
+        <ul ngbNav #nav="ngbNav" [(activeId)]="d.activeTab" class="nav-tabs">
+            <li [ngbNavItem]="2">
+                <a ngbNavLink>2 Premises</a>
+                <ng-template ngbNavContent>
+                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab }"></ng-container> 
+                </ng-template>
+            </li>
 
-    <div>
-        <h3>3 Premises</h3>
+            <li [ngbNavItem]="3">
+                <a ngbNavLink>3 Ps</a>
+                <ng-template ngbNavContent>
+                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab }"></ng-container> 
+                </ng-template>
+            </li>
 
-        <div>Average Time per Answer: </div>
-        <div>Fastest Answer: </div>
-        <div>Slowest Answer: </div>
-    </div>
+            <li [ngbNavItem]="4">
+                <a ngbNavLink>4 Ps</a>
+                <ng-template ngbNavContent>
+                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab }"></ng-container> 
+                </ng-template>
+            </li>
 
-    <div>
-        <h3>4 Premises</h3>
+            <li [ngbNavItem]="5">
+                <a ngbNavLink>5 Ps</a>
+                <ng-template ngbNavContent>
+                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab }"></ng-container> 
+                </ng-template>
+            </li>
 
-        <div>Average Time per Answer: </div>
-        <div>Fastest Answer: </div>
-        <div>Slowest Answer: </div>
-    </div>
+            <li [ngbNavItem]="6">
+                <a ngbNavLink>6 Ps</a>
+                <ng-template ngbNavContent>
+                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab }"></ng-container> 
+                </ng-template>
+            </li>
 
-    <div>
-        <h3>5 Premises</h3>
-
-        <div>Average Time per Answer: </div>
-        <div>Fastest Answer: </div>
-        <div>Slowest Answer: </div>
-    </div>
-
-    <div>
-        <h3>6 Premises</h3>
-
-        <div>Average Time per Answer: </div>
-        <div>Fastest Answer: </div>
-        <div>Slowest Answer: </div>
-    </div>
-
-    <div>
-        <h3>7+ Premises</h3>
-
-        <div>Average Time per Answer: </div>
-        <div>Fastest Answer: </div>
-        <div>Slowest Answer: </div>
+            <li [ngbNavItem]="7">
+                <a ngbNavLink>7+ Ps</a>
+                <ng-template ngbNavContent>
+                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab }"></ng-container> 
+                </ng-template>
+            </li>
+        </ul>
+        
+        <div [ngbNavOutlet]="nav" class="p-3 border border-top-0"></div>
     </div>
 </section>
 

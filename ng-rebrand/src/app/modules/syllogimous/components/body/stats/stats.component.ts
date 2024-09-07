@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { SyllogimousService } from "../../../syllogimous.service";
-import { TIER_COLORS, TIER_SCORE_RANGES, TIER_SETTINGS } from "../../../constants/syllogimous.constants";
+import { TIER_COLORS, TIER_SCORE_RANGES } from "../../../constants/syllogimous.constants";
 import { EnumTiers } from "../../../models/syllogimous.models";
 import { Question } from "../../../models/question.models";
 import { LS_HISTORY } from "../../../constants/local-storage.constants";
@@ -24,6 +24,7 @@ export class BodyStatsComponent {
     unansweredQs: Question[] = [];
     currentStreak: Question[] = [];
     longestStreak: Question[] = [];
+    timeBasedStats: Record<string, any> = {};
 
     constructor(
         public sylSrv: SyllogimousService
@@ -61,6 +62,26 @@ export class BodyStatsComponent {
             }
             streak.push(q);
         }
-        
+
+        for (const q of this.questions) {
+            const ps = q.premises.length;
+            this.timeBasedStats[ps] = this.timeBasedStats[ps] || {
+                sum: 0,
+                count: 0,
+                fastest: 0,
+                slowest: 0,
+            };
+            if (q.userAnswer !== undefined) {
+                const dt = q.answeredAt - q.createdAt;
+                this.timeBasedStats[ps].sum += dt;
+                this.timeBasedStats[ps].count += 1;
+                if (this.timeBasedStats[ps].fastest === 0 || dt < this.timeBasedStats[ps].fastest) {
+                    this.timeBasedStats[ps].fastest = dt;
+                }
+                if (this.timeBasedStats[ps].fastest === 0 || dt > this.timeBasedStats[ps].slowest) {
+                    this.timeBasedStats[ps].slowest = dt;
+                }
+            }
+        }
     }
 }

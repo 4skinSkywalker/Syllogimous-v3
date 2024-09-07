@@ -41,22 +41,22 @@
     position: absolute;
     width: 100%;
     bottom: 100%;
-    font-size: 4rem;
+    font-size: 3.25rem;
     line-height: 1;
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: 900;
     color: #0008;
 }
 
 .great-title-version {
-    font-size: 2rem;
+    font-size: 1.75rem;
     text-transform: lowercase;
     margin-bottom: 0.25rem;
 }
 
 .playcard {
-    width: min(35rem, 100vw);
-    height: min(35rem, 100vh);
+    width: min(40rem, 100vw);
+    height: min(40rem, 100vh);
 }
 
 .playcard-body {
