@@ -7,6 +7,7 @@ import { BodyStartComponent } from './start/start.component';
 import { BodyInGameComponent } from './in-game/in-game.component';
 import { BodyFeedbackComponent } from './feedback/feedback.component';
 import { BodyHistoryComponent } from './history/history.component';
+import { BodyStatsComponent } from './stats/stats.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { BodyHistoryComponent } from './history/history.component';
     BodyInGameComponent,
     BodyFeedbackComponent,
     BodyHistoryComponent,
+    BodyStatsComponent,
   ],
   imports: [
     CommonModule,
@@ -28,6 +30,7 @@ import { BodyHistoryComponent } from './history/history.component';
     BodyInGameComponent,
     BodyFeedbackComponent,
     BodyHistoryComponent,
+    BodyStatsComponent,
   ]
 })
 export class BodyModule { }

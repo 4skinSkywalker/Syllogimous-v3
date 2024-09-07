@@ -2,10 +2,11 @@ export enum EnumScreens {
     Intro = "Intro",
     Start = "Start",
     Tutorial = "Tutorial",
-    Tutorials = "Tutorials",
     InGame = "In Game",
     Feedback = "Feedback",
     History = "History",
+    Tutorials = "Tutorials",
+    Stats = "Stats",
 }
 
 export enum EnumTiers {

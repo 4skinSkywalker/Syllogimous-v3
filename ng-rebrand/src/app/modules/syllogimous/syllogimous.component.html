@@ -42,9 +42,9 @@
                     <button class="btn" ngbDropdownToggle>More</button>
 					<div ngbDropdownMenu>
                         <button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.Start">Start</button>
-						<button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.History">History</button>
-						<button ngbDropdownItem>Stats</button>
 						<button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.Tutorials">Tutorials</button>
+						<button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.History">History</button>
+						<button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.Stats">Stats</button>
 						<div class="dropdown-divider"></div>
                         <a ngbDropdownItem href="https://www.linkedin.com/in/f3d3r1c07r0774/" target="_blank">About the creator</a>
 					</div>
@@ -56,24 +56,26 @@
     <div class="card-body p-0 overflow-hidden position-relative">
         <div class="playcard-body">
             <ng-container [ngSwitch]="sylSrv.screen">
-                <app-body-intro    *ngSwitchCase="EnumScreens.Intro"/>
-                <app-body-start    *ngSwitchCase="EnumScreens.Start"/>
-                <app-body-tutorial *ngSwitchCase="EnumScreens.Tutorial"/>
-                <app-body-in-game  *ngSwitchCase="EnumScreens.InGame"/>
-                <app-body-feedback *ngSwitchCase="EnumScreens.Feedback"/>
-                <app-body-history  *ngSwitchCase="EnumScreens.History"/>
-                <app-body-tutorials  *ngSwitchCase="EnumScreens.Tutorials"/>
+                <app-body-intro     *ngSwitchCase="EnumScreens.Intro"/>
+                <app-body-start     *ngSwitchCase="EnumScreens.Start"/>
+                <app-body-tutorial  *ngSwitchCase="EnumScreens.Tutorial"/>
+                <app-body-in-game   *ngSwitchCase="EnumScreens.InGame"/>
+                <app-body-feedback  *ngSwitchCase="EnumScreens.Feedback"/>
+                <app-body-history   *ngSwitchCase="EnumScreens.History"/>
+                <app-body-tutorials *ngSwitchCase="EnumScreens.Tutorials"/>
+                <app-body-stats     *ngSwitchCase="EnumScreens.Stats"/>
             </ng-container>
         </div>
     </div>
 
     <div class="playcard-footer card-footer">
         <ng-container [ngSwitch]="sylSrv.screen">
-            <app-footer-intro    *ngSwitchCase="EnumScreens.Intro"/>
-            <app-footer-tutorial *ngSwitchCase="EnumScreens.Tutorial"/>
-            <app-footer-in-game  *ngSwitchCase="EnumScreens.InGame"/>
-            <app-footer-history  *ngSwitchCase="EnumScreens.History"/>
-            <app-footer-tutorials  *ngSwitchCase="EnumScreens.Tutorials"/>
+            <app-footer-intro     *ngSwitchCase="EnumScreens.Intro"/>
+            <app-footer-tutorial  *ngSwitchCase="EnumScreens.Tutorial"/>
+            <app-footer-in-game   *ngSwitchCase="EnumScreens.InGame"/>
+            <app-footer-history   *ngSwitchCase="EnumScreens.History"/>
+            <app-footer-tutorials *ngSwitchCase="EnumScreens.Tutorials"/>
+            <app-footer-stats     *ngSwitchCase="EnumScreens.Stats"/>
         </ng-container>
     </div>
 </div>
