@@ -8,7 +8,6 @@ export enum EnumQuestionType {
     Direction3D = "Direction3D",
     Direction4D = "Direction4D",
     Analogy = "Analogy",
-    Family = "Family"
 }
 
 export class Question {
