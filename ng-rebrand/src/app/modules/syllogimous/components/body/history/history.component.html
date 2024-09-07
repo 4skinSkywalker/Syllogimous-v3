@@ -1,4 +1,9 @@
-<ul class="list-group list-group-flush">
+<div class="text-center" *ngIf="!questions.length">
+    <h3 class="mb-3">You have to play to see something here</h3>
+    <button class="btn btn-lg btn-primary" (click)="sylSrv.start()">Press to Play</button>
+</div>
+
+<ul class="list-group list-group-flush" *ngIf="questions.length">
     <li
         class="list-group-item"
         *ngFor="let q of questions"
