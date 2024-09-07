@@ -880,6 +880,7 @@ export class SyllogimousService {
         };
         let [ subject ] = pickUniqueItems(choosenGeneration, 1).picked;
         const seen = new Set([ subject.name ]);
+        const subjects = [ subject ];
 
         const question = new Question(EnumQuestionType.Family);
 
@@ -951,6 +952,7 @@ export class SyllogimousService {
 
                 subject = relative;
                 seen.add(relative.name);
+                subjects.push(relative);
                 break;
             }
         }
@@ -958,6 +960,26 @@ export class SyllogimousService {
         // shuffle(question.premises);
         console.log("premises", question.premises);
         console.log("seen", [ ...seen ]);
+
+        const a = subjects[0];
+        const b = subjects[subjects.length - 1];
+        console.log("subjects", subjects);
+
+        if (coinFlip()) {
+        } else {
+
+        }
+        /*
+            ancestor
+            descendant
+            grand-father/mother
+            grand-son/daughter
+            father/mother
+            brother/sister
+            uncle/aunt
+            nephew/niece
+            cousin
+        */
 
         console.timeEnd("createFamily");
     }
