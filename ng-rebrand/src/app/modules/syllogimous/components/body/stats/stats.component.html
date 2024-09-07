@@ -58,6 +58,28 @@
 <section class="mb-4">
     <h2 class="text-center">Time-Based Stats</h2>
 
+    <ul class="list-group mb-3" style="max-width: 90%; margin: 0 auto;">
+        <li class="list-group-item">
+            <b>Total Play Time</b>
+            <div>{{ formatTime(this.totalPlayTime) }}</div>
+        </li>
+
+        <li class="list-group-item">
+            <b>Average Time per Answer</b>
+            <div>{{ ((this.questions.length !== 0) ? (this.totalPlayTime / (1000 * this.questions.length)) : 0) | number:".1-1" }} s</div>
+        </li>
+
+        <li class="list-group-item">
+            <b>Fastest Answer</b>
+            <div>{{ ((this.fastestAnswer / 1000) || 0) | number:".1-1" }} s</div>
+        </li>
+
+        <li class="list-group-item">
+            <b>Slowest Answer</b>
+            <div>{{ ((this.slowestAnswer / 1000) || 0) | number:".1-1" }} s</div>
+        </li>
+    </ul>
+
     <ng-template #timeBasedStatsTemplate let-ps="ps">
         <ul class="list-group">
             <li class="list-group-item">

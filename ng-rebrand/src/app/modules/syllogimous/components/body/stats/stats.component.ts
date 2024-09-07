@@ -24,6 +24,10 @@ export class BodyStatsComponent {
     unansweredQs: Question[] = [];
     currentStreak: Question[] = [];
     longestStreak: Question[] = [];
+    totalPlayTime = 0;
+    avgAnswer = 0;
+    fastestAnswer = 0;
+    slowestAnswer = 0;
     timeBasedStats: Record<string, any> = {};
 
     constructor(
@@ -71,17 +75,42 @@ export class BodyStatsComponent {
                 fastest: 0,
                 slowest: 0,
             };
+
+            const dt = q.answeredAt - q.createdAt;
+            this.totalPlayTime += dt;
+
+            this.timeBasedStats[ps].sum += dt;
+            this.timeBasedStats[ps].count += 1;
+
             if (q.userAnswer !== undefined) {
-                const dt = q.answeredAt - q.createdAt;
-                this.timeBasedStats[ps].sum += dt;
-                this.timeBasedStats[ps].count += 1;
+                if (this.fastestAnswer === 0 || dt < this.fastestAnswer) {
+                    this.fastestAnswer = dt;
+                }
+                if (this.slowestAnswer === 0 || dt > this.slowestAnswer) {
+                    this.slowestAnswer = dt;
+                }
+
                 if (this.timeBasedStats[ps].fastest === 0 || dt < this.timeBasedStats[ps].fastest) {
                     this.timeBasedStats[ps].fastest = dt;
                 }
-                if (this.timeBasedStats[ps].fastest === 0 || dt > this.timeBasedStats[ps].slowest) {
+                if (this.timeBasedStats[ps].slowest === 0 || dt > this.timeBasedStats[ps].slowest) {
                     this.timeBasedStats[ps].slowest = dt;
                 }
             }
         }
+    }
+
+    formatTime(ms: number): string {
+        const seconds = Math.floor(ms / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+      
+        const remainingSeconds = seconds % 60;
+        const remainingMinutes = minutes % 60;
+      
+        const formattedHours = hours.toString().padStart(2, '0');
+        const formattedMinutes = remainingMinutes.toString().padStart(2, '0');
+        const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
+        return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     }
 }

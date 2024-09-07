@@ -11,7 +11,7 @@
             <div [innerHTML]="q.conclusion"></div>
         </div>
 
-        <small class="d-grid mt-2 px-2" style="grid-template-columns: repeat(4, 1fr);">
+        <small class="d-grid mt-2 px-2" style="grid-template-columns: repeat(4, 1fr); gap: 0.25rem;">
             <div>
                 <div class="fw-bold">Type</div>
                 {{ q.type }}
@@ -29,7 +29,7 @@
 
             <div>
                 <div class="fw-bold">Time Taken</div>
-                {{ (q.userAnswer === undefined) ? "Timeout" : ((q.answeredAt - q.createdAt) / 1000) + "s" }}
+                {{ (q.userAnswer === undefined) ? "Timeout" : (((q.answeredAt - q.createdAt) / 1000) | number:".1-1") + "s" }}
             </div>
         </small>
     </li>
