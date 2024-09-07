@@ -24,11 +24,15 @@ export class BodyStatsComponent {
     unansweredQs: Question[] = [];
     currentStreak: Question[] = [];
     longestStreak: Question[] = [];
+
     totalPlayTime = 0;
     avgAnswer = 0;
     fastestAnswer = 0;
     slowestAnswer = 0;
     timeBasedStats: Record<string, any> = {};
+
+    mostCommonMistake = "";
+    leastCommonMistake = "";
 
     constructor(
         public sylSrv: SyllogimousService
@@ -98,6 +102,17 @@ export class BodyStatsComponent {
                 }
             }
         }
+
+        const typeMistakesCount: Record<string, number> = {};
+        this.questions
+            .filter(q => q.isValid !== q.userAnswer)
+            .forEach(q => {
+                typeMistakesCount[q.type] = typeMistakesCount[q.type] || 0;
+                typeMistakesCount[q.type]++;
+            });
+        const sorted = Object.entries(typeMistakesCount).sort((a, b) => a[1] - b[1]);
+        this.mostCommonMistake = sorted[sorted.length - 1][0];
+        this.leastCommonMistake = sorted[0][0];
     }
 
     formatTime(ms: number): string {
