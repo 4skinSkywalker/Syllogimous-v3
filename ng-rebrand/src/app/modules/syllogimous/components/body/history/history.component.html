@@ -2,27 +2,34 @@
     <li
         class="list-group-item"
         *ngFor="let q of questions"
-        [class.timeout]="!q.userAnswer"
-        [class.correct]="q.userAnswer && q.userAnswer === q.isValid"
-        [class.incorrect]="q.userAnswer && q.userAnswer !== q.isValid"
+        [class.timeout]="q.userAnswer === undefined"
+        [class.correct]="q.userAnswer !== undefined && q.userAnswer === q.isValid"
+        [class.incorrect]="q.userAnswer !== undefined && q.userAnswer !== q.isValid"
     >
         <div class="p-2 overflow-auto" style="max-height: 150px; border: 1px solid;">
             <div *ngFor="let p of q.premises" class="premise" [innerHTML]="p"></div>
             <div [innerHTML]="q.conclusion"></div>
         </div>
 
-        <small class="d-grid mt-2 px-2" style="grid-template-columns: repeat(3, 1fr);">
+        <small class="d-grid mt-2 px-2" style="grid-template-columns: repeat(4, 1fr);">
             <div>
                 <div class="fw-bold">Type</div>
                 {{ q.type }}
             </div>
+
             <div>
-                <div class="fw-bold">Follows</div>
+                <div class="fw-bold">Correct Answer</div>
                 {{ q.isValid }}
             </div>
+
             <div>
-                <div class="fw-bold">Answer</div>
-                {{ !q.userAnswer ? "Timeout" : (q.userAnswer === q.isValid) ? "Correct" : "Incorrect" }}
+                <div class="fw-bold">User Answer</div>
+                {{ (q.userAnswer === undefined) ? "Timeout" : q.userAnswer }}
+            </div>
+
+            <div>
+                <div class="fw-bold">Time Taken</div>
+                {{ (q.userAnswer === undefined) ? "Timeout" : ((q.answeredAt - q.createdAt) / 1000) + "s" }}
             </div>
         </small>
     </li>

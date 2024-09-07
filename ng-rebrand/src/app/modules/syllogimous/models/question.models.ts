@@ -1,8 +1,8 @@
 export enum EnumQuestionType {
     Syllogism = "Syllogism",
     Distinction = "Distinction",
-    ComparisonNumerical = "Comparison - Numerical",
-    ComparisonChronological = "Comparison - Chronological",
+    ComparisonNumerical = "Comparison Numerical",
+    ComparisonChronological = "Comparison Chronological",
     Binary = "Binary",
     Direction = "Direction",
     Direction3D = "Direction3D",
