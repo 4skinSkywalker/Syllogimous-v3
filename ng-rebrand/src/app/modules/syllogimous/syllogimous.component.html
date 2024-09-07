@@ -41,10 +41,10 @@
                 <div ngbDropdown container="body">
                     <button class="btn" ngbDropdownToggle>More</button>
 					<div ngbDropdownMenu>
-                        <button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.Intro">Introduction</button>
+                        <button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.Start">Start</button>
 						<button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.History">History</button>
 						<button ngbDropdownItem>Stats</button>
-						<button ngbDropdownItem>Tutorials</button>
+						<button ngbDropdownItem (click)="sylSrv.screen = EnumScreens.Tutorials">Tutorials</button>
 						<div class="dropdown-divider"></div>
                         <a ngbDropdownItem href="https://www.linkedin.com/in/f3d3r1c07r0774/" target="_blank">About the creator</a>
 					</div>
@@ -62,6 +62,7 @@
                 <app-body-in-game  *ngSwitchCase="EnumScreens.InGame"/>
                 <app-body-feedback *ngSwitchCase="EnumScreens.Feedback"/>
                 <app-body-history  *ngSwitchCase="EnumScreens.History"/>
+                <app-body-tutorials  *ngSwitchCase="EnumScreens.Tutorials"/>
             </ng-container>
         </div>
     </div>
@@ -72,6 +73,7 @@
             <app-footer-tutorial *ngSwitchCase="EnumScreens.Tutorial"/>
             <app-footer-in-game  *ngSwitchCase="EnumScreens.InGame"/>
             <app-footer-history  *ngSwitchCase="EnumScreens.History"/>
+            <app-footer-tutorials  *ngSwitchCase="EnumScreens.Tutorials"/>
         </ng-container>
     </div>
 </div>

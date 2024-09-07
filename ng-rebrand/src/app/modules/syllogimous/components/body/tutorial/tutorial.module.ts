@@ -11,10 +11,12 @@ import { TutorialDirection4DComponent } from './direction4D/direction4D.componen
 import { TutorialAnalogyComponent } from './analogy/analogy.component';
 import { TutorialBinaryComponent } from './binary/binary.component';
 import { BodyTutorialComponent } from './tutorial.component';
+import { BodyTutorialsComponent } from './tutorials/tutorials.component';
 
 @NgModule({
   declarations: [
     BodyTutorialComponent,
+    BodyTutorialsComponent,
     TutorialDistinctionComponent,
     TutorialSyllogismComponent,
     TutorialComparisonNumericalComponent,
@@ -31,6 +33,7 @@ import { BodyTutorialComponent } from './tutorial.component';
   ],
   exports: [
     BodyTutorialComponent,
+    BodyTutorialsComponent,
   ]
 })
 export class TutorialModule { }

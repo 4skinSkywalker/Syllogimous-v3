@@ -5,6 +5,7 @@ import { FooterIntroComponent } from './intro/intro.component';
 import { FooterInGameComponent } from './in-game/in-game.component';
 import { FooterTutorialComponent } from './tutorial/tutorial.component';
 import { FooterHistoryComponent } from './history/history.component';
+import { FooterTutorialsComponent } from './tutorials/tutorials.component';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { FooterHistoryComponent } from './history/history.component';
     FooterTutorialComponent,
     FooterInGameComponent,
     FooterHistoryComponent,
+    FooterTutorialsComponent,
   ],
   imports: [
     CommonModule,
@@ -22,6 +24,7 @@ import { FooterHistoryComponent } from './history/history.component';
     FooterTutorialComponent,
     FooterInGameComponent,
     FooterHistoryComponent,
+    FooterTutorialsComponent,
   ]
 })
 export class FooterModule { }
