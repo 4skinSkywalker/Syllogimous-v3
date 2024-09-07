@@ -1,37 +1,58 @@
-<section class="mb-3">
-    <h2 class="text-center">Tier</h2>
+<section class="mb-4">
+    <h2 class="text-center">Tier Stats</h2>
 
     <ul class="list-group" style="max-width: 90%; margin: 0 auto;">
-        <li class="list-group-item d-flex justify-content-between">
+        <li class="list-group-item">
             <b>Tier</b>
             <div>{{ sylSrv.tier }}</div>
         </li>
 
-        <li class="list-group-item d-flex justify-content-between">
+        <li class="list-group-item">
             <b>Points Earned</b>
             <div>{{ sylSrv.score }}</div>
         </li>
 
-        <li class="list-group-item d-flex justify-content-between">
+        <li class="list-group-item">
             <b>Next Tier</b>
             <div>{{ this.nextTier }}</div>
         </li>
 
-        <li class="list-group-item d-flex justify-content-between">
+        <li class="list-group-item">
             <b>Points Remaining to Next Tier</b>
             <div>{{ this.pointsRemaining }}</div>
         </li>
     </ul>
 </section>
 
-<section>
-    <h2>Accuracy Stats</h2>
+<section class="mb-4">
+    <h2 class="text-center">Accuracy Stats</h2>
 
-    <div>Correct Answers: </div>
-    <div>Incorrect Answers: </div>
-    <div>Unanswered Questions: </div>
-    <div>Current Streak: </div>
-    <div>Longest Streak: </div>
+    <ul class="list-group" style="max-width: 90%; margin: 0 auto;">
+        <li class="list-group-item">
+            <b>Correct Answers</b>
+            <div>{{ this.correctQs.length }}</div>
+        </li>
+
+        <li class="list-group-item">
+            <b>Incorrect Answers</b>
+            <div>{{ this.incorrectQs.length }}</div>
+        </li>
+
+        <li class="list-group-item">
+            <b>Unanswered Questions</b>
+            <div>{{ this.unansweredQs.length }}</div>
+        </li>
+
+        <li class="list-group-item">
+            <b>Current Streak</b>
+            <div>{{ this.currentStreak.length }}</div>
+        </li>
+
+        <li class="list-group-item">
+            <b>Longest Streak</b>
+            <div>{{ this.longestStreak.length }}</div>
+        </li>
+    </ul>
 </section>
 
 <section>
