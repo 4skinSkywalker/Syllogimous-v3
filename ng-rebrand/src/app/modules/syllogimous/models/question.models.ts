@@ -20,6 +20,7 @@ export class Question {
     premises: string[] = [];
     conclusion = "";
     createdAt = new Date().getTime();
+    answeredAt = new Date().getTime();
     userAnswer?: boolean;
 
     constructor(

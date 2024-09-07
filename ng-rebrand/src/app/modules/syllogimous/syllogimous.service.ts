@@ -128,6 +128,7 @@ export class SyllogimousService {
 
     checkQuestion(value?: boolean) {
         this.question.userAnswer = value;
+        this.question.answeredAt = Date.now();
         if (this.question.userAnswer === this.question.isValid) {
             this.score += TIER_SCORE_ADJUSTMENTS[this.tier].increment;
         } else {
