@@ -31,8 +31,8 @@ export class BodyStatsComponent {
     slowestAnswer = 0;
     timeBasedStats: Record<string, any> = {};
 
-    mostCommonMistake = "";
-    leastCommonMistake = "";
+    mostCommonMistake = "No Mistakes Yet";
+    leastCommonMistake = "No Mistakes Yet";
 
     types: string[] = [];
     typeBasedStats: Record<string, { type: string, completed: number, accuracy: number, stats: Record<string, any> }> = {};
@@ -114,8 +114,10 @@ export class BodyStatsComponent {
                 typeMistakesCount[q.type]++;
             });
         const sorted = Object.entries(typeMistakesCount).sort((a, b) => a[1] - b[1]);
-        this.mostCommonMistake = sorted[sorted.length - 1][0];
-        this.leastCommonMistake = sorted[0][0];
+        if (sorted.length) {
+            this.mostCommonMistake = sorted[sorted.length - 1][0];
+            this.leastCommonMistake = sorted[0][0];
+        }
 
         this.types = [ ...new Set(this.questions.map(q => q.type)) ];
         this.typeBasedStats = this.types.reduce((acc, curr) => (acc[curr] = { type: "", completed: 0, accuracy: 0, stats: {} }, acc), {} as Record<string, any>);
