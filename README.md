@@ -1,10 +1,10 @@
-## Syllogimous v4 Is Out!
-
-Syllogimous v4 is now available! Try it now at: [Syllogimous v4](https://4skinskywalker.github.io/Syllogimous-v4/)
-
 # Syllogimous v3
 
 Definitive Relational Game. Try it at: [Original Syllogimous v3](https://4skinskywalker.github.io/Syllogimous-v3/)
+
+## Syllogimous v4 Is Out!
+
+Syllogimous v4 is now available! Try it now at: [Syllogimous v4](https://4skinskywalker.github.io/Syllogimous-v4/)
 
 ## Alternative Versions
 
