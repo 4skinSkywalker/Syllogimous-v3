@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { SyllogimousService } from "../../../syllogimous.service";
 import { TIER_SCORE_RANGES } from "../../../constants/syllogimous.constants";
-import { EnumTiers } from "../../../models/syllogimous.models";
+import { EnumScreens, EnumTiers } from "../../../models/syllogimous.models";
 import { Question } from "../../../models/question.models";
 
 @Component({
@@ -10,6 +10,8 @@ import { Question } from "../../../models/question.models";
     styleUrls: ["./start.component.css"]
 })
 export class BodyStartComponent {
+    EnumScreens = EnumScreens;
+
     TIER_SCORE_RANGES = TIER_SCORE_RANGES;
     tiers = Object.values(EnumTiers);
     nextTier = EnumTiers.Savant;

@@ -1,7 +1,7 @@
 <div style="min-width: 320px;">
-    <h2 class="text-center">Stats</h2>
+    <h2 class="text-center">Start Screen</h2>
     
-    <ul class="list-group mb-4">
+    <ul class="list-group mb-2">
         <li class="list-group-item flex-between">
             <b>Tier</b>
             <div>{{ sylSrv.tier }} ({{ sylSrv.score }} pts earned)</div>
@@ -37,4 +37,11 @@
             <div>{{ longestStreak.length }}</div>
         </li>
     </ul>
+
+    <div class="d-flex justify-content-evenly">
+        <button class="btn btn-link" (click)="sylSrv.screen = EnumScreens.Intro">Intro</button>
+        <button class="btn btn-link" (click)="sylSrv.screen = EnumScreens.Stats">Stats</button>
+        <button class="btn btn-link" (click)="sylSrv.screen = EnumScreens.History">History</button>
+        <button class="btn btn-link" (click)="sylSrv.screen = EnumScreens.Tutorials">Tutorials</button>
+    </div>
 </div>
