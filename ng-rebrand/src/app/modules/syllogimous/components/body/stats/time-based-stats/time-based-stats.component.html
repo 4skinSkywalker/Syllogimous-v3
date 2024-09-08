@@ -22,22 +22,22 @@
 <ul class="list-group mb-3">
     <li class="list-group-item flex-between">
         <b>Total Play Time</b>
-        <div>{{ formatTime(this.totalPlayTime) }}</div>
+        <div>{{ formatTime(totalPlayTime) }}</div>
     </li>
 
     <li class="list-group-item flex-between">
         <b>Average Time per Answer</b>
-        <div>{{ ((this.questions.length !== 0) ? (this.totalPlayTime / (1000 * this.questions.length)) : 0) | number:".1-1" }} s</div>
+        <div>{{ ((questions.length !== 0) ? (totalPlayTime / (1000 * questions.length)) : 0) | number:".1-1" }} s</div>
     </li>
 
     <li class="list-group-item flex-between">
         <b>Fastest Answer</b>
-        <div>{{ ((this.fastestAnswer / 1000) || 0) | number:".1-1" }} s</div>
+        <div>{{ ((fastestAnswer / 1000) || 0) | number:".1-1" }} s</div>
     </li>
 
     <li class="list-group-item flex-between">
         <b>Slowest Answer</b>
-        <div>{{ ((this.slowestAnswer / 1000) || 0) | number:".1-1" }} s</div>
+        <div>{{ ((slowestAnswer / 1000) || 0) | number:".1-1" }} s</div>
     </li>
 </ul>
 

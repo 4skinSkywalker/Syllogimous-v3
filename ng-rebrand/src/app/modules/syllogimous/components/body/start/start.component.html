@@ -1,4 +1,40 @@
-<div class="d-grid gap-2 text-center">
-    <!-- TODO: Put some stats here -->
-    <button class="btn btn-lg btn-primary" (click)="sylSrv.start()">Press to Play</button>
+<div style="min-width: 320px;">
+    <h2 class="text-center">Stats</h2>
+    
+    <ul class="list-group mb-4">
+        <li class="list-group-item flex-between">
+            <b>Tier</b>
+            <div>{{ sylSrv.tier }} ({{ sylSrv.score }} pts earned)</div>
+        </li>
+    
+        <li class="list-group-item flex-between">
+            <b>Next Tier</b>
+            <div>{{ nextTier }} ({{ pointsRemaining }} pts left)</div>
+        </li>
+
+        <li class="list-group-item flex-between">
+            <b>Correct Answers</b>
+            <div>{{ correctQs.length }}</div>
+        </li>
+    
+        <li class="list-group-item flex-between">
+            <b>Incorrect Answers</b>
+            <div>{{ incorrectQs.length }}</div>
+        </li>
+    
+        <li class="list-group-item flex-between">
+            <b>Unanswered Questions</b>
+            <div>{{ unansweredQs.length }}</div>
+        </li>
+    
+        <li class="list-group-item flex-between">
+            <b>Current Streak</b>
+            <div>{{ currentStreak.length }}</div>
+        </li>
+    
+        <li class="list-group-item flex-between">
+            <b>Longest Streak</b>
+            <div>{{ longestStreak.length }}</div>
+        </li>
+    </ul>
 </div>

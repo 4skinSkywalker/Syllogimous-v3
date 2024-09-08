@@ -11,7 +11,6 @@ import { SyllogimousService } from 'src/app/modules/syllogimous/syllogimous.serv
 export class TierStatsComponent {
     TIER_SCORE_RANGES = TIER_SCORE_RANGES;
     tiers = Object.values(EnumTiers);
-
     nextTier = EnumTiers.Savant;
     pointsRemaining = 0;
 
@@ -22,6 +21,6 @@ export class TierStatsComponent {
     ngOnInit() {
         const currTierIdx = this.tiers.findIndex(tier => tier === this.sylSrv.tier);
         this.nextTier = this.tiers[currTierIdx + 1] || "--";
-        this.pointsRemaining = this.nextTier ? (TIER_SCORE_RANGES[this.nextTier].minScore - this.sylSrv.score) : 0
+        this.pointsRemaining = this.nextTier ? (TIER_SCORE_RANGES[this.nextTier].minScore - this.sylSrv.score) : 0;
     }
 }
