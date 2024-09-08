@@ -5,6 +5,8 @@ import { DIRECTION_COORDS, DIRECTION_COORDS_3D, DIRECTION_NAMES, DIRECTION_NAMES
 import { EnumScreens, EnumTiers } from "./models/syllogimous.models";
 import { TIER_SCORE_ADJUSTMENTS, TIER_SCORE_RANGES, TIER_SETTINGS } from "./constants/syllogimous.constants";
 import { LS_DONT_SHOW, LS_HISTORY, LS_SCORE } from "./constants/local-storage.constants";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ModalLevelChangeComponent } from "./components/modal-level-change/modal-level-change.component";
 
 @Injectable({
     providedIn: "root"
@@ -47,7 +49,9 @@ export class SyllogimousService {
         return questions;
     }
 
-    constructor() {
+    constructor(
+        private modalService: NgbModal
+    ) {
         this.loadScore();
         this.loadHistory();
 
@@ -138,14 +142,37 @@ export class SyllogimousService {
     checkQuestion(value?: boolean) {
         this.question.userAnswer = value;
         this.question.answeredAt = Date.now();
+
+        const currTier = this.tier;
+
+        let ds = 0;
         if (this.question.userAnswer === this.question.isValid) {
             this.score += TIER_SCORE_ADJUSTMENTS[this.tier].increment;
+            ds += 1;
         } else {
             this.score = Math.max(0, this.score - TIER_SCORE_ADJUSTMENTS[this.tier].decrement);
+            if (this.score !== 0) {
+                ds -= 1;
+            }
         }
+
+        const nextTier = this.tier;
+
+        // Level up/down
+        if (currTier !== nextTier) {
+            const modalRef = this.modalService.open(ModalLevelChangeComponent, { centered: true });
+            if (ds > 0) { // level up
+                modalRef.componentInstance.title = "Congratulations, You've Leveled Up!";
+                modalRef.componentInstance.content = "Your hard work is paying off. Keep going to unlock more features and rewards!";
+            } else if (ds < 0) { // level down
+                modalRef.componentInstance.title = "Level Down - Let's Regroup!";
+                modalRef.componentInstance.content = "Take this as a learning step. Refocus your efforts and you’ll be back on top in no time!";
+            }
+        }
+
         this.pushIntoHistory(this.question);
         this.screen = EnumScreens.Feedback;
-        setTimeout(() => this.screen = EnumScreens.Start, 750)
+        setTimeout(() => this.screen = EnumScreens.Start, 750);
     }
 
     createSyllogism(length: number) {
