@@ -23,66 +23,68 @@
     <button class="btn btn-lg btn-primary" (click)="sylSrv.start()">Press to Play</button>
 </div>
 
-<div class="mb-5" *ngFor="let type of types">
-    <h2 class="text-center">{{ type }} Stats</h2>
-
-    <ul class="list-group my-3">
-        <li class="list-group-item">
-            <b>Completed Questions</b>
-            <div>{{ typeBasedStats[type].completed }}</div>
-        </li>
-
-        <li class="list-group-item">
-            <b>Accuracy</b>
-            <div>{{ typeBasedStats[type].accuracy | percent }}</div>
-        </li>
-    </ul>
-
-    <div *ngIf="{ activeTab: 2 } as d">
-        <ul ngbNav #nav="ngbNav" [(activeId)]="d.activeTab" class="nav-tabs">
-            <li [ngbNavItem]="2">
-                <a ngbNavLink>2 Premises</a>
-                <ng-template ngbNavContent>
-                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
-                </ng-template>
+<div class="d-grid gap-5">
+    <div *ngFor="let type of types">
+        <h2 class="text-center">{{ type }} Stats</h2>
+    
+        <ul class="list-group my-3">
+            <li class="list-group-item">
+                <b>Completed Questions</b>
+                <div>{{ typeBasedStats[type].completed }}</div>
             </li>
-
-            <li [ngbNavItem]="3">
-                <a ngbNavLink>3 Ps</a>
-                <ng-template ngbNavContent>
-                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
-                </ng-template>
-            </li>
-
-            <li [ngbNavItem]="4">
-                <a ngbNavLink>4 Ps</a>
-                <ng-template ngbNavContent>
-                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
-                </ng-template>
-            </li>
-
-            <li [ngbNavItem]="5">
-                <a ngbNavLink>5 Ps</a>
-                <ng-template ngbNavContent>
-                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
-                </ng-template>
-            </li>
-
-            <li [ngbNavItem]="6">
-                <a ngbNavLink>6 Ps</a>
-                <ng-template ngbNavContent>
-                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
-                </ng-template>
-            </li>
-
-            <li [ngbNavItem]="7">
-                <a ngbNavLink>7+ Ps</a>
-                <ng-template ngbNavContent>
-                    <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
-                </ng-template>
+    
+            <li class="list-group-item">
+                <b>Accuracy</b>
+                <div>{{ typeBasedStats[type].accuracy | percent }}</div>
             </li>
         </ul>
-        
-        <div [ngbNavOutlet]="nav" class="p-3 border border-top-0"></div>
+    
+        <div *ngIf="{ activeTab: 2 } as d">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="d.activeTab" class="nav-tabs">
+                <li [ngbNavItem]="2">
+                    <a ngbNavLink>2 Premises</a>
+                    <ng-template ngbNavContent>
+                        <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
+                    </ng-template>
+                </li>
+    
+                <li [ngbNavItem]="3">
+                    <a ngbNavLink>3 Ps</a>
+                    <ng-template ngbNavContent>
+                        <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
+                    </ng-template>
+                </li>
+    
+                <li [ngbNavItem]="4">
+                    <a ngbNavLink>4 Ps</a>
+                    <ng-template ngbNavContent>
+                        <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
+                    </ng-template>
+                </li>
+    
+                <li [ngbNavItem]="5">
+                    <a ngbNavLink>5 Ps</a>
+                    <ng-template ngbNavContent>
+                        <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
+                    </ng-template>
+                </li>
+    
+                <li [ngbNavItem]="6">
+                    <a ngbNavLink>6 Ps</a>
+                    <ng-template ngbNavContent>
+                        <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
+                    </ng-template>
+                </li>
+    
+                <li [ngbNavItem]="7">
+                    <a ngbNavLink>7+ Ps</a>
+                    <ng-template ngbNavContent>
+                        <ng-container *ngTemplateOutlet="timeBasedStatsTemplate; context: { ps: d.activeTab, stats: typeBasedStats[type].stats }"></ng-container> 
+                    </ng-template>
+                </li>
+            </ul>
+            
+            <div [ngbNavOutlet]="nav" class="p-3 border border-top-0"></div>
+        </div>
     </div>
 </div>
