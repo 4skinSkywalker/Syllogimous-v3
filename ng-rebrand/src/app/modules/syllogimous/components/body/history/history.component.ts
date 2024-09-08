@@ -16,9 +16,6 @@ export class BodyHistoryComponent {
     ) {}
 
     ngOnInit() {
-        const history = localStorage.getItem(LS_HISTORY);
-        if (history) {
-            this.questions = JSON.parse(history).reverse();
-        }
+        this.questions = this.sylSrv.questionsFromLS;
     }
 }

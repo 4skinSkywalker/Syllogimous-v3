@@ -38,6 +38,15 @@ export class SyllogimousService {
         return TIER_SETTINGS[this.tier];
     }
 
+    get questionsFromLS() {
+        let questions: Question[] = [];
+        const history = localStorage.getItem(LS_HISTORY);
+        if (history) {
+            questions = JSON.parse(history).reverse();
+        }
+        return questions;
+    }
+
     constructor() {
         this.loadScore();
         this.loadHistory();

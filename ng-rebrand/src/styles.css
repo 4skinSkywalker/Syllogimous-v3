@@ -5,3 +5,8 @@
     --border-radius_lg: calc(var(--border-radius_md) * 0.3 / 0.25);
 }
 /* End of VARIABLES */
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
