@@ -1,5 +1,9 @@
-<div class="modal-body p-4 text-center">
-    <h3>{{ title }}</h3>
-    <p>{{ content }}</p>
+<div class="modal-body p-5 text-center">
+    <h4>{{ title }}</h4>
+
+    <div class="my-4" style="font-size: 1.15rem;">
+        <div *ngFor="let content of contents">{{ content }}</div>
+    </div>
+
     <button class="btn btn-primary" (click)="activeModal.close('Ok click')">Got It!</button>
 </div>

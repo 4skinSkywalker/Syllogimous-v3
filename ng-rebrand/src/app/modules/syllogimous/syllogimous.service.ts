@@ -163,10 +163,10 @@ export class SyllogimousService {
             const modalRef = this.modalService.open(ModalLevelChangeComponent, { centered: true });
             if (ds > 0) { // level up
                 modalRef.componentInstance.title = "Congratulations, You've Leveled Up!";
-                modalRef.componentInstance.content = "Your hard work is paying off. Keep going to unlock more features and rewards!";
+                modalRef.componentInstance.content = "Your hard work is paying off.\nKeep going to unlock more features and rewards!";
             } else if (ds < 0) { // level down
                 modalRef.componentInstance.title = "Level Down - Let's Regroup!";
-                modalRef.componentInstance.content = "Take this as a learning step. Refocus your efforts and you’ll be back on top in no time!";
+                modalRef.componentInstance.content = "Take this as a learning step.\nRefocus your efforts and you’ll be back on top in no time!";
             }
         }
 

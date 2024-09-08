@@ -9,8 +9,15 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class ModalLevelChangeComponent {
     @Input("title") title?: string;
     @Input("content") content?: string;
+    contents: string[] = [];
 
     constructor(
         public activeModal: NgbActiveModal
     ) { }
+
+    ngOnInit() {
+        if (this.content) {
+            this.contents = this.content.split("\n");
+        }
+    }
 }
