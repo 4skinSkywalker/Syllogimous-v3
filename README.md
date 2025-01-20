@@ -8,8 +8,9 @@ Syllogimous v4 is now available! Try it now at: [Syllogimous v4](https://4skinsk
 
 ## Alternative Versions
 
-The following versions are not maintained by me, but are worth mentioning.
-Let's try them: [ikokusovereignty's version](https://ikokusovereignty.github.io/Syllogimous-v3/)
+The following are other versions that are worth mentioning, not created by me: 
+- [ikokusovereignty's version](https://ikokusovereignty.github.io/Syllogimous-v3/)
+- [soa's version](https://soamsy.github.io/Syllogimous-v3/)
 
 ## Attribution-NonCommercial 3.0 Unported (CC BY-NC 3.0)
 
